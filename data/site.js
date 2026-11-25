@@ -61,6 +61,43 @@ window.SITE = {
 
   signLines: ["Volunteers needed", "Drill Tuesdays 7 PM"],
 
+  /* Live weather alerts. Give a real department its coordinates and alerts from the National
+     Weather Service's public feed appear under the top strip by themselves, for example:
+     weather: { lat: 40.92, lon: -74.51, place: "Rockaway Township" }
+     This sample town is fictional, so it has none. */
+
+  /* The guided tour, for showing the site to a department. Start it from the label across the top
+     or by adding ?tour to the address. `at` is the id of the section each step points at.
+     SET `offer.price` (your yearly price) and `offer.contact` before you show it. */
+  tour: {
+    button: "Take the 60-second tour",
+    seconds: 7,
+    steps: [
+      { at: "top", title: "Built to become yours", text: "This town is made up. Put in your patch, your rigs and your people and the whole site re-letters itself. Here is what it does for a department, in about a minute.", action: "welcome", actionLabel: "Play the welcome" },
+      { at: "feed", title: "It updates itself", text: "Keep posting to Facebook and Instagram the way you do now. The posts show up here on their own, so nobody has to learn a website." },
+      { at: "year", title: "Your year, added up", text: "Training and volunteer hours turned into a dollar figure for the fund-drive letter and the budget meeting." },
+      { at: "join", title: "It recruits", text: "A visitor types a last name and sees it on the coat. The interest form goes straight to the membership chair's phone.", action: "apply", actionLabel: "Open the form" },
+      { at: "neighbors", title: "Faces, not just trucks", text: "People join people. Members shown with their day jobs is the best recruiting page a volunteer department can have." },
+      { at: "santa", title: "The night everyone visits", text: "On Santa night the map follows the engine, and the whole town opens the site to see when to come outside." },
+      { at: "support", title: "It raises money", text: "A goal people can watch fill up, monthly giving, a code to print on the mailed letter, and house-number signs ordered online." },
+      { at: "partners", title: "And it pays for itself", text: "Local businesses support the department through the site, and each one gets a monthly report showing what it got for the money.", action: "report", actionLabel: "See a sample report" },
+      { end: true, title: "What it costs the department" }
+    ],
+    offer: {
+      price: 1800,      /* PLACEHOLDER: your yearly price */
+      lines: [
+        "{count} local partners at the prices on this page bring in {total} a year.",
+        "The site, hosting, updates and support cost {price} a year.",
+        "That leaves {left} a year for the department before the first donation."
+      ],
+      note: "Example figures, to be agreed.",
+      qrLabel: "Open it on your own phone",
+      qrText: "Point the camera at the code.",
+      contact: "",      /* PLACEHOLDER: "Your Name, 973-555-0100, you@example.com" */
+      contactBlank: "Your name, phone and email go here."
+    }
+  },
+
   /* A thin label across the very top. Keep it on any demo that is shared; delete the line for a real department. */
   sampleBanner: "Sample site. {town} is a fictional town, and this is not a real fire department.",
 
@@ -100,6 +137,49 @@ window.SITE = {
     ]
   },
 
+  /* What the department posted lately. On a live site these come from its Facebook and Instagram
+     pages by themselves. */
+  feed: {
+    title: "Latest from the stations",
+    text: "Whatever the department posts on Facebook or Instagram shows up here on its own.",
+    items: [
+      { from: "Facebook", when: "Yesterday", photo: "images/rigs/engine-1.jpg", alt: "Engine 1", text: "Engine 1, washed and back in the bay after last night's alarm on Main Street." },
+      { from: "Instagram", when: "3 days ago", photo: "images/rigs/ladder-1.jpg", alt: "Ladder 1", text: "Ladder 1 out for Tuesday's drill." },
+      { from: "Facebook", when: "Last week", photo: "images/stations/station-3.jpg", alt: "Station 3, The Falls", text: "Station 3 at The Falls. Stop in any Tuesday, the coffee is on." }
+    ],
+    more: { label: "Follow the department on Facebook", href: "#contact" }
+  },
+
+  /* The year added up. `worth` multiplies the volunteer hours by a dollar value for an hour of
+     volunteer time: use the current published figure. */
+  year: {
+    title: "What a year of volunteering adds up to",
+    text: "Nobody at the five stations is paid. This is what {town} got anyway.",
+    stats: [
+      { n: 11480, label: "hours of training" },
+      { n: 41200, label: "volunteer hours in all" },
+      { n: 168, label: "volunteers" },
+      { n: 365, label: "days a year someone is on call" }
+    ],
+    worth: { hours: 41200, rate: 34, text: "{hours} volunteer hours at {rate} an hour: service the town's taxpayers did not have to pay for." }
+  },
+
+  /* Members with their day jobs. Use real members only with their say-so; add `photo:` to any of
+     them to replace the initials. */
+  neighbors: {
+    title: "The people on the truck live down the street.",
+    text: "They have day jobs, kids and lawns to mow, and a pager on the nightstand.",
+    items: [
+      { name: "Erin R.", job: "Middle-school science teacher", role: "firefighter at Station 2", since: 2019 },
+      { name: "Marcus T.", job: "Electrician", role: "engine driver", since: 2011 },
+      { name: "Priya S.", job: "Hospital nurse", role: "medical responder", since: 2021 },
+      { name: "Tom B.", job: "Retired mail carrier", role: "fire police", since: 1994 },
+      { name: "Jenna K.", job: "High-school junior", role: "junior member", since: 2026 },
+      { name: "Luis M.", job: "Diesel mechanic", role: "rescue company", since: 2015 }
+    ],
+    cta: { label: "Add your name to the list", href: "#join" }
+  },
+
   calls: {
     year: 2026,
     through: "November 23",
@@ -137,7 +217,17 @@ window.SITE = {
       name: { blank: "images/gear/name-panel.png", box: [882, 138, 220, 64], arc: "M880 187.6 Q990 157.4 1100 187.6", size: 29, max: 184, color: "#D5AB6D" },
       zoom: [670, 50, 640, 480]
     },
-    cta: { label: "Start your application", topic: "I want to volunteer" },
+    cta: { label: "Ask a question first", topic: "I want to volunteer" },
+    /* The interest form. On a live site it goes to the membership chair's phone and inbox. */
+    apply: {
+      button: "Tell us you're interested",
+      title: "Tell us you're interested",
+      text: "It takes two minutes. A member calls you back, and you can watch a drill before you decide anything.",
+      interests: ["Engine company", "Truck company", "Rescue", "Medical response", "Fire police", "Junior member, 16 or 17"],
+      visits: { label: "Want to come to a drill night?", none: "Not yet, call me first", options: ["Tuesday, December 1, 7 PM", "Tuesday, December 8, 7 PM", "Tuesday, December 15, 7 PM"] },
+      submit: "Send it",
+      done: "Demo only: nothing was sent. On a live site this goes straight to the membership chair's phone and inbox, and you get a text to confirm."
+    },
     perks: ["Free training and gear", "Length-of-service retirement award", "Dinner on drill nights"],
     steps: [
       { title: "Come to a drill night", text: "Tuesdays at 7 PM, at the station nearest you. Meet the crew and ask anything." },
@@ -227,11 +317,12 @@ window.SITE = {
   events: {
     title: "At the stations",
     items: [
-      { month: "Dec", day: "1", title: "Drill night: vehicle extrication", meta: "Tuesday, 7 PM, Station 5. Visitors welcome." },
-      { month: "Dec", day: "6", title: "Pancake breakfast", meta: "Sunday, 8 AM to noon, Foundry Hall. $10, kids under 6 eat free.", sponsor: "Kettle & Crumb Bakery" },
-      { month: "Dec", day: "19", title: "Santa rides Engine 1", meta: "Saturday and Sunday. The route is posted a week ahead.", sponsor: "Three Forks Auto Body" },
-      { month: "Jan", day: "9", title: "Junior firefighter open house", meta: "Saturday, 10 AM, Station 2. Bring a parent." },
-      { month: "Jan", day: "16", title: "CPR and AED class", meta: "Saturday, 9 AM, Station 5. $25, free for members." }
+      /* `date` and `hours` put an "Add to calendar" button on the event. */
+      { month: "Dec", day: "1", date: "2026-12-01T19:00", hours: 2, title: "Drill night: vehicle extrication", meta: "Tuesday, 7 PM, Station 5. Visitors welcome." },
+      { month: "Dec", day: "6", date: "2026-12-06T08:00", hours: 4, title: "Pancake breakfast", meta: "Sunday, 8 AM to noon, Foundry Hall. $10, kids under 6 eat free.", sponsor: "Kettle & Crumb Bakery" },
+      { month: "Dec", day: "19", date: "2026-12-19T17:00", hours: 2, title: "Santa rides Engine 1", meta: "Saturday from 5 PM. Follow the engine on the map below.", sponsor: "Three Forks Auto Body" },
+      { month: "Jan", day: "9", date: "2027-01-09T10:00", hours: 2, title: "Junior firefighter open house", meta: "Saturday, 10 AM, Station 2. Bring a parent." },
+      { month: "Jan", day: "16", date: "2027-01-16T09:00", hours: 3, title: "CPR and AED class", meta: "Saturday, 9 AM, Station 5. $25, free for members." }
     ],
     news: [
       { date: "November 18", title: "New air packs are on order", text: "The fund drive passed 70 percent. Twelve packs arrive in the spring." },
@@ -240,11 +331,43 @@ window.SITE = {
     ]
   },
 
+  /* Santa night. On the real night the map follows a phone riding on the engine; here the engine
+     runs a made-up loop. Delete `santa` after the holidays and it disappears. */
+  santa: {
+    title: "Santa rides Engine 1.",
+    text: "On the night, this map follows the truck, so you know when to bring the kids to the curb.",
+    when: "Saturday, December 19, from 5 PM",
+    water: "Mill Pond",
+    loopSeconds: 52,
+    stops: [
+      { name: "Station 1, Main Street", time: "5:00" },
+      { name: "North End", time: "5:25" },
+      { name: "Orchard Road", time: "5:50" },
+      { name: "The Falls", time: "6:15" },
+      { name: "Foundry Road", time: "6:40" },
+      { name: "Back at Station 1", time: "7:00" }
+    ],
+    sponsor: "Three Forks Auto Body",
+    mapAlt: "A map of the town with the engine's route around the pond and five numbered stops",
+    note: "Demonstration. The engine on this map is following a made-up loop."
+  },
+
   support: {
     title: "Tax dollars buy the trucks. You buy the rest.",
     text: "{company} is a 501(c)(3) nonprofit. Your gift is tax deductible.",
     fund: { name: "2026 fund drive: 12 new air packs", raised: 61400, goal: 85000, note: "One air pack costs about $7,000 and lasts 15 years." },
     amounts: [25, 50, 100, 250],
+    monthly: true,
+    /* A code that opens this section on a phone. It is made in the browser, so it always points at
+       wherever the site is hosted. */
+    qr: { label: "Scan to give", text: "Print this code on the fund-drive letter. It opens this page on any phone." },
+    signs: {
+      title: "Help us find your house in the dark",
+      text: "A reflective green number sign for the end of the driveway, readable from both directions at night.",
+      label: "Your house number", sample: "27",
+      cta: "Order a sign for $20",
+      done: "Demo only. On a live site this takes the order and payment, and the department gets a list of signs to make."
+    },
     other: ["Mail a check to 47 Foundry Road", "Ask your employer to match your gift", "Give in memory of a member"],
     hall: { name: "Foundry Hall", text: "The hall at Station 5 seats 180 and has a full kitchen, a bar and parking for 90 cars. Rentals start at $450.", cta: { label: "Ask about a date", topic: "Hall rental" } }
   },
@@ -264,6 +387,15 @@ window.SITE = {
       { name: "Hose partner", price: "$350 a year", items: ["Name on the partner wall", "A thank-you in the annual mailer"] }
     ],
     cta: { label: "Become a partner", topic: "Community partnership" },
+    /* The monthly report each partner gets. The numbers here are generated for show: `views` is
+       roughly how often each level is seen in a month. */
+    report: {
+      button: "See a sample partner report", kicker: "Partner report", month: "October 2026",
+      note: "Invented figures for an invented business.",
+      views: { Engine: 4000, Truck: 1700, Hose: 900 }, events: "2",
+      allTitle: "Every partner this month",
+      foot: "Each partner gets its own report by email on the first of the month."
+    },
     top: [
       { id: "foundry-road-hardware", active: true, name: "Foundry Road Hardware", logo: "images/partners/foundry-road-hardware.svg", mark: ["Foundry Road", "Hardware"], headline: "Everything for the house since 1961", sub: "Paint, plumbing, keys cut while you wait.", cta: "Visit the store", url: "#partners", theme: { from: "#12372A", to: "#1F6B4C", accent: "#F2C14E" } },
       { id: "three-forks-auto-body", active: true, name: "Three Forks Auto Body", logo: "images/partners/three-forks-auto-body.svg", mark: ["Three Forks", "Auto Body"], headline: "Collision repair, done right the first time", sub: "Free estimates. We work with every insurer.", cta: "Get an estimate", url: "#partners", theme: { from: "#10233F", to: "#1F4E8C", accent: "#FF8A3D" } },

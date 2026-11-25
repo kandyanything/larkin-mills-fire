@@ -81,6 +81,27 @@ When someone opens the site, the department's badge is on fire. A hose stream co
 - "Skip the fire", the close button, the Esc key and a click outside all get past it.
 - Visitors whose device is set to reduce motion, or who pressed "Pause motion", get the badge and the message with no fire.
 
+## More sections and tools
+
+All of these live in `js/plus.js` and the two "more:" blocks in `css/site.css`. Each is switched on by its entry in `data/site.js`; delete the entry and the block disappears.
+
+| Entry in `data/site.js` | What visitors get | What it needs before it is real |
+| --- | --- | --- |
+| `feed` | The department's latest social posts, with photos | A connection to its Facebook and Instagram pages. Until then the posts are typed into the data file. |
+| `year` | Training and volunteer hours, and their dollar value to taxpayers | The department's own figures, and the current value of a volunteer hour in `worth.rate` |
+| `neighbors` | Members shown with their day jobs | Real members, with their say-so. Add `photo:` to replace the initials. |
+| `lake` | A status sign, an ice-thickness guide and what to do if someone goes through | The department's review of the wording. `status.level` is `off`, `caution` or `ok`. |
+| `weather` | Live alerts from the National Weather Service under the top strip | Only the coordinates. Add `?alert` to the address to see a sample on a quiet day. |
+| `santa` | A map that follows the engine on Santa night | A phone on the engine sharing its position. Until then the engine runs a made-up loop. |
+| `support.monthly`, `support.qr` | Monthly giving and a scan-to-give code for the mailed letter | A payment page. The code is made in the browser and always points at wherever the site is hosted. |
+| `support.signs` | Reflective house-number signs with a live preview | Order taking and payment |
+| `join.apply` | The "tell us you're interested" form | Delivery to the membership chair by email and text |
+| `partners.report` | A sample of the monthly report each partner gets | Counting of views and clicks. The numbers shown are generated for show. |
+| `date` on an event | An "Add to calendar" button | Nothing. It works now. |
+| `tour` | A guided tour of the site for showing it to a department | Your price in `tour.offer.price` and your details in `tour.offer.contact` |
+
+The tour starts from the label across the top of the page, or by adding `?tour` to the address. It moves on by itself every `tour.seconds`, waits while the mouse is on the card, and ends on a panel that adds up the partner wall (`partners.wall` at the `partners.tiers` prices) against your price.
+
 ## Sponsors
 
 - `partners.top`: banner ads under the hero. Up to three rotate every `rotateSeconds`, with pause and dot controls. Set `active: false` to pause one.
@@ -122,6 +143,7 @@ media/            the 20-second film and its poster
 js/art.js         drawings: emblem, coat, helmet shields, map, icons, and the fallback rigs, firehouse and portraits
 js/fx.js          moving background: embers and glints behind the dark sections
 js/welcome.js     the welcome popup: the burning badge and the hose
+js/plus.js        the feed, the year, neighbors, lake and ice, Santa night, giving extras, forms, the partner report and the tour
 js/site.js        builds the page from the data and handles clicks
 css/site.css      design
 css/fonts.css     self-hosted fonts (Archivo Black, Bitter, Source Sans 3; SIL Open Font License)
