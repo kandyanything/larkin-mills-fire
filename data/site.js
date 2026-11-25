@@ -36,6 +36,17 @@ window.SITE = {
      Use `motion: false` to switch it off, or raise/lower `density` (1 is the default). */
   motion: { density: 1 },
 
+/* The first-visit welcome: the badge burns, a hose stream puts it out, and this message appears.
+     Each visitor sees it once. Change `id` to show a new message to everyone again, or set
+     `on: false` to switch it off. Add ?welcome to the address to play it on demand. */
+  welcome: {
+    on: true, id: "launch",
+    title: "Welcome to our new site.",
+    text: "Everything about {company} in one place: how to join, the rigs, what's coming up and ways to help.",
+    links: [{ label: "Become a volunteer", href: "#join" }, { label: "See the rigs", href: "#apparatus" }, { label: "Support us", href: "#support" }],
+    button: "Take a look around"
+  },
+
   contact: {
     address: "47 Foundry Road",
     cityLine: "{town}, NJ",
