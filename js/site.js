@@ -5,7 +5,7 @@
   var A = window.FireArt, RAW = window.SITE, esc = A.esc, I = A.icon;
   var app = document.getElementById('app');
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var state = { rig: 0, station: 0, ad: 0, adPaused: reduced, first: true, coat: '', amount: null, still: false };
+  var state = { rig: 0, station: 0, ad: 0, adPaused: reduced, first: true, coat: '', amount: null, still: false, zoom: false };
   var S, FX = window.FireFX;
   try { state.still = window.localStorage.getItem('fx-still') === '1'; } catch (e) { /* storage can be blocked: start with motion on */ }
 
@@ -128,14 +128,58 @@
       '</tbody></table><p class="calls-foot">Locations are given by block or intersection to protect privacy.</p></div></div></section>';
   }
 
+  /* The typed surname as it is lettered on the coat: first letter capital, the rest as typed. */
+  function onCoat(v) { v = String(v || '').trim(); return v.charAt(0).toUpperCase() + v.slice(1); }
+  function gearCaption(g) { return state.coat && g.name && g.namedCaption ? g.namedCaption.replace('{name}', onCoat(state.coat)) : (g.caption || ''); }
+  function zoomLabel() { return I(state.zoom ? 'zoomout' : 'zoomin') + '<span>' + (state.zoom ? 'Show the whole photo' : 'See the name up close') + '</span>'; }
+  function gearFigure(g) {
+    var n = g.name, z = g.zoom, W = g.width, H = g.height, has = !!(n && state.coat);
+    var vars = '--ar:' + W + ' / ' + H + (z ? ';--zs:' + (W / z[2]).toFixed(4) + ';--zx:' + (-z[0] / W * 100).toFixed(3) + '%;--zy:' + (-z[1] / H * 100).toFixed(3) + '%' : '');
+    var overlay = !n ? '' : '<svg class="gear-name" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" aria-hidden="true" focusable="false">' +
+      '<defs><path id="gear-arc" d="' + esc(n.arc) + '"/>' +
+      '<filter id="gear-sewn" filterUnits="userSpaceOnUse" x="' + (n.box[0] - 12) + '" y="' + (n.box[1] - 12) + '" width="' + (n.box[2] + 24) + '" height="' + (n.box[3] + 24) + '"><feGaussianBlur in="SourceAlpha" stdDeviation=".9"/><feOffset dy=".9" result="o"/><feFlood flood-color="#000" flood-opacity=".6"/><feComposite in2="o" operator="in" result="sh"/><feGaussianBlur in="SourceGraphic" stdDeviation=".42" result="t"/><feMerge><feMergeNode in="sh"/><feMergeNode in="t"/></feMerge></filter></defs>' +
+      '<image href="' + esc(n.blank) + '" x="' + n.box[0] + '" y="' + n.box[1] + '" width="' + n.box[2] + '" height="' + n.box[3] + '" preserveAspectRatio="none"/>' +
+      '<text class="gear-letters" font-size="' + n.size + '" fill="' + esc(n.color) + '" filter="url(#gear-sewn)" data-max="' + n.max + '"><textPath href="#gear-arc" startOffset="50%" text-anchor="middle">' + esc(onCoat(state.coat)) + '</textPath></text></svg>';
+    return '<figure class="gear' + (has ? ' has-name' : '') + (z && state.zoom ? ' is-zoomed' : '') + '" id="gear" style="' + vars + '">' +
+      '<div class="gear-view"><div class="gear-stage"><img src="' + esc(g.photo) + '" alt="' + esc(g.alt || '') + '" width="' + W + '" height="' + H + '" loading="lazy">' + overlay + '</div>' +
+      (z ? '<button class="gear-zoom" type="button" data-gear-zoom aria-pressed="' + !!state.zoom + '">' + zoomLabel() + '</button>' : '') + '</div>' +
+      '<figcaption id="gear-cap" aria-live="polite">' + esc(gearCaption(g)) + '</figcaption></figure>';
+  }
+  /* Squeeze a long surname so it stays inside the panel. */
+  function fitGearName() {
+    var t = app.querySelector('.gear-letters'); if (!t || !t.getComputedTextLength) return;
+    t.removeAttribute('textLength'); t.removeAttribute('lengthAdjust');
+    var max = +t.getAttribute('data-max');
+    if (max && t.getComputedTextLength() > max) { t.setAttribute('textLength', max); t.setAttribute('lengthAdjust', 'spacingAndGlyphs'); }
+  }
+  var capTimer;
+  function setGearName() {
+    var fig = document.getElementById('gear'), g = S.join.gear; if (!fig || !g) return false;
+    var tp = fig.querySelector('.gear-letters textPath');
+    if (tp) {
+      if (state.coat) { tp.textContent = onCoat(state.coat); fitGearName(); }
+      fig.classList.toggle('has-name', !!state.coat);
+      setZoom(!!state.coat);
+    }
+    clearTimeout(capTimer);
+    capTimer = setTimeout(function () { var c = document.getElementById('gear-cap'); if (c) c.textContent = gearCaption(g); }, 600);
+    return true;
+  }
+  function setZoom(v) {
+    var fig = document.getElementById('gear'), b = fig && fig.querySelector('[data-gear-zoom]'); if (!b) return;
+    state.zoom = !!v;
+    fig.classList.toggle('is-zoomed', state.zoom);
+    b.setAttribute('aria-pressed', state.zoom); b.innerHTML = zoomLabel();
+  }
+
   function join() {
-    var j = S.join, name = state.coat || j.coatDefault;
+    var j = S.join, name = state.coat || j.coatDefault, photo = j.gear && j.gear.photo, typing = !photo || !!j.gear.name;
     return '<section class="band band--dusk" id="join" aria-labelledby="join-h">' + sparks('dusk') + '<div class="wrap">' +
-      '<div class="join-top"><div><h2 id="join-h">' + esc(j.title) + '</h2><p class="lede">' + esc(j.text) + '</p>' +
-      '<div class="coat-try"><label for="coat-name">' + esc(j.coatLabel) + '</label><div class="coat-row"><input id="coat-name" type="text" maxlength="14" autocomplete="family-name" placeholder="Last name" value="' + esc(state.coat) + '">' +
+      '<div class="join-top' + (photo ? ' join-top--photo' : '') + '"><div class="join-copy"><h2 id="join-h">' + esc(j.title) + '</h2><p class="lede">' + esc(j.text) + '</p>' +
+      '<div class="coat-try">' + (typing ? '<label for="coat-name">' + esc(j.coatLabel) + '</label>' : '') + '<div class="coat-row">' + (typing ? '<input id="coat-name" type="text" maxlength="14" autocomplete="family-name" placeholder="Last name" value="' + esc(state.coat) + '">' : '') +
       topicLink(j.cta.label, j.cta.topic, 'btn btn--gold') + '</div></div>' +
       '<ul class="perks">' + j.perks.map(function (p) { return '<li>' + I('check') + esc(p) + '</li>'; }).join('') + '</ul></div>' +
-      '<div class="join-coat" id="coat">' + A.coat(S, name) + '</div></div>' +
+      (photo ? gearFigure(j.gear) : '<div class="join-coat" id="coat">' + A.coat(S, name) + '</div>') + '</div>' +
       '<div class="join-mid"><figure class="film"><video controls playsinline preload="metadata" poster="' + esc(j.film.poster) + '"><source src="' + esc(j.film.src) + '" type="video/mp4"></video><figcaption>' + esc(j.film.caption) + '</figcaption></figure>' +
       '<div class="steps"><h3>How joining works</h3><ol>' + j.steps.map(function (s, i) { return '<li><b>' + (i + 1) + '</b><div><strong>' + esc(s.title) + '</strong><span>' + esc(s.text) + '</span></div></li>'; }).join('') + '</ol></div></div>' +
       '<ul class="roles"><li class="roles-title">There is a job for everyone</li>' + j.roles.map(function (r) { return '<li class="role">' + A.shield(S, r.label, r.color) + '<strong>' + esc(r.title) + '</strong><span>' + esc(r.text) + '</span></li>'; }).join('') + '</ul>' +
@@ -164,9 +208,21 @@
     var pic = p.photo ? '<img src="' + esc(p.photo) + '" alt="' + esc(p.rank + ' ' + p.name) + '" loading="lazy">' : A.portrait(p, S);
     return '<li><figure class="person' + (p.photo ? ' person--photo' : '') + '">' + pic + '<figcaption><span class="rank">' + esc(p.rank) + '</span><strong>' + esc(p.name) + '</strong>' + (p.note ? '<span class="note">' + esc(p.note) + '</span>' : '') + '</figcaption></figure></li>';
   }
+  function chief(c) {
+    if (!c) return '';
+    var both = c.portrait && c.uniform;
+    var uni = c.uniform ? '<figure class="chief-uniform"><img src="' + esc(c.uniform) + '" alt="' + esc(c.uniformAlt || '') + '" loading="lazy">' + (c.uniformCaption ? '<figcaption>' + esc(c.uniformCaption) + '</figcaption>' : '') + '</figure>' : '';
+    var pic = c.portrait ? '<figure class="chief-portrait"><img src="' + esc(c.portrait) + '" alt="' + esc(c.rank + ' ' + c.name) + '" loading="lazy"></figure>' : '';
+    return '<article class="chief' + (both ? ' chief--both' : '') + '" aria-labelledby="chief-h">' + (pic || uni) +
+      '<div class="chief-copy"><p class="rank">' + esc(c.rank) + '</p><h3 id="chief-h">' + esc(c.name) + '</h3>' +
+      '<blockquote class="chief-words">' + (c.message || []).map(function (m) { return '<p>' + esc(m) + '</p>'; }).join('') + '</blockquote>' +
+      (c.facts && c.facts.length ? '<dl class="chief-facts">' + c.facts.map(function (f) { return '<div><dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd></div>'; }).join('') + '</dl>' : '') + '</div>' +
+      (both ? uni : '') + '</article>';
+  }
   function officers() {
     var o = S.officers;
     return '<section class="band band--concrete" id="officers" aria-labelledby="off-h"><div class="wrap"><div class="head"><h2 id="off-h">' + esc(o.title) + '</h2><p class="lede">' + esc(o.text) + '</p></div>' +
+      chief(o.chief) +
       '<ul class="people">' + o.line.map(person).join('') + '</ul>' +
       (o.captains && o.captains.length ? '<h3 class="people-sub">' + esc(o.captainsTitle || 'Station captains') + '</h3><ul class="captains">' + o.captains.map(function (c) { return '<li><span>' + esc(c.station) + '</span><strong>' + esc(c.name) + '</strong></li>'; }).join('') + '</ul>' : '') +
       (o.admin && o.admin.length ? '<h3 class="people-sub">Company officers</h3><ul class="people people--admin">' + o.admin.map(person).join('') + '</ul>' : '') + '</div></section>';
@@ -294,6 +350,7 @@
     theme();
     app.innerHTML = header() + '<main id="main">' + hero() + partnerBanner() + tasks() + stations() + calls() + join() + apparatus() + officers() + safety() + events() + support() + partners() + gallery() + history() + contact() + '</main>' + footer() + mobileBar() + membersDialog();
     jsonLd();
+    fitGearName();
     state.first = false;
     var root = document.documentElement, on = motionOn();
     root.classList.toggle('fx-on', on);
@@ -322,7 +379,7 @@
   }
 
   document.addEventListener('click', function (e) {
-    var t = e.target.closest('[data-rig],[data-station],[data-ad],[data-ad-pause],[data-topic],[data-open],[data-close],[data-amount],[data-donate],[data-still],[data-preset],.nav-toggle,.tc-open,.pb-ad,.nav a');
+    var t = e.target.closest('[data-rig],[data-station],[data-ad],[data-ad-pause],[data-topic],[data-open],[data-close],[data-amount],[data-donate],[data-still],[data-gear-zoom],[data-preset],.nav-toggle,.tc-open,.pb-ad,.nav a');
     if (!t) return;
     if (t.matches('[data-rig]')) {
       state.rig = +t.getAttribute('data-rig');
@@ -346,6 +403,7 @@
       app.querySelector('[data-donate] span').textContent = 'Donate ' + money(state.amount);
     } else if (t.matches('[data-donate]')) { document.getElementById('donate-note').hidden = false; }
     else if (t.matches('[data-still]')) { setStill(!state.still); }
+    else if (t.matches('[data-gear-zoom]')) { setZoom(!state.zoom); }
     else if (t.matches('.nav-toggle')) {
       var nav = document.getElementById('nav'), open = !nav.classList.contains('is-open');
       nav.classList.toggle('is-open', open); t.setAttribute('aria-expanded', open);
@@ -372,7 +430,7 @@
     if (e.target.id === 'coat-name') {
       state.coat = e.target.value.trim();
       var box = document.getElementById('coat'), nm = state.coat || S.join.coatDefault;
-      if (!A.coatName(box, S, nm)) box.innerHTML = A.coat(S, nm);
+      if (!setGearName() && box && !A.coatName(box, S, nm)) box.innerHTML = A.coat(S, nm);
     } else if (e.target.id === 'tc-town' || e.target.id === 'tc-station') {
       var town = document.getElementById('tc-town').value.trim(), st = document.getElementById('tc-station').value.trim();
       RAW.town = town || 'Your Town'; RAW.station = st || '1';

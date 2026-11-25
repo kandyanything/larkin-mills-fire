@@ -205,6 +205,22 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .coat-fig .art-coat { width: 100%; filter: drop-shadow(0 26px 30px rgba(0, 0, 0, .45)); }
 .art-coat-fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; will-change: transform; }
 .coat-glint { opacity: 0; }   /* shown and moved by the motion block below */
+
+/* The gear photo. Typing a surname letters it onto the coat's name panel and moves the view in on it. */
+.join-top--photo { grid-template-columns: 5fr 7fr; }
+.join-top--photo h2 { font-size: clamp(2rem, 3.7vw, 3.25rem); }
+.gear { min-width: 0; }
+.gear-view { position: relative; overflow: hidden; aspect-ratio: var(--ar, 4 / 3); border-radius: 10px; background: #15171C; box-shadow: 0 30px 60px rgba(0, 0, 0, .45); }
+.gear-stage { position: relative; transform-origin: 0 0; transition: transform 1.1s var(--ease); }
+.gear-stage img { width: 100%; height: auto; }
+.gear-name { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; opacity: 0; transition: opacity .3s; }
+.gear-letters { font-family: Arial, "Helvetica Neue", Helvetica, "Liberation Sans", Roboto, sans-serif; font-weight: 700; letter-spacing: .7px; }
+.gear.has-name .gear-name { opacity: 1; }
+.gear.is-zoomed .gear-stage { transform: scale(var(--zs, 1)) translate(var(--zx, 0), var(--zy, 0)); }
+.gear-zoom { position: absolute; right: 12px; bottom: 12px; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 6px 12px; border: 1px solid rgba(255, 255, 255, .4); border-radius: 6px; background: rgba(11, 20, 40, .8); color: var(--white); font: inherit; font-size: .875rem; font-weight: 600; cursor: pointer; }
+.gear-zoom:hover { background: rgba(11, 20, 40, .95); }
+.gear-zoom .ic { width: 15px; height: 15px; }
+.gear figcaption { min-height: 1.5em; margin-top: 12px; color: var(--on-dusk-2); font-size: .9375rem; }
 .join-mid { display: grid; grid-template-columns: 7fr 5fr; gap: clamp(28px, 5vw, 72px); align-items: start; margin-top: clamp(56px, 8vw, 104px); }
 .film video { width: 100%; aspect-ratio: 16 / 9; border-radius: 10px; background: #000; }
 .film figcaption { margin-top: 10px; color: var(--on-dusk-2); font-size: .9375rem; }
@@ -272,6 +288,20 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .person .note { display: block; color: var(--ink-2); font-size: .9375rem; line-height: 1.35; }
 .people-sub { margin: clamp(40px, 6vw, 72px) 0 20px; font: 700 1.4rem/1.2 var(--text); }
 .people--admin { grid-template-columns: repeat(4, minmax(0, 190px)); }
+
+/* The chief: a white card above the rest of the command staff. */
+.chief { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(24px, 4vw, 56px); align-items: center; margin-bottom: clamp(40px, 6vw, 72px); padding: clamp(16px, 2.2vw, 28px); border-radius: 12px; background: var(--white); }
+.chief--both { grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) minmax(0, 3fr); }
+.chief figure img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 8px; }
+.chief-portrait img { object-position: 50% 18%; }
+.chief figcaption { margin-top: 10px; color: var(--ink-2); font-size: .9375rem; line-height: 1.4; }
+.chief .rank { color: var(--accent); font-weight: 700; font-size: 1.0625rem; }
+.chief h3 { margin-top: 2px; font: 400 clamp(1.8rem, 3vw, 2.6rem)/1.05 var(--display); letter-spacing: -.015em; }
+.chief-words { margin: 0; }
+.chief-words p { max-width: 58ch; margin-top: 16px; font-size: clamp(1.1rem, 1.4vw, 1.25rem); line-height: 1.5; }
+.chief-facts { display: flex; flex-wrap: wrap; gap: 12px 44px; margin: 26px 0 0; padding-top: 18px; border-top: 2px solid var(--ink); }
+.chief-facts dt { color: var(--ink-2); font-size: .9375rem; }
+.chief-facts dd { margin: 0; font-weight: 700; font-size: 1.1rem; }
 
 /* ---------- safety ---------- */
 .safety-grid { display: grid; grid-template-columns: 5fr 7fr; gap: clamp(32px, 6vw, 88px); align-items: start; }
@@ -437,6 +467,9 @@ dialog::backdrop { background: rgba(11, 20, 40, .7); }
   .nav .btn { margin-top: 14px; border-bottom: 0; border-radius: 6px; color: var(--white); padding: 12px 24px; }
   .nav-toggle { display: inline-flex; }
   .people { grid-template-columns: repeat(3, 1fr); }
+  .chief--both { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); }
+  .chief--both .chief-uniform { grid-column: 2; display: grid; grid-template-columns: 150px 1fr; gap: 16px; align-items: end; }
+  .chief--both .chief-uniform figcaption { margin: 0; }
   .captains { grid-template-columns: repeat(3, 1fr); }
   .roles { grid-template-columns: repeat(3, 1fr); }
   .foot-grid { grid-template-columns: 1fr 1fr; }
@@ -445,6 +478,15 @@ dialog::backdrop { background: rgba(11, 20, 40, .7); }
   .task-grid { grid-template-columns: 1fr 1fr; }
   .viewer, .calls-grid, .join-top, .join-mid, .rig-info, .safety-grid, .events-grid, .support-grid, .contact-grid { grid-template-columns: 1fr; }
   .join-coat { order: -1; }
+  .join-top--photo { gap: 0; }
+  .join-top--photo .join-copy { display: contents; }
+  .join-top--photo h2 { order: 1; }
+  .join-top--photo .lede { order: 2; }
+  .join-top--photo .gear { order: 3; margin-top: 26px; }
+  .join-top--photo .coat-try { order: 4; margin-top: 20px; }
+  .join-top--photo .perks { order: 5; }
+  .chief, .chief--both { grid-template-columns: 1fr; }
+  .chief--both .chief-uniform { grid-column: auto; }
   .coat-fig { width: min(92%, 380px); }
   .faq { grid-template-columns: 1fr; }
   .tiers { grid-template-columns: 1fr; }
@@ -576,6 +618,7 @@ dialog::backdrop { background: rgba(11, 20, 40, .7); }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   [data-still] { display: none; }
+  .gear-stage, .gear-name { transition: none; }
   .hero-img { animation: none; }
   .baydoor { animation: none; transform: translateY(-238px); }
   .spill { animation: none; opacity: 1; }

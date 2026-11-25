@@ -113,6 +113,18 @@ window.SITE = {
     text: "You don't need experience. We supply the gear, the training and the people to learn from. About four hours a week is enough to matter.",
     coatLabel: "See it. Type your last name:",
     coatDefault: "Your name",
+    /* The gear photo. Remove `gear` and the site draws a coat instead.
+       `name` places the typed surname on the photo's name panel and `zoom` is the part of the
+       photo the view moves in on. Both are measured in pixels on this one photo, so a different
+       photo needs new numbers, or leave them out to show the photo with no typing. */
+    gear: {
+      photo: "images/gear/turnout-gear.jpg", width: 1448, height: 1086,
+      alt: "Two sets of tan {town} turnout gear on stands in the apparatus bay, one seen from the front and one from the back. The back of the coat carries the department crest and a name panel.",
+      caption: "Coat, pants, boots and helmet. Every member is issued a set, fitted to them.",
+      namedCaption: "{name}, across the shoulders of a {town} coat.",
+      name: { blank: "images/gear/name-panel.png", box: [882, 138, 220, 64], arc: "M880 187.6 Q990 157.4 1100 187.6", size: 29, max: 184, color: "#D5AB6D" },
+      zoom: [670, 50, 640, 480]
+    },
     cta: { label: "Start your application", topic: "I want to volunteer" },
     perks: ["Free training and gear", "Length-of-service retirement award", "Dinner on drill nights"],
     steps: [
@@ -155,6 +167,22 @@ window.SITE = {
   officers: {
     title: "Command staff",
     text: "Elected by the members every December.",
+    /* The chief, set apart above the rest of the command staff.
+       `portrait` is a photo of the chief (4:5, like the other officers); leave it "" until there is one.
+       `uniform` is the dress uniform photo. With both, the portrait leads and the uniform sits beside
+       the message. Remove `chief` to leave the block out. */
+    chief: {
+      rank: "Fire Chief", name: "Michael Carter",
+      portrait: "",
+      uniform: "images/officers/chief-dress-uniform.jpg",
+      uniformAlt: "Navy dress uniform coat on a stand in the apparatus bay, with a gold chief's badge, the {town} shoulder patch, gold sleeve stripes and a name plate reading Chief M. Carter.",
+      uniformCaption: "The chief's dress uniform, worn for parades, promotions and funerals.",
+      message: [
+        "Every one of our 168 members started where you are now: a neighbor who wanted to help.",
+        "We answer about 1,300 calls a year from five stations, and not one of them comes with a bill. That only works because people here keep showing up. If you have four hours a week, come to a drill night and I will shake your hand myself."
+      ],
+      facts: [["Joined", "1994, at Station 1"], ["Elected chief", "2017"]]
+    },
     line: [
       { rank: "Deputy Chief", name: "Dana Whitfield", note: "Operations", photo: "images/officers/deputy-chief.jpg" },
       { rank: "Assistant Chief", name: "Javier Alvarez", note: "Volunteer services", photo: "images/officers/alvarez.jpg" },

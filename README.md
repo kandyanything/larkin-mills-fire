@@ -30,6 +30,8 @@ Photos live in `images/` and are named in `data/site.js`. Replace a file, or poi
 | Stations | `stations.items[].photo` | 1600 x 900 |
 | Apparatus | `apparatus.rigs[].photo` | 1600 x 900 |
 | Officers | `officers.line[].photo` | 800 x 1000, head and shoulders |
+| Chief | `officers.chief.portrait`, `officers.chief.uniform` | 800 x 1000 each. The portrait leads; the dress uniform sits beside the chief's message. Either can be left out. |
+| Turnout gear | `join.gear.photo` | 1448 x 1086 here; any 4:3 photo works. See "The gear photo" below. |
 | Gallery | `gallery.items[]` | 1600 x 1200. Hidden while the list is empty. |
 | Film | `join.film.src`, `join.film.poster` | 1280 x 720 MP4 and a JPG poster |
 
@@ -46,9 +48,17 @@ Leave any `photo` empty and the site draws that picture in code (`js/art.js`), l
 
 Set `templateControls: true` to show a panel that renames the town and repaints the drawn rigs live. It is a sales tool for the illustrated version; keep it off when photos are in place.
 
-### The turnout coat
+### The gear photo
 
-The coat in the Join section is always drawn, never a photo, so it can carry each department's lettering and the surname a visitor types. It takes the town name, `coatLine` (the second line of lettering) and the department emblem from the data file. Add `coatShell: "#2B2B2E"` for a black outer shell; leave it out for the usual tan.
+The Join section shows `join.gear.photo`. When a visitor types a surname, the site letters it onto the coat's name panel and moves the view in on it. That part is fitted to one photo, by measuring in pixels:
+
+- `gear.name.blank` is a small cut-out of the name panel with its lettering painted out, and `box` is where it sits on the photo.
+- `gear.name.arc` is the curve the lettering follows, `size` its height, `max` the widest it may run and `color` the thread colour.
+- `gear.zoom` is the part of the photo the view moves in on: left, top, width, height.
+
+A new photo needs a new cut-out and new numbers. To skip that, delete `name` and `zoom`: the photo shows as it is and the typing box goes away.
+
+Delete `gear` altogether and the site draws a turnout coat instead, lettered with the town name, `coatLine`, the department emblem and the typed surname. Add `coatShell: "#2B2B2E"` for a black shell.
 
 ## Motion
 
