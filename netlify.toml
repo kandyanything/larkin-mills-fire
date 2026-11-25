@@ -1,0 +1,25 @@
+# Static site: no build step. Netlify publishes the repo as it is.
+[build]
+  publish = "."
+
+# Photos, film and fonts change rarely, so let browsers keep them.
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/media/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
+
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Sample site: keep it out of search results. Delete this block for a real department.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
