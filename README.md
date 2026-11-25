@@ -70,11 +70,12 @@ Also remove the `sampleBanner` line and the sample text in `footer.sample`, and 
 
 ## Deploy
 
-- **Netlify**, connected to this repo's `main` branch. Every push to `main` publishes.
-  Build command: *(none)*. Publish directory: `.`
-- `netlify.toml` sets the publish folder and caching. `.netlifyignore` keeps the README and build script out of the deploy.
-- This sample is hidden from search engines three ways: the `robots` meta tag in `index.html`, `robots.txt`, and the `X-Robots-Tag` block in `netlify.toml`. Remove all three for a real department.
-- Link previews: once the site has its address, put it in front of the `og:image` path in `index.html`.
+- **Cloudflare Worker** named `larkin-mills-fire`, serving this folder as static files. There is no build step.
+- Publish from this folder with `npx wrangler deploy`, or connect the repo to the Worker in the Cloudflare dashboard so every push to `main` publishes.
+- Preview address: `https://larkin-mills-fire.kandyanything.workers.dev`. Add a custom domain in the Worker's settings when there is one.
+- `wrangler.toml` holds the settings, `_headers` sets caching, and `.assetsignore` keeps the README and build script off the site.
+- This sample is hidden from search engines three ways: the `robots` meta tag in `index.html`, `robots.txt`, and the `X-Robots-Tag` rule in `_headers`. Remove all three for a real department.
+- Link previews use the full address in the `og:image` tag in `index.html`. Change it if the site moves to another address.
 
 ## Files
 
@@ -88,6 +89,6 @@ js/site.js        builds the page from the data and handles clicks
 css/site.css      design
 css/fonts.css     self-hosted fonts (Archivo Black, Bitter, Source Sans 3; SIL Open Font License)
 404.html          shown for a wrong address
-netlify.toml      hosting settings
+wrangler.toml     Cloudflare settings (also _headers and .assetsignore)
 build.py          optional: packs everything into one HTML file for emailing a preview
 ```

@@ -1,0 +1,13 @@
+# Photos, film and fonts change rarely, so let browsers keep them.
+/images/*
+  Cache-Control: public, max-age=604800
+
+/media/*
+  Cache-Control: public, max-age=604800
+
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Sample site: keep it out of search results. Delete this rule for a real department.
+/*
+  X-Robots-Tag: noindex, nofollow

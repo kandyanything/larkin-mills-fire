@@ -1,0 +1,9 @@
+# Cloudflare Worker serving this folder as a static site. No build step.
+# Publish with:  npx wrangler deploy
+name = "larkin-mills-fire"
+compatibility_date = "2026-11-24"
+workers_dev = true          # preview address: https://larkin-mills-fire.<your-subdomain>.workers.dev
+
+[assets]
+directory = "./"
+not_found_handling = "404-page"

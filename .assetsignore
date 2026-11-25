@@ -1,0 +1,12 @@
+# Files in the repo that are not part of the website.
+.git
+.gitignore
+.assetsignore
+.wrangler
+node_modules
+wrangler.toml
+README.md
+build.py
+dist
+work
+.gitkeep
