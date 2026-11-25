@@ -31,6 +31,11 @@ window.SITE = {
      Off here because the photos are lettered for one town. */
   templateControls: false,
 
+  /* Moving background behind the dark sections: gold embers, platinum glints and a sheen
+     on the gold. Visitors can pause it, and it stays still on devices set to reduce motion.
+     Use `motion: false` to switch it off, or raise/lower `density` (1 is the default). */
+  motion: { density: 1 },
+
   contact: {
     address: "47 Foundry Road",
     cityLine: "{town}, NJ",

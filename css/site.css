@@ -201,7 +201,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .perks { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-top: 24px; color: var(--on-dusk-2); }
 .perks li { display: flex; align-items: center; gap: 8px; }
 .perks .ic { width: 18px; height: 18px; color: var(--gold); }
-.join-coat .art-coat { width: min(100%, 400px); margin-inline: auto; filter: drop-shadow(0 26px 30px rgba(0, 0, 0, .4)); }
+.coat-fig { position: relative; width: min(100%, 500px); margin-inline: auto; }
+.coat-fig .art-coat { width: 100%; filter: drop-shadow(0 26px 30px rgba(0, 0, 0, .45)); }
+.art-coat-fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; will-change: transform; }
+.coat-glint { opacity: 0; }   /* shown and moved by the motion block below */
 .join-mid { display: grid; grid-template-columns: 7fr 5fr; gap: clamp(28px, 5vw, 72px); align-items: start; margin-top: clamp(56px, 8vw, 104px); }
 .film video { width: 100%; aspect-ratio: 16 / 9; border-radius: 10px; background: #000; }
 .film figcaption { margin-top: 10px; color: var(--on-dusk-2); font-size: .9375rem; }
@@ -442,7 +445,7 @@ dialog::backdrop { background: rgba(11, 20, 40, .7); }
   .task-grid { grid-template-columns: 1fr 1fr; }
   .viewer, .calls-grid, .join-top, .join-mid, .rig-info, .safety-grid, .events-grid, .support-grid, .contact-grid { grid-template-columns: 1fr; }
   .join-coat { order: -1; }
-  .join-coat .art-coat { width: min(70%, 300px); }
+  .coat-fig { width: min(92%, 380px); }
   .faq { grid-template-columns: 1fr; }
   .tiers { grid-template-columns: 1fr; }
   .wall, .timeline { grid-template-columns: 1fr 1fr; }
@@ -476,6 +479,7 @@ dialog::backdrop { background: rgba(11, 20, 40, .7); }
   .hero-scene { flex: none; height: 64vw; min-height: 0; }
   .hero-cta .btn { flex: 1 1 100%; }
   .hero-pause { bottom: 8px; }
+  .hero--photo .hero-pause { top: 10px; right: 10px; bottom: auto; }
   .task-grid, .wall, .timeline, .specs, .facts, .form { grid-template-columns: 1fr; }
   .people { grid-template-columns: 1fr 1fr; }
   .roles { grid-template-columns: 1fr 1fr; }
@@ -495,8 +499,83 @@ dialog::backdrop { background: rgba(11, 20, 40, .7); }
   .mbar .ic { width: 20px; height: 20px; color: var(--gold); }
   body { padding-bottom: 64px; }
 }
+/* ---------- background motion: embers, glints and metal sheen ----------
+   The layers come first and are always there. The movement follows, and only
+   runs when js/fx.js has switched it on (html.fx-on), "Pause motion" has not
+   been pressed (html.is-still) and the device does not ask for less motion. */
+.band--dusk, .band--accent, .site-footer { position: relative; isolation: isolate; overflow: hidden; overflow: clip; }
+.band--dusk > .wrap, .band--accent > .wrap, .site-footer > .wrap { position: relative; z-index: 1; }
+.site-footer .chevrons { z-index: 1; }
+/* The canvas is one screen tall and rides down its section as the page scrolls,
+   so a long section costs no more to draw than a short one. */
+.fx-layer { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.hero .fx-layer { z-index: 1; }
+.fx-sparks { position: sticky; top: 0; display: block; width: 100%; height: 100vh; max-height: 100%; }
+
+/* firelight low on one side, cool platinum light high on the other */
+.band--dusk::before, .band--accent::before, .site-footer::before { content: ""; position: absolute; inset: -25% -15%; z-index: -1; pointer-events: none; }
+.band--dusk::before { background: radial-gradient(36% 44% at 16% 80%, rgba(233, 185, 73, .17), transparent 72%), radial-gradient(32% 40% at 86% 16%, rgba(214, 220, 230, .13), transparent 72%); }
+.band--accent::before { background: radial-gradient(38% 46% at 84% 78%, rgba(233, 185, 73, .24), transparent 72%), radial-gradient(30% 40% at 12% 14%, rgba(255, 255, 255, .1), transparent 72%); }
+.site-footer::before { background: radial-gradient(34% 60% at 80% 100%, rgba(233, 185, 73, .12), transparent 72%), radial-gradient(30% 50% at 8% 0%, rgba(214, 220, 230, .08), transparent 72%); }
+
+/* gold leaf along the foot of the hero, with a platinum glint in it */
+.hero { border-bottom: 0; }
+.hero::after { content: ""; position: absolute; inset: auto 0 0; height: 6px; z-index: 3; background: linear-gradient(90deg, #B98A2A 0%, #E9B949 10%, #FFF4CC 20%, #E9B949 30%, #B98A2A 50%, #E9B949 60%, #F4F6F8 70%, #E9B949 80%, #B98A2A 100%) 0 0 / 200% 100% repeat-x; }
+
+/* gold leaf on the history years, platinum on the headings of the navy sections */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .timeline b { width: fit-content; background: linear-gradient(100deg, #C9952E 0%, #E9B949 20%, #FFF4CC 36%, #E9B949 52%, #C9952E 70%, #F3D27A 86%, #C9952E 100%) 0 50% / 260% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .band--dusk h2 { background: linear-gradient(100deg, #EEF1F4 0%, #EEF1F4 44%, #B7BEC9 47.5%, #fff 50%, #fff 51%, #D5DAE1 53.5%, #EEF1F4 57%, #EEF1F4 100%) 0 50% / 300% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+}
+@media (forced-colors: active) { .timeline b, .band--dusk h2 { background: none; -webkit-text-fill-color: currentColor; } }
+
+/* a light that crosses the gold buttons and the partner banner */
+.btn--gold, .pb-ad, .tier:first-child { position: relative; overflow: hidden; }
+.btn--gold::after, .pb-ad::after, .tier:first-child::after { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 36%, rgba(255, 255, 255, .6) 48%, rgba(255, 255, 255, .14) 55%, transparent 64%); transform: translateX(-130%); pointer-events: none; }
+.pb-ad::after, .tier:first-child::after { background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, .2) 49%, rgba(255, 255, 255, .05) 54%, transparent 62%); }
+
+/* a band of platinum light that crosses the grey sections */
+.band--concrete { position: relative; isolation: isolate; overflow: hidden; overflow: clip; }
+.band--concrete::before { content: ""; position: absolute; inset: 0 -60%; z-index: -1; pointer-events: none; background: linear-gradient(112deg, transparent 43%, rgba(255, 255, 255, .68) 50%, transparent 57%); transform: translateX(-62%); opacity: 0; }
+
+.foot-still { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; margin-top: 8px; padding: 6px 12px; border: 1px solid rgba(255, 255, 255, .35); border-radius: 6px; background: transparent; color: var(--white); font: inherit; font-weight: 600; cursor: pointer; }
+.foot-still:hover { background: rgba(255, 255, 255, .08); }
+.foot-still .ic { width: 15px; height: 15px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .fx-on .band--dusk::before, .fx-on .band--accent::before, .fx-on .site-footer::before { animation: fxDrift 24s ease-in-out infinite alternate; will-change: transform; }
+  .fx-on .band--accent::before { animation-duration: 30s; animation-direction: alternate-reverse; }
+  .fx-on .hero::after { animation: fxLeaf 16s linear infinite; }
+  .fx-on .timeline b { animation: fxFoil 6.5s ease-in-out calc(var(--i, 0) * -1.1s) infinite alternate; }
+  .fx-on .band--dusk h2 { animation: fxChrome 10s var(--ease) 1.5s infinite; }
+  .fx-on .btn--gold::after { animation: fxShine 8s var(--ease) 2.5s infinite; }
+  .fx-on .pb-ad.is-active::after { animation: fxShine 6.5s var(--ease) .9s infinite; }
+  .fx-on .tier:first-child::after { animation: fxShine 9s var(--ease) 4s infinite; }
+  .fx-on .band--concrete::before { opacity: 1; animation: fxSweep 16s ease-in-out 1s infinite; will-change: transform; }
+  .fx-on .wall-logo { animation: fxGleam 10s ease-in-out calc(var(--i, 0) * .5s) infinite; }
+  .fx-on .coat-glint { opacity: 1; animation: coatGlint 6.5s cubic-bezier(.4, 0, .2, 1) 1.5s infinite both; }
+  .is-still .band--dusk::before, .is-still .band--accent::before, .is-still .site-footer::before, .is-still .hero::after, .is-still .timeline b { animation-play-state: paused; }
+  .is-still .band--dusk h2, .is-still .btn--gold::after, .is-still .pb-ad.is-active::after, .is-still .tier:first-child::after, .is-still .wall-logo { animation: none; }
+  .is-still .band--concrete::before { animation: none; opacity: 0; }
+  .is-still .coat-glint { animation: none; opacity: 0; }
+}
+@media (prefers-reduced-motion: no-preference) and (min-width: 861px) {
+  .fx-on .hero-img { animation: heroIn 7s var(--ease) both, heroDrift 32s ease-in-out 7s infinite alternate; }
+  .is-still .hero-img { animation-play-state: paused; }
+}
+@keyframes fxDrift { from { transform: translate3d(-4%, 3%, 0) scale(1); } to { transform: translate3d(5%, -4%, 0) scale(1.14); } }
+@keyframes fxLeaf { to { background-position: -200% 0; } }
+@keyframes fxFoil { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+@keyframes fxChrome { 0%, 10% { background-position: 0% 50%; } 55%, 100% { background-position: 100% 50%; } }
+@keyframes fxSweep { 0% { transform: translateX(-62%); } 55%, 100% { transform: translateX(62%); } }
+@keyframes fxShine { 0% { transform: translateX(-130%); } 20%, 100% { transform: translateX(130%); } }
+@keyframes fxGleam { 0%, 86%, 100% { filter: none; transform: none; } 93% { filter: brightness(1.2) saturate(1.1); transform: scale(1.07); } }
+@keyframes coatGlint { 0%, 58% { transform: translateX(0); } 100% { transform: translateX(860px); } }
+@keyframes heroDrift { from { transform: scale(1); } to { transform: scale(1.07) translate(-1.2%, -.8%); } }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  [data-still] { display: none; }
   .hero-img { animation: none; }
   .baydoor { animation: none; transform: translateY(-238px); }
   .spill { animation: none; opacity: 1; }

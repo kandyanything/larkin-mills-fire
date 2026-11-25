@@ -6,7 +6,26 @@
   var app = document.getElementById('app');
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var state = { rig: 0, station: 0, ad: 0, adPaused: reduced, first: true, coat: '', amount: null, still: false };
-  var S;
+  var S, FX = window.FireFX;
+  try { state.still = window.localStorage.getItem('fx-still') === '1'; } catch (e) { /* storage can be blocked: start with motion on */ }
+
+  /* ---------- background motion: embers and glints behind the dark sections ---------- */
+  function motionOn() { return !!FX && RAW.motion !== false; }
+  function sparks(kind) { return motionOn() ? '<div class="fx-layer" aria-hidden="true"><canvas class="fx-sparks" data-fx="' + kind + '"></canvas></div>' : ''; }
+  function stillButton(cls) {
+    return '<button class="' + cls + '" type="button" data-still aria-pressed="' + state.still + '">' + I(state.still ? 'play' : 'pause') + '<span>' + (state.still ? 'Play motion' : 'Pause motion') + '</span></button>';
+  }
+  function setStill(v) {
+    state.still = !!v;
+    document.documentElement.classList.toggle('is-still', state.still);
+    var hero = app.querySelector('.hero'); if (hero) hero.classList.toggle('is-still', state.still);
+    app.querySelectorAll('[data-still]').forEach(function (b) {
+      b.setAttribute('aria-pressed', state.still);
+      b.innerHTML = I(state.still ? 'play' : 'pause') + '<span>' + (state.still ? 'Play motion' : 'Pause motion') + '</span>';
+    });
+    if (FX) FX.pause(state.still);
+    try { window.localStorage.setItem('fx-still', state.still ? '1' : '0'); } catch (e) { /* not saved; the button still works for this visit */ }
+  }
 
   /* ---------- data: fill {tokens}, derive names ---------- */
   function resolve(raw) {
@@ -48,14 +67,13 @@
 
   function hero() {
     var h = S.hero;
-    if (h.photo) return '<section class="hero hero--photo" id="top" aria-labelledby="hero-h"><img class="hero-img" src="' + esc(h.photo) + '" alt="' + esc(h.photoAlt || '') + '"><div class="hero-shade"></div>' +
+    if (h.photo) return '<section class="hero hero--photo" id="top" aria-labelledby="hero-h"><img class="hero-img" src="' + esc(h.photo) + '" alt="' + esc(h.photoAlt || '') + '"><div class="hero-shade"></div>' + sparks('hero') +
       '<div class="hero-copy wrap"><h1 id="hero-h">' + esc(h.title) + '</h1><p>' + esc(h.text) + '</p>' +
-      '<div class="hero-cta"><a class="btn btn--gold" href="' + h.primary.href + '">' + esc(h.primary.label) + '</a><a class="btn btn--ghost" href="' + h.secondary.href + '">' + esc(h.secondary.label) + '</a></div></div></section>';
+      '<div class="hero-cta"><a class="btn btn--gold" href="' + h.primary.href + '">' + esc(h.primary.label) + '</a><a class="btn btn--ghost" href="' + h.secondary.href + '">' + esc(h.secondary.label) + '</a></div></div>' + (motionOn() ? stillButton('hero-pause') : '') + '</section>';
     return '<section class="hero' + (state.first ? '' : ' no-intro') + (state.still ? ' is-still' : '') + '" id="top" aria-labelledby="hero-h">' +
       '<div class="hero-copy wrap"><h1 id="hero-h">' + esc(h.title) + '</h1><p>' + esc(h.text) + '</p>' +
       '<div class="hero-cta"><a class="btn btn--gold" href="' + h.primary.href + '">' + esc(h.primary.label) + '</a><a class="btn btn--ghost" href="' + h.secondary.href + '">' + esc(h.secondary.label) + '</a></div></div>' +
-      '<div class="hero-scene">' + A.station(S) + '</div>' +
-      '<button class="hero-pause" type="button" data-still aria-pressed="' + state.still + '">' + I(state.still ? 'play' : 'pause') + '<span>' + (state.still ? 'Play lights' : 'Pause lights') + '</span></button></section>';
+      '<div class="hero-scene">' + A.station(S) + '</div>' + sparks('hero') + stillButton('hero-pause') + '</section>';
   }
 
   function partnerBanner() {
@@ -112,7 +130,7 @@
 
   function join() {
     var j = S.join, name = state.coat || j.coatDefault;
-    return '<section class="band band--dusk" id="join" aria-labelledby="join-h"><div class="wrap">' +
+    return '<section class="band band--dusk" id="join" aria-labelledby="join-h">' + sparks('dusk') + '<div class="wrap">' +
       '<div class="join-top"><div><h2 id="join-h">' + esc(j.title) + '</h2><p class="lede">' + esc(j.text) + '</p>' +
       '<div class="coat-try"><label for="coat-name">' + esc(j.coatLabel) + '</label><div class="coat-row"><input id="coat-name" type="text" maxlength="14" autocomplete="family-name" placeholder="Last name" value="' + esc(state.coat) + '">' +
       topicLink(j.cta.label, j.cta.topic, 'btn btn--gold') + '</div></div>' +
@@ -170,7 +188,7 @@
 
   function support() {
     var s = S.support, f = s.fund, pct = Math.round(f.raised / f.goal * 100);
-    return '<section class="band band--accent" id="support" aria-labelledby="sup-h"><div class="wrap support-grid"><div><h2 id="sup-h">' + esc(s.title) + '</h2><p class="lede">' + esc(s.text) + '</p>' +
+    return '<section class="band band--accent" id="support" aria-labelledby="sup-h">' + sparks('accent') + '<div class="wrap support-grid"><div><h2 id="sup-h">' + esc(s.title) + '</h2><p class="lede">' + esc(s.text) + '</p>' +
       '<div class="card fund"><h3>' + esc(f.name) + '</h3><div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '" aria-label="Fund drive progress"><i style="width:' + pct + '%"></i></div>' +
       '<div class="fund-nums"><span><b>' + money(f.raised) + '</b> raised</span><span>of ' + money(f.goal) + '</span></div><p class="fund-note">' + esc(f.note) + '</p>' +
       '<div class="amounts" role="group" aria-label="Gift amount">' + s.amounts.map(function (a) { return '<button class="amount" type="button" data-amount="' + a + '" aria-pressed="' + (state.amount === a) + '">' + money(a) + '</button>'; }).join('') + '</div>' +
@@ -184,7 +202,7 @@
     var p = S.partners;
     return '<section class="band" id="partners" aria-labelledby="par-h"><div class="wrap"><div class="head"><h2 id="par-h">' + esc(p.title) + '</h2><p class="lede">' + esc(p.text) + '</p></div>' +
       '<ul class="tiers">' + p.tiers.map(function (t) { return '<li class="tier"><h3>' + esc(t.name) + '</h3><p class="price">' + esc(t.price) + '</p><ul>' + t.items.map(function (x) { return '<li>' + I('check') + '<span>' + esc(x) + '</span></li>'; }).join('') + '</ul></li>'; }).join('') + '</ul>' +
-      '<h3 class="wall-title">This year\'s partners</h3><ul class="wall">' + p.wall.map(function (w) { return '<li' + (w.logo ? ' class="has-logo"><img class="wall-logo" src="' + esc(w.logo) + '" alt="" width="56" height="56" loading="lazy"' : '') + '><div><b>' + esc(w.name) + '</b><span>' + esc(w.tier) + ' partner</span></div></li>'; }).join('') + '</ul>' +
+      '<h3 class="wall-title">This year\'s partners</h3><ul class="wall">' + p.wall.map(function (w, i) { return '<li style="--i:' + i + '"' + (w.logo ? ' class="has-logo"><img class="wall-logo" src="' + esc(w.logo) + '" alt="" width="56" height="56" loading="lazy"' : '') + '><div><b>' + esc(w.name) + '</b><span>' + esc(w.tier) + ' partner</span></div></li>'; }).join('') + '</ul>' +
       '<div class="partners-foot"><p>' + esc(p.disclosure) + '</p>' + topicLink(p.cta.label, p.cta.topic, 'btn') + '</div></div></section>';
   }
 
@@ -208,8 +226,8 @@
 
   function history() {
     var h = S.history;
-    return '<section class="band band--dusk" id="history" aria-labelledby="his-h"><div class="wrap"><div class="head"><h2 id="his-h">' + esc(h.title) + '</h2></div><ol class="timeline">' +
-      h.items.map(function (x) { return '<li><b>' + esc(x.year) + '</b><strong>' + esc(x.title) + '</strong><p>' + esc(x.text) + '</p></li>'; }).join('') + '</ol></div></section>';
+    return '<section class="band band--dusk" id="history" aria-labelledby="his-h">' + sparks('dusk') + '<div class="wrap"><div class="head"><h2 id="his-h">' + esc(h.title) + '</h2></div><ol class="timeline">' +
+      h.items.map(function (x, i) { return '<li style="--i:' + i + '"><b>' + esc(x.year) + '</b><strong>' + esc(x.title) + '</strong><p>' + esc(x.text) + '</p></li>'; }).join('') + '</ol></div></section>';
   }
 
   function contact() {
@@ -232,12 +250,12 @@
 
   function footer() {
     var c = S.contact;
-    return '<footer class="site-footer"><div class="wrap"><div class="foot-grid">' +
+    return '<footer class="site-footer">' + sparks('night') + '<div class="wrap"><div class="foot-grid">' +
       '<div class="foot-brand">' + A.emblem(S) + '<div><b>' + esc(S.company) + '</b><p>' + esc(c.address) + ', ' + esc(c.cityLine) + '<br>' + esc(c.nonEmergency) + '</p></div></div>' +
       '<div class="foot-col"><h3>The company</h3><ul><li><a href="#join">Join</a></li>' + (S.stations && S.stations.items && S.stations.items.length ? '<li><a href="#stations">Stations</a></li>' : '') + '<li><a href="#apparatus">Apparatus</a></li><li><a href="#officers">Officers</a></li><li><a href="#history">History</a></li></ul></div>' +
       '<div class="foot-col"><h3>For residents</h3><ul><li><a href="#safety">Fire safety</a></li><li><a href="#events">Events</a></li><li><a href="#support">Donate</a></li><li><a href="#partners">Partners</a></li></ul></div>' +
       '<div class="foot-col"><h3>Follow and sign in</h3><ul>' + c.social.map(function (s) { return '<li><a href="' + esc(s.url) + '">' + esc(s.label) + '</a></li>'; }).join('') + '<li><button type="button" data-open="members">Members\' area</button></li></ul></div></div>' +
-      '<div class="foot-legal"><p class="foot-911">In an emergency, call 911. This website is not monitored.</p><p>&copy; ' + new Date().getFullYear() + ' ' + esc(S.company) + '. A 501(c)(3) nonprofit.' + (S.footer.builtBy ? ' ' + esc(S.footer.builtBy) : '') + '</p><p>' + esc(S.footer.sample) + '</p></div></div><div class="chevrons" aria-hidden="true"></div></footer>';
+      '<div class="foot-legal"><p class="foot-911">In an emergency, call 911. This website is not monitored.</p><p>&copy; ' + new Date().getFullYear() + ' ' + esc(S.company) + '. A 501(c)(3) nonprofit.' + (S.footer.builtBy ? ' ' + esc(S.footer.builtBy) : '') + '</p><p>' + esc(S.footer.sample) + '</p>' + (motionOn() ? '<p>' + stillButton('foot-still') + '</p>' : '') + '</div></div><div class="chevrons" aria-hidden="true"></div></footer>';
   }
 
   function membersDialog() {
@@ -277,6 +295,10 @@
     app.innerHTML = header() + '<main id="main">' + hero() + partnerBanner() + tasks() + stations() + calls() + join() + apparatus() + officers() + safety() + events() + support() + partners() + gallery() + history() + contact() + '</main>' + footer() + mobileBar() + membersDialog();
     jsonLd();
     state.first = false;
+    var root = document.documentElement, on = motionOn();
+    root.classList.toggle('fx-on', on);
+    root.classList.toggle('is-still', on && state.still);
+    if (FX) { if (on) { FX.pause(state.still); FX.mount(app, { density: RAW.motion && RAW.motion.density }); } else FX.unmount(); }
   }
   function rerender() {
     var y = window.scrollY, active = document.activeElement && document.activeElement.id;
@@ -323,11 +345,8 @@
       app.querySelectorAll('.amount').forEach(function (b) { b.setAttribute('aria-pressed', +b.getAttribute('data-amount') === state.amount); });
       app.querySelector('[data-donate] span').textContent = 'Donate ' + money(state.amount);
     } else if (t.matches('[data-donate]')) { document.getElementById('donate-note').hidden = false; }
-    else if (t.matches('[data-still]')) {
-      state.still = !state.still;
-      app.querySelector('.hero').classList.toggle('is-still', state.still);
-      t.setAttribute('aria-pressed', state.still); t.innerHTML = I(state.still ? 'play' : 'pause') + '<span>' + (state.still ? 'Play lights' : 'Pause lights') + '</span>';
-    } else if (t.matches('.nav-toggle')) {
+    else if (t.matches('[data-still]')) { setStill(!state.still); }
+    else if (t.matches('.nav-toggle')) {
       var nav = document.getElementById('nav'), open = !nav.classList.contains('is-open');
       nav.classList.toggle('is-open', open); t.setAttribute('aria-expanded', open);
     } else if (t.matches('.nav a')) {
@@ -352,7 +371,8 @@
   document.addEventListener('input', function (e) {
     if (e.target.id === 'coat-name') {
       state.coat = e.target.value.trim();
-      document.getElementById('coat').innerHTML = A.coat(S, state.coat || S.join.coatDefault);
+      var box = document.getElementById('coat'), nm = state.coat || S.join.coatDefault;
+      if (!A.coatName(box, S, nm)) box.innerHTML = A.coat(S, nm);
     } else if (e.target.id === 'tc-town' || e.target.id === 'tc-station') {
       var town = document.getElementById('tc-town').value.trim(), st = document.getElementById('tc-station').value.trim();
       RAW.town = town || 'Your Town'; RAW.station = st || '1';

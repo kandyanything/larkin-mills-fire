@@ -46,6 +46,19 @@ Leave any `photo` empty and the site draws that picture in code (`js/art.js`), l
 
 Set `templateControls: true` to show a panel that renames the town and repaints the drawn rigs live. It is a sales tool for the illustrated version; keep it off when photos are in place.
 
+### The turnout coat
+
+The coat in the Join section is always drawn, never a photo, so it can carry each department's lettering and the surname a visitor types. It takes the town name, `coatLine` (the second line of lettering) and the department emblem from the data file. Add `coatShell: "#2B2B2E"` for a black outer shell; leave it out for the usual tan.
+
+## Motion
+
+The dark sections have a moving background: gold embers that drift upward, platinum glints, and a slow light that crosses the gold buttons, the history years, the grey sections and the reflective trim on the coat. It is drawn by `js/fx.js` and the "background motion" block in `css/site.css`.
+
+- `motion: { density: 1 }` in `data/site.js` sets how many embers there are. Try `0.6` for quieter, `1.5` for busier.
+- `motion: false` switches all of it off.
+- Visitors get a "Pause motion" button in the hero and the footer, and the choice is remembered on their device.
+- Nothing moves for visitors whose device is set to reduce motion.
+
 ## Sponsors
 
 - `partners.top`: banner ads under the hero. Up to three rotate every `rotateSeconds`, with pause and dot controls. Set `active: false` to pause one.
@@ -85,6 +98,7 @@ data/site.js      all content and settings (edit this)
 images/           photos: stations, rigs, officers, gallery
 media/            the 20-second film and its poster
 js/art.js         drawings: emblem, coat, helmet shields, map, icons, and the fallback rigs, firehouse and portraits
+js/fx.js          moving background: embers and glints behind the dark sections
 js/site.js        builds the page from the data and handles clicks
 css/site.css      design
 css/fonts.css     self-hosted fonts (Archivo Black, Bitter, Source Sans 3; SIL Open Font License)

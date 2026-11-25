@@ -394,22 +394,166 @@
   }
 
   /* ------------------------------------------------- turnout coat (back) */
+  /* A shaded drawing, not a photo, so the town name, the crest and the typed
+     surname stay live. cfg.coatShell sets the outer-shell colour. */
+  function mix(a, b, t) {
+    var x = parseInt(String(a).slice(1), 16), y = parseInt(String(b).slice(1), 16), o = '#';
+    [16, 8, 0].forEach(function (s) { var v = Math.round(((x >> s) & 255) * (1 - t) + ((y >> s) & 255) * t); o += (v < 16 ? '0' : '') + v.toString(16); });
+    return o;
+  }
+  var COAT_NAME_FIT = 150;
+  function coatLabel(cfg, name) { return 'Turnout coat with the ' + cfg.company + ' crest on the back and ' + name + ' on the tail'; }
+
   function coat(cfg, name) {
-    var L = liv(cfg), p = id('ct'), tan = '#C8A45A', tan2 = '#A8853F', lime = '#D9E14B', silver = '#E8EAEC';
-    var trim = function (y, x1, x2) { return '<rect x="' + x1 + '" y="' + y + '" width="' + (x2 - x1) + '" height="20" fill="' + lime + '"/><rect x="' + x1 + '" y="' + (y + 6.5) + '" width="' + (x2 - x1) + '" height="7" fill="' + silver + '"/>'; };
-    var s = '<svg class="art art-coat" viewBox="0 0 420 470" role="img" aria-label="Turnout coat lettered ' + esc(cfg.town) + ', with ' + esc(name) + ' on the tail">';
-    s += '<defs><clipPath id="' + p + 'b"><path d="M124 62 L296 62 L318 96 L326 404 L94 404 L102 96 Z"/></clipPath><clipPath id="' + p + 'l"><path d="M124 62 L102 96 L98 150 L64 330 L22 322 L46 150 Q54 84 124 62 Z"/></clipPath><clipPath id="' + p + 'r"><path d="M296 62 L318 96 L322 150 L356 330 L398 322 L374 150 Q366 84 296 62 Z"/></clipPath></defs>';
-    s += '<path d="M60 22 H360" stroke="#5d626b" stroke-width="6" stroke-linecap="round"/><path d="M210 22 V44" stroke="#5d626b" stroke-width="5"/><rect x="186" y="6" width="48" height="18" rx="3" fill="#0F1B33"/>' + letter(String(cfg.station), 210, 19.5, { size: 12, fill: L.sign, family: BLOCK, shade: false, ls: 0 });
-    s += '<path d="M124 62 L102 96 L98 150 L64 330 L22 322 L46 150 Q54 84 124 62 Z" fill="' + tan2 + '"/><g clip-path="url(#' + p + 'l)"><g transform="rotate(8 44 290)">' + trim(284, 0, 110) + '</g></g>';
-    s += '<path d="M296 62 L318 96 L322 150 L356 330 L398 322 L374 150 Q366 84 296 62 Z" fill="' + tan2 + '"/><g clip-path="url(#' + p + 'r)"><g transform="rotate(-8 376 290)">' + trim(284, 310, 420) + '</g></g>';
-    s += '<path d="M124 62 L296 62 L318 96 L326 404 L94 404 L102 96 Z" fill="' + tan + '"/>';
-    s += '<g clip-path="url(#' + p + 'b)">' + trim(176, 80, 340) + trim(372, 80, 340) + '<path d="M210 62 V404" stroke="' + tan2 + '" stroke-width="1.5" opacity=".6"/></g>';
-    s += '<path d="M150 62 Q210 30 270 62 L262 76 Q210 54 158 76 Z" fill="#2A2D33"/>';
-    s += letter(up(cfg.town), 210, 128, { size: 25, max: 196, fill: '#14161B', shade: false, family: BLOCK, ls: 0.04 });
-    s += letter(up(cfg.coatLine || 'Fire Co.'), 210, 156, { size: 17, max: 190, fill: '#14161B', shade: false, family: BLOCK, ls: 0.08 });
-    s += '<rect x="108" y="416" width="204" height="40" rx="3" fill="#14161B"/><rect x="108" y="416" width="204" height="40" rx="3" fill="none" stroke="' + lime + '" stroke-width="3"/>';
-    s += '<text class="coat-name" x="210" y="444.5" text-anchor="middle" font-family="' + BLOCK + '" font-size="23" letter-spacing="2" fill="' + lime + '"' + (up(name).length > 9 ? ' textLength="184" lengthAdjust="spacingAndGlyphs"' : '') + '>' + esc(up(name)) + '</text>';
-    return s + '</svg>';
+    var L = liv(cfg), p = id('ct'), u = function (k) { return 'url(#' + p + k + ')'; };
+    var shell = cfg.coatShell || '#B8975A';
+    var hi = mix(shell, '#FFF1CC', 0.34), lo = mix(shell, '#22160A', 0.34), deep = mix(shell, '#140C04', 0.58);
+    var lime = '#DCE548', limeLo = '#B4BE2C', hide = '#26272B', W = 500, H = 496;
+    var BODY = 'M198 84 C176 88 142 98 118 112 C120 140 122 170 124 198 C122 280 116 360 112 420 Q250 440 388 420 C384 360 378 280 376 198 C378 170 380 140 382 112 C358 98 324 88 302 84 C268 75 232 75 198 84 Z';
+    var SLEEVE = 'M150 96 C128 100 108 108 96 128 C84 150 78 190 70 240 C62 300 52 350 44 400 L100 408 C106 356 116 300 124 250 C128 226 130 210 132 196 Z';
+    var COLLAR = 'M196 89 C192 73 196 60 208 56 C234 47 266 47 292 56 C304 60 308 73 304 89 C268 79 232 79 196 89 Z';
+    var MIRROR = 'translate(' + W + ' 0) scale(-1 1)';
+    var blur = function (k, d) { return '<filter id="' + p + k + '" filterUnits="userSpaceOnUse" x="-20" y="-20" width="' + (W + 40) + '" height="' + (H + 40) + '"><feGaussianBlur stdDeviation="' + d + '"/></filter>'; };
+    var stitch = function (d, c, o) { return '<path d="' + d + '" fill="none" stroke="' + (c || deep) + '" stroke-width=".8" stroke-dasharray="2.8 1.9" opacity="' + (o || 0.6) + '"/>'; };
+
+    /* Reflective triple trim on the body: a band that sags with the cloth. */
+    var edge = function (yy, sag) { return 'M96 ' + yy + ' Q250 ' + (yy + 2 * sag) + ' 404 ' + yy; };
+    var box = function (a, b, sag) { return edge(a, sag) + ' L404 ' + b + ' Q250 ' + (b + 2 * sag) + ' 96 ' + b + ' Z'; };
+    var BANDS = [[214, 3.5], [380, 10]], SBANDS = [[100, 222], [79, 356]];
+    function band(y, sag) {
+      var h = 24;
+      return '<path d="' + edge(y + h + 2.5, sag) + '" fill="none" stroke="#120B03" stroke-opacity=".5" stroke-width="5" filter="' + u('b2') + '"/>' +
+        '<path d="' + box(y, y + h, sag) + '" fill="' + u('lime') + '"/>' +
+        '<path d="' + box(y + 7.6, y + 16.4, sag) + '" fill="' + u('silver') + '"/>' +
+        '<path d="' + box(y, y + h, sag) + '" fill="' + u('prism') + '"/>' +
+        '<path d="' + edge(y + 0.6, sag) + '" fill="none" stroke="#F6FB9A" stroke-opacity=".7" stroke-width="1"/>' +
+        stitch(edge(y + 2.4, sag), '#6C7418', 0.75) + stitch(edge(y + h - 2.4, sag), '#6C7418', 0.75);
+    }
+    /* The same trim on a sleeve, square to the sleeve. */
+    function sband(cx, cy) {
+      var h = 22, x = cx - 62, y = cy - h / 2, w = 124;
+      return '<g transform="rotate(7.8 ' + cx + ' ' + cy + ')">' +
+        '<rect x="' + x + '" y="' + (y + h - 1) + '" width="' + w + '" height="5" fill="#120B03" opacity=".5" filter="' + u('b2') + '"/>' +
+        '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="' + u('lime') + '"/>' +
+        '<rect x="' + x + '" y="' + (y + 7) + '" width="' + w + '" height="8" fill="' + u('silverS') + '"/>' +
+        '<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="' + u('prism') + '"/>' +
+        stitch('M' + x + ' ' + (y + 2.2) + ' H' + (x + w), '#6C7418', 0.75) + stitch('M' + x + ' ' + (y + h - 2.2) + ' H' + (x + w), '#6C7418', 0.75) + '</g>';
+    }
+    function sleeve() {
+      return '<path d="M48 398 L98 405 L96 420 L50 412 Z" fill="#141518"/><path d="M57 401 l-1 12 M66 402 l-1 13 M75 403 l-1 13 M84 404 l-1 14 M92 405 l-1 14" stroke="#34363C" stroke-width="1.2"/>' +
+        '<path d="' + SLEEVE + '" fill="' + u('sl') + '"/>' +
+        '<g clip-path="' + u('cs') + '">' +
+        '<g transform="rotate(7.8 89 296)"><rect x="70" y="266" width="40" height="60" rx="13" fill="#120B03" opacity=".45" filter="' + u('b2') + '"/><rect x="70" y="264" width="40" height="60" rx="13" fill="' + hide + '"/><rect x="73.5" y="267.5" width="33" height="53" rx="10" fill="none" stroke="#5B5D64" stroke-width=".8" stroke-dasharray="2.6 1.8"/><rect x="76" y="270" width="12" height="46" rx="6" fill="#fff" opacity=".05"/></g>' +
+        SBANDS.map(function (b) { return sband(b[0], b[1]); }).join('') +
+        '<g transform="rotate(7.8 72 404)"><rect x="10" y="388" width="126" height="22" fill="' + hide + '"/><path d="M10 388 H136" stroke="#5B5D64" stroke-width=".8" stroke-dasharray="2.6 1.8" transform="translate(0 3)"/></g>' +
+        /* folds, the cast shadow of the body, and the roll of the cloth */
+        '<g filter="' + u('b5') + '" fill="none" stroke-linecap="round">' +
+        '<path d="' + SLEEVE + '" stroke="#120B03" stroke-opacity=".5" stroke-width="13"/>' +
+        '<path d="M124 108 C126 150 128 180 130 204 C128 250 122 310 116 350" stroke="#120B03" stroke-opacity=".55" stroke-width="20"/>' +
+        '<path d="M58 258 C78 270 98 268 124 254" stroke="#120B03" stroke-opacity=".42" stroke-width="6"/><path d="M60 270 C80 281 100 279 122 266" stroke="#FFF1CC" stroke-opacity=".3" stroke-width="5"/>' +
+        '<path d="M52 322 C72 336 94 334 114 322" stroke="#120B03" stroke-opacity=".4" stroke-width="6"/><path d="M52 334 C72 347 92 345 112 334" stroke="#FFF1CC" stroke-opacity=".26" stroke-width="5"/>' +
+        '<path d="M48 376 C66 386 86 386 104 380" stroke="#120B03" stroke-opacity=".4" stroke-width="5"/>' +
+        '<path d="M112 116 C98 138 92 168 88 204" stroke="#FFF1CC" stroke-opacity=".32" stroke-width="12"/>' +
+        '</g></g>' +
+        '<path d="' + SLEEVE + '" fill="none" stroke="' + deep + '" stroke-opacity=".7" stroke-width="1"/>';
+    }
+
+    var town = up(cfg.town), line = up(cfg.coatLine || 'Fire Co.'), nm = up(name);
+    var fit = function (str, size, max, ratio) { return str.length * size * ratio > max ? ' textLength="' + max + '" lengthAdjust="spacingAndGlyphs"' : ''; };
+    var sewn = function (str, y, size, max, ls) {
+      var a = ' x="250" y="' + y + '" text-anchor="middle" font-family="' + BLOCK + '" font-size="' + size + '" letter-spacing="' + ls + '"' + fit(str, size, max, 0.8);
+      return '<text' + a + ' fill="#150D04" opacity=".6" transform="translate(1.1 1.7)" filter="' + u('b1') + '">' + esc(str) + '</text>' +
+        '<text' + a + ' fill="' + u('lime') + '" stroke="#565C12" stroke-width="1.5" paint-order="stroke" stroke-linejoin="round">' + esc(str) + '</text>';
+    };
+    var mark = emblem(cfg).replace(/^<svg[^>]*>/, '<svg x="194" y="259" width="112" height="112" viewBox="0 0 220 220" aria-hidden="true">');
+
+    var s = '<svg class="art art-coat" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(coatLabel(cfg, name)) + '">';
+    s += '<defs>' +
+      '<linearGradient id="' + p + 'bd" gradientUnits="userSpaceOnUse" x1="108" y1="0" x2="392" y2="0"><stop offset="0" stop-color="' + lo + '"/><stop offset=".14" stop-color="' + shell + '"/><stop offset=".4" stop-color="' + hi + '"/><stop offset=".62" stop-color="' + shell + '"/><stop offset=".88" stop-color="' + mix(shell, lo, 0.5) + '"/><stop offset="1" stop-color="' + deep + '"/></linearGradient>' +
+      '<linearGradient id="' + p + 'sl" gradientUnits="userSpaceOnUse" x1="50" y1="296" x2="124" y2="306"><stop offset="0" stop-color="' + lo + '"/><stop offset=".3" stop-color="' + mix(shell, hi, 0.6) + '"/><stop offset=".6" stop-color="' + shell + '"/><stop offset="1" stop-color="' + deep + '"/></linearGradient>' +
+      '<linearGradient id="' + p + 'cl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + hi + '"/><stop offset=".5" stop-color="' + shell + '"/><stop offset="1" stop-color="' + lo + '"/></linearGradient>' +
+      '<linearGradient id="' + p + 'lime" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EDF465"/><stop offset=".55" stop-color="' + lime + '"/><stop offset="1" stop-color="' + limeLo + '"/></linearGradient>' +
+      '<linearGradient id="' + p + 'silver" gradientUnits="userSpaceOnUse" x1="100" y1="0" x2="400" y2="0"><stop offset="0" stop-color="#B9BEC5"/><stop offset=".2" stop-color="#FFFFFF"/><stop offset=".36" stop-color="#CFD4DA"/><stop offset=".6" stop-color="#F8F9FA"/><stop offset=".82" stop-color="#B4BAC1"/><stop offset="1" stop-color="#8E949C"/></linearGradient>' +
+      '<linearGradient id="' + p + 'silverS" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#AEB4BB"/><stop offset=".4" stop-color="#FFFFFF"/><stop offset=".7" stop-color="#D3D8DD"/><stop offset="1" stop-color="#979DA5"/></linearGradient>' +
+      '<linearGradient id="' + p + 'steel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C9CED5"/><stop offset=".45" stop-color="#8A9099"/><stop offset="1" stop-color="#4C5159"/></linearGradient>' +
+      '<linearGradient id="' + p + 'light" gradientUnits="userSpaceOnUse" x1="90" y1="50" x2="420" y2="470"><stop offset="0" stop-color="#FFF6DC" stop-opacity=".2"/><stop offset=".45" stop-color="#FFF6DC" stop-opacity="0"/><stop offset="1" stop-color="#0A0602" stop-opacity=".3"/></linearGradient>' +
+      '<linearGradient id="' + p + 'glint" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".3" stop-color="#fff" stop-opacity=".12"/><stop offset=".5" stop-color="#fff" stop-opacity=".9"/><stop offset=".7" stop-color="#fff" stop-opacity=".12"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>' +
+      '<pattern id="' + p + 'prism" width="3" height="3" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0 .4H3" stroke="#fff" stroke-width=".6" opacity=".3"/><path d="M.4 0V3" stroke="#58600E" stroke-width=".5" opacity=".2"/></pattern>' +
+      '<pattern id="' + p + 'weave" width="2.6" height="2.6" patternUnits="userSpaceOnUse" patternTransform="rotate(34)"><rect width="2.6" height=".9" fill="#1E1305" opacity=".2"/><rect width=".9" height="2.6" fill="#FFF1CC" opacity=".12"/></pattern>' +
+      '<pattern id="' + p + 'thread" width="2" height="2" patternUnits="userSpaceOnUse" patternTransform="rotate(-38)"><rect width="2" height=".8" fill="#fff" opacity=".1"/></pattern>' +
+      '<filter id="' + p + 'grain" filterUnits="userSpaceOnUse" x="0" y="0" width="' + W + '" height="' + H + '" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="1.15" numOctaves="2" seed="7"/><feColorMatrix type="matrix" values="0 0 0 0 .08  0 0 0 0 .05  0 0 0 0 .02  .7 .7 .7 0 -.72"/></filter>' +
+      '<filter id="' + p + 'wear" filterUnits="userSpaceOnUse" x="0" y="0" width="' + W + '" height="' + H + '" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency=".014 .034" numOctaves="3" seed="23"/><feColorMatrix type="matrix" values="0 0 0 0 .08  0 0 0 0 .05  0 0 0 0 .02  1.7 0 0 0 -.62"/></filter>' +
+      blur('b1', 1) + blur('b2', 1.8) + blur('b5', 5) + blur('b8', 8) +
+      '<clipPath id="' + p + 'cb"><path d="' + BODY + '"/></clipPath><clipPath id="' + p + 'cs"><path d="' + SLEEVE + '"/></clipPath>' +
+      '<clipPath id="' + p + 'all"><path d="' + BODY + '"/><path d="' + SLEEVE + '"/><path d="' + SLEEVE + '" transform="' + MIRROR + '"/><path d="' + COLLAR + '"/></clipPath>' +
+      '<clipPath id="' + p + 'tb">' + BANDS.map(function (b) { return '<path d="' + box(b[0], b[0] + 24, b[1]) + '"/>'; }).join('') + '</clipPath>' +
+      '<clipPath id="' + p + 'ts">' + SBANDS.map(function (b) { return '<rect x="' + (b[0] - 62) + '" y="' + (b[1] - 11) + '" width="124" height="22" transform="rotate(7.8 ' + b[0] + ' ' + b[1] + ')"/>'; }).join('') + '</clipPath>' +
+      '<clipPath id="' + p + 'tail"><rect x="158" y="408" width="184" height="74" rx="4"/></clipPath>' +
+      '</defs>';
+
+    /* gear rail, station plate and hook */
+    s += '<rect x="54" y="13" width="392" height="9" rx="4.5" fill="' + u('steel') + '"/><rect x="54" y="13.6" width="392" height="1.6" rx=".8" fill="#fff" opacity=".45"/>';
+    s += '<path d="M250 20 V46" fill="none" stroke="#3E434B" stroke-width="5.6" stroke-linecap="round"/><path d="M250 20 V46" fill="none" stroke="#A9AFB8" stroke-width="3" stroke-linecap="round"/>';
+    s += '<rect x="226" y="3" width="48" height="20" rx="3" fill="#0B1428" stroke="' + L.brass + '" stroke-width="1.2"/>' + letter(String(cfg.station), 250, 18, { size: 13, fill: L.sign, family: BLOCK, shade: false, ls: 0 });
+
+    /* name panel hanging from the tail */
+    s += '<rect x="160" y="412" width="184" height="72" rx="4" fill="#0A0602" opacity=".45" filter="' + u('b5') + '"/>';
+    s += '<rect x="158" y="408" width="184" height="74" rx="4" fill="#17181C"/><g clip-path="' + u('tail') + '"><rect x="158" y="408" width="184" height="74" fill="' + u('weave') + '" opacity=".7"/><path d="M112 424 Q250 444 388 424" fill="none" stroke="#000" stroke-opacity=".8" stroke-width="16" filter="' + u('b5') + '"/></g>';
+    s += '<rect x="164.5" y="439.5" width="171" height="36" rx="2.5" fill="none" stroke="' + lime + '" stroke-width="1.5" stroke-dasharray="4.4 2.4"/>';
+    s += '<text class="coat-name" x="250" y="466.5" text-anchor="middle" font-family="' + BLOCK + '" font-size="23" letter-spacing="1.6" fill="' + u('lime') + '"' + fit(nm, 23, COAT_NAME_FIT, 0.74) + '>' + esc(nm) + '</text>';
+
+    /* sleeves, then the back panel over them */
+    s += '<g>' + sleeve() + '</g><g transform="' + MIRROR + '">' + sleeve() + '</g>';
+    s += '<path d="' + BODY + '" fill="' + u('bd') + '"/>';
+    s += '<g clip-path="' + u('cb') + '">';
+    /* seams: shoulder yoke and the two action pleats */
+    s += '<path d="M118 128 Q250 150 382 128" fill="none" stroke="#120B03" stroke-opacity=".5" stroke-width="5" filter="' + u('b2') + '" transform="translate(0 2)"/><path d="M118 128 Q250 150 382 128" fill="none" stroke="' + deep + '" stroke-opacity=".75" stroke-width="1"/>' + stitch('M119 131.5 Q250 153.5 381 131.5') + stitch('M119 124.6 Q250 146.6 381 124.6', hi, 0.5);
+    s += '<path d="M143 133 C139 160 141 185 141 213" fill="none" stroke="' + deep + '" stroke-opacity=".6" stroke-width="1"/><path d="M357 133 C361 160 359 185 359 213" fill="none" stroke="' + deep + '" stroke-opacity=".6" stroke-width="1"/>' + stitch('M146 134 C142 160 144 185 144 213') + stitch('M354 134 C358 160 356 185 356 213');
+    /* drag rescue device flap under the collar */
+    s += '<rect x="221" y="96" width="58" height="21" rx="2.5" fill="#120B03" opacity=".5" filter="' + u('b2') + '"/><rect x="221" y="94" width="58" height="21" rx="2.5" fill="' + mix(shell, lo, 0.35) + '" stroke="' + deep + '" stroke-opacity=".7" stroke-width=".8"/><rect x="223.6" y="96.6" width="52.8" height="15.8" rx="1.5" fill="none" stroke="' + deep + '" stroke-width=".7" stroke-dasharray="2.4 1.7" opacity=".7"/><rect x="243" y="111" width="14" height="9" rx="1.5" fill="' + lime + '"/><text x="250" y="108.4" text-anchor="middle" font-family="' + BLOCK + '" font-size="7.5" letter-spacing=".8" fill="' + deep + '" opacity=".85">DRD</text>';
+    /* department lettering, sewn on */
+    s += sewn(town, 181, 29, 196, 1) + sewn(line, 201.5, 13.5, 150, 2.2);
+    s += BANDS.map(function (b) { return band(b[0], b[1]); }).join('');
+    /* the department crest, as a twill patch */
+    s += '<circle cx="250" cy="318" r="63" fill="#0A0602" opacity=".6" filter="' + u('b2') + '"/><circle cx="250" cy="315" r="62" fill="#17181C"/><circle cx="250" cy="315" r="59" fill="none" stroke="#D2A237" stroke-width="5"/><circle cx="250" cy="315" r="59" fill="none" stroke="#7E5C12" stroke-width="5" stroke-dasharray="1.1 2.1" opacity=".6"/>' + mark + '<circle cx="250" cy="315" r="56.5" fill="' + u('thread') + '"/><circle cx="250" cy="315" r="56.5" fill="none" stroke="#000" stroke-opacity=".35" stroke-width="3" filter="' + u('b1') + '"/>';
+    /* folds and the roll of the cloth, over everything sewn to it */
+    s += '<g fill="none" stroke-linecap="round">' +
+      '<path d="' + BODY + '" stroke="#120B03" stroke-opacity=".5" stroke-width="20" filter="' + u('b8') + '"/>' +
+      '<g filter="' + u('b5') + '"><path d="M166 150 C158 232 172 312 156 418" stroke="#120B03" stroke-opacity=".34" stroke-width="12"/><path d="M336 150 C344 232 328 312 346 418" stroke="#120B03" stroke-opacity=".38" stroke-width="13"/>' +
+      '<path d="M124 204 C152 216 168 244 160 286" stroke="#120B03" stroke-opacity=".3" stroke-width="10"/><path d="M376 204 C348 216 332 244 340 286" stroke="#120B03" stroke-opacity=".32" stroke-width="10"/>' +
+      '<path d="M192 146 C186 230 196 322 188 414" stroke="#FFF1CC" stroke-opacity=".26" stroke-width="12"/><path d="M308 150 C314 232 304 322 314 412" stroke="#FFF1CC" stroke-opacity=".14" stroke-width="10"/>' +
+      '<path d="M196 96 C230 106 270 106 304 96" stroke="#120B03" stroke-opacity=".55" stroke-width="9"/></g></g>';
+    s += '</g>';
+    s += '<path d="' + BODY + '" fill="none" stroke="' + deep + '" stroke-opacity=".75" stroke-width="1"/>';
+
+    /* collar and hanging loop */
+    s += '<path d="' + COLLAR + '" fill="' + u('cl') + '" stroke="' + deep + '" stroke-opacity=".75" stroke-width="1"/>' + stitch('M200 82 C232 72.5 268 72.5 300 82') + stitch('M199 74 C203 62 208 60.5 214 58.6 C238 51.6 262 51.6 286 58.6 C292 60.5 297 62 301 74') +
+      '<path d="M209 56.6 C234 48 266 48 291 56.6" fill="none" stroke="#FFF6DC" stroke-opacity=".55" stroke-width="1.2"/>';
+    s += '<path d="M241 59 V50 a9 9 0 0 1 18 0 V59" fill="none" stroke="#141518" stroke-width="4.6"/><path d="M241 59 V50 a9 9 0 0 1 18 0 V59" fill="none" stroke="#44474E" stroke-width="1" stroke-dasharray="2 1.6"/>';
+
+    /* cloth: weave, grain and wear over the whole shell, then the light */
+    s += '<g clip-path="' + u('all') + '"><rect width="' + W + '" height="' + H + '" fill="' + u('weave') + '" opacity=".55"/><rect width="' + W + '" height="' + H + '" filter="' + u('grain') + '" opacity=".5"/><rect width="' + W + '" height="' + H + '" filter="' + u('wear') + '" opacity=".3"/><rect width="' + W + '" height="' + H + '" fill="' + u('light') + '"/></g>';
+
+    /* A slow glint across the reflective trim. It sits in its own layer above the
+       coat, so the moving light never makes the browser redraw the cloth. */
+    var glint = '<g transform="skewX(-16)"><rect class="coat-glint" x="-150" y="0" width="96" height="' + H + '" fill="' + u('glint') + '"/></g>';
+    var fx = '<svg class="art-coat-fx" viewBox="0 0 ' + W + ' ' + H + '" aria-hidden="true" focusable="false"><g clip-path="' + u('cb') + '"><g clip-path="' + u('tb') + '">' + glint + '</g></g>' +
+      '<g clip-path="' + u('cs') + '"><g clip-path="' + u('ts') + '">' + glint + '</g></g>' +
+      '<g transform="' + MIRROR + '"><g clip-path="' + u('cs') + '"><g clip-path="' + u('ts') + '"><g transform="' + MIRROR + '">' + glint + '</g></g></g></g></svg>';
+    return '<div class="coat-fig">' + s + '</svg>' + fx + '</div>';
+  }
+
+  /* Change only the lettering on the tail, so typing a name does not redraw the coat. */
+  function coatName(root, cfg, name) {
+    var svg = root && root.querySelector('.art-coat'), t = up(name);
+    if (!svg) return false;
+    Array.prototype.forEach.call(svg.querySelectorAll('.coat-name'), function (el) {
+      el.textContent = t;
+      if (t.length * 23 * 0.74 > COAT_NAME_FIT) { el.setAttribute('textLength', COAT_NAME_FIT); el.setAttribute('lengthAdjust', 'spacingAndGlyphs'); }
+      else { el.removeAttribute('textLength'); el.removeAttribute('lengthAdjust'); }
+    });
+    svg.setAttribute('aria-label', coatLabel(cfg, name));
+    return true;
   }
 
   /* --------------------------------------------- helmet front piece */
@@ -469,5 +613,5 @@
   };
   function icon(name) { return '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (IC[name] || IC.check) + '</svg>'; }
 
-  window.FireArt = { emblem: emblem, rig: rig, station: station, portrait: portrait, coat: coat, shield: shield, map: map, icon: icon, esc: esc };
+  window.FireArt = { emblem: emblem, rig: rig, station: station, portrait: portrait, coat: coat, coatName: coatName, shield: shield, map: map, icon: icon, esc: esc };
 })();
