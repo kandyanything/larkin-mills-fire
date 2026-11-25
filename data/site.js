@@ -69,7 +69,7 @@ window.SITE = {
   hero: {
     photo: "images/stations/station-5.jpg",   /* leave empty to show the drawn firehouse instead */
     photoAlt: "Station 5, the {company} headquarters, at sunset",
-    title: "When the tones drop, your neighbors go.",
+    title: "When the alarm sounds, your neighbors go.",
     text: "{company} has answered every call since 1856. Five stations, 168 volunteers and no bill.",
     primary: { label: "Become a volunteer", href: "#join" },
     secondary: { label: "Give to the fund drive", href: "#support" }
