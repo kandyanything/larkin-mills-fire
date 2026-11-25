@@ -168,12 +168,12 @@ window.SITE = {
     title: "Command staff",
     text: "Elected by the members every December.",
     /* The chief, set apart above the rest of the command staff.
-       `portrait` is a photo of the chief (4:5, like the other officers); leave it "" until there is one.
+       `portrait` is a photo of the chief, shown square; "" leaves it out.
        `uniform` is the dress uniform photo. With both, the portrait leads and the uniform sits beside
        the message. Remove `chief` to leave the block out. */
     chief: {
       rank: "Fire Chief", name: "Michael Carter",
-      portrait: "",
+      portrait: "images/officers/chief-carter.jpg",
       uniform: "images/officers/chief-dress-uniform.jpg",
       uniformAlt: "Navy dress uniform coat on a stand in the apparatus bay, with a gold chief's badge, the {town} shoulder patch, gold sleeve stripes and a name plate reading Chief M. Carter.",
       uniformCaption: "The chief's dress uniform, worn for parades, promotions and funerals.",

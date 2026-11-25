@@ -291,9 +291,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 /* The chief: a white card above the rest of the command staff. */
 .chief { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: clamp(24px, 4vw, 56px); align-items: center; margin-bottom: clamp(40px, 6vw, 72px); padding: clamp(16px, 2.2vw, 28px); border-radius: 12px; background: var(--white); }
-.chief--both { grid-template-columns: minmax(0, 3fr) minmax(0, 6fr) minmax(0, 3fr); }
+.chief--both { grid-template-columns: minmax(0, 9fr) minmax(0, 10fr) minmax(0, 6fr); gap: clamp(24px, 3.4vw, 48px); }
 .chief figure img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 8px; }
-.chief-portrait img { object-position: 50% 18%; }
+.chief .chief-portrait img { aspect-ratio: 1 / 1; object-position: 50% 18%; }
 .chief figcaption { margin-top: 10px; color: var(--ink-2); font-size: .9375rem; line-height: 1.4; }
 .chief .rank { color: var(--accent); font-weight: 700; font-size: 1.0625rem; }
 .chief h3 { margin-top: 2px; font: 400 clamp(1.8rem, 3vw, 2.6rem)/1.05 var(--display); letter-spacing: -.015em; }

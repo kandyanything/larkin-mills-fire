@@ -30,7 +30,7 @@ Photos live in `images/` and are named in `data/site.js`. Replace a file, or poi
 | Stations | `stations.items[].photo` | 1600 x 900 |
 | Apparatus | `apparatus.rigs[].photo` | 1600 x 900 |
 | Officers | `officers.line[].photo` | 800 x 1000, head and shoulders |
-| Chief | `officers.chief.portrait`, `officers.chief.uniform` | 800 x 1000 each. The portrait leads; the dress uniform sits beside the chief's message. Either can be left out. |
+| Chief | `officers.chief.portrait`, `officers.chief.uniform` | Portrait 1000 x 1000 (shown square), uniform 800 x 1000. The portrait leads; the dress uniform sits beside the chief's message. Either can be left out. |
 | Turnout gear | `join.gear.photo` | 1448 x 1086 here; any 4:3 photo works. See "The gear photo" below. |
 | Gallery | `gallery.items[]` | 1600 x 1200. Hidden while the list is empty. |
 | Film | `join.film.src`, `join.film.poster` | 1280 x 720 MP4 and a JPG poster |
