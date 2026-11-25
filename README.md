@@ -49,7 +49,7 @@ Set `templateControls: true` to show a panel that renames the town and repaints 
 ## Sponsors
 
 - `partners.top`: banner ads under the hero. Up to three rotate every `rotateSeconds`, with pause and dot controls. Set `active: false` to pause one.
-- `partners.wall`: every partner, by tier.
+- `partners.wall`: every partner, by tier. Give a partner a `logo` (a square SVG or PNG in `images/partners/`) and it shows beside the name, in the wall and in the banner.
 - `partners.tiers`: the price sheet.
 - `events.items[].sponsor`: a "Sponsored by" credit on a single event.
 - `partners.disclosure`: shown under the wall. Keep it.

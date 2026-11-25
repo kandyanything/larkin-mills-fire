@@ -65,7 +65,7 @@
     return '<aside class="pb" aria-label="Community partners"><div class="wrap"><div class="pb-frame">' +
       ads.map(function (a, i) {
         return '<a class="pb-ad' + (i === state.ad ? ' is-active' : '') + '" href="' + esc(a.url) + '" style="--from:' + a.theme.from + ';--to:' + a.theme.to + ';--ac:' + a.theme.accent + '"' + (i === state.ad ? '' : ' tabindex="-1" aria-hidden="true"') + '>' +
-          '<span class="pb-mark"><b>' + esc(a.mark[0]) + '</b><i>' + esc(a.mark[1] || '') + '</i></span>' +
+          '<span class="pb-mark">' + (a.logo ? '<img class="pb-logo" src="' + esc(a.logo) + '" alt="" width="52" height="52">' : '') + '<span><b>' + esc(a.mark[0]) + '</b><i>' + esc(a.mark[1] || '') + '</i></span></span>' +
           '<span class="pb-copy"><strong>' + esc(a.headline) + '</strong><span>' + esc(a.sub) + '</span></span>' +
           '<span class="pb-cta">' + esc(a.cta) + '</span></a>';
       }).join('') + '</div>' +
@@ -184,7 +184,7 @@
     var p = S.partners;
     return '<section class="band" id="partners" aria-labelledby="par-h"><div class="wrap"><div class="head"><h2 id="par-h">' + esc(p.title) + '</h2><p class="lede">' + esc(p.text) + '</p></div>' +
       '<ul class="tiers">' + p.tiers.map(function (t) { return '<li class="tier"><h3>' + esc(t.name) + '</h3><p class="price">' + esc(t.price) + '</p><ul>' + t.items.map(function (x) { return '<li>' + I('check') + '<span>' + esc(x) + '</span></li>'; }).join('') + '</ul></li>'; }).join('') + '</ul>' +
-      '<h3 class="wall-title">This year\'s partners</h3><ul class="wall">' + p.wall.map(function (w) { return '<li><b>' + esc(w.name) + '</b><span>' + esc(w.tier) + ' partner</span></li>'; }).join('') + '</ul>' +
+      '<h3 class="wall-title">This year\'s partners</h3><ul class="wall">' + p.wall.map(function (w) { return '<li' + (w.logo ? ' class="has-logo"><img class="wall-logo" src="' + esc(w.logo) + '" alt="" width="56" height="56" loading="lazy"' : '') + '><div><b>' + esc(w.name) + '</b><span>' + esc(w.tier) + ' partner</span></div></li>'; }).join('') + '</ul>' +
       '<div class="partners-foot"><p>' + esc(p.disclosure) + '</p>' + topicLink(p.cta.label, p.cta.topic, 'btn') + '</div></div></section>';
   }
 

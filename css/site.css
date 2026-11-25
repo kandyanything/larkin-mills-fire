@@ -146,6 +146,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .pb-ad.is-active { opacity: 1; visibility: visible; transition: opacity .6s var(--ease), visibility 0s; }
 .pb-ad:focus-visible { outline-offset: -4px; }
 .pb-mark { padding-right: clamp(16px, 3vw, 40px); border-right: 2px solid color-mix(in srgb, var(--ac) 60%, transparent); font-family: var(--letter); font-weight: 900; line-height: 1.02; }
+.pb-mark { display: flex; align-items: center; gap: 14px; }
+.pb-logo { width: 52px; height: 52px; flex: none; }
 .pb-mark b { display: block; font-size: clamp(1.15rem, 2vw, 1.6rem); letter-spacing: .01em; }
 .pb-mark i { display: block; color: var(--ac); font-style: normal; font-size: clamp(.85rem, 1.2vw, 1rem); letter-spacing: .14em; text-transform: uppercase; }
 .pb-copy strong { display: block; font-size: clamp(1.1rem, 1.9vw, 1.5rem); line-height: 1.15; }
@@ -344,7 +346,10 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .tier:first-child .ic { color: var(--gold); }
 .wall-title { margin: clamp(40px, 6vw, 72px) 0 18px; font: 700 1.4rem/1.2 var(--text); }
 .wall { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 2px solid var(--ink); border-left: 1px solid var(--line); }
-.wall li { display: grid; align-content: center; gap: 2px; min-height: 104px; padding: 18px 22px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.wall li { display: grid; align-content: center; min-height: 104px; padding: 18px 22px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.wall li.has-logo { grid-template-columns: 56px 1fr; column-gap: 16px; align-items: center; }
+.wall li > div { display: grid; gap: 2px; }
+.wall-logo { width: 56px; height: 56px; }
 .wall b { font: 900 1.25rem/1.15 var(--letter); }
 .wall span { color: var(--ink-2); font-size: .9375rem; }
 .partners-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; margin-top: 28px; }
@@ -445,6 +450,7 @@ dialog::backdrop { background: rgba(11, 20, 40, .7); }
   .pb-mark { grid-column: 1 / -1; padding: 0 0 10px; border-right: 0; border-bottom: 2px solid color-mix(in srgb, var(--ac) 60%, transparent); }
   .pb-mark b, .pb-mark i { display: inline; }
   .pb-mark i { margin-left: 8px; }
+  .pb-logo { width: 38px; height: 38px; }
   .runlog thead { display: none; }
   .runlog tr { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding-block: 14px; border-bottom: 1px solid var(--line); }
   .runlog td { padding: 0; border: 0; }

@@ -205,7 +205,8 @@ window.SITE = {
   },
 
   /* Sponsors. 'top' ads rotate in the banner under the hero (keep it to 3).
-     'wall' lists every partner. Set active:false to pause one. */
+     'wall' lists every partner. Set active:false to pause one.
+     logo: a square image file (SVG or PNG). Leave it out to show the name alone. */
   partners: {
     title: "Local businesses keep the bays open.",
     text: "Community partners fund training and equipment all year.",
@@ -219,14 +220,14 @@ window.SITE = {
     ],
     cta: { label: "Become a partner", topic: "Community partnership" },
     top: [
-      { id: "foundry-road-hardware", active: true, name: "Foundry Road Hardware", mark: ["Foundry Road", "Hardware"], headline: "Everything for the house since 1961", sub: "Paint, plumbing, keys cut while you wait.", cta: "Visit the store", url: "#partners", theme: { from: "#12372A", to: "#1F6B4C", accent: "#F2C14E" } },
-      { id: "three-forks-auto-body", active: true, name: "Three Forks Auto Body", mark: ["Three Forks", "Auto Body"], headline: "Collision repair, done right the first time", sub: "Free estimates. We work with every insurer.", cta: "Get an estimate", url: "#partners", theme: { from: "#10233F", to: "#1F4E8C", accent: "#FF8A3D" } },
-      { id: "kettle-and-crumb", active: true, name: "Kettle & Crumb Bakery", mark: ["Kettle & Crumb", "Bakery"], headline: "The coffee is on at 5:30", sub: "First responders drink free, every day.", cta: "See the menu", url: "#partners", theme: { from: "#3B2314", to: "#8A4B22", accent: "#FFE1A8" } }
+      { id: "foundry-road-hardware", active: true, name: "Foundry Road Hardware", logo: "images/partners/foundry-road-hardware.svg", mark: ["Foundry Road", "Hardware"], headline: "Everything for the house since 1961", sub: "Paint, plumbing, keys cut while you wait.", cta: "Visit the store", url: "#partners", theme: { from: "#12372A", to: "#1F6B4C", accent: "#F2C14E" } },
+      { id: "three-forks-auto-body", active: true, name: "Three Forks Auto Body", logo: "images/partners/three-forks-auto-body.svg", mark: ["Three Forks", "Auto Body"], headline: "Collision repair, done right the first time", sub: "Free estimates. We work with every insurer.", cta: "Get an estimate", url: "#partners", theme: { from: "#10233F", to: "#1F4E8C", accent: "#FF8A3D" } },
+      { id: "kettle-and-crumb", active: true, name: "Kettle & Crumb Bakery", logo: "images/partners/kettle-and-crumb.svg", mark: ["Kettle & Crumb", "Bakery"], headline: "The coffee is on at 5:30", sub: "First responders drink free, every day.", cta: "See the menu", url: "#partners", theme: { from: "#3B2314", to: "#8A4B22", accent: "#FFE1A8" } }
     ],
     wall: [
-      { name: "Foundry Road Hardware", tier: "Engine" }, { name: "Three Forks Auto Body", tier: "Engine" }, { name: "Kettle & Crumb Bakery", tier: "Engine" },
-      { name: "Birchline Insurance Agency", tier: "Truck" }, { name: "Quarry Street Pizza", tier: "Truck" }, { name: "Mill Race Veterinary", tier: "Truck" },
-      { name: "North Fork Heating & Air", tier: "Hose" }, { name: "Larkin Mills Lumber", tier: "Hose" }, { name: "Hadley Family Dental", tier: "Hose" }
+      { name: "Foundry Road Hardware", logo: "images/partners/foundry-road-hardware.svg", tier: "Engine" }, { name: "Three Forks Auto Body", logo: "images/partners/three-forks-auto-body.svg", tier: "Engine" }, { name: "Kettle & Crumb Bakery", logo: "images/partners/kettle-and-crumb.svg", tier: "Engine" },
+      { name: "Birchline Insurance Agency", logo: "images/partners/birchline-insurance.svg", tier: "Truck" }, { name: "Quarry Street Pizza", logo: "images/partners/quarry-street-pizza.svg", tier: "Truck" }, { name: "Mill Race Veterinary", logo: "images/partners/mill-race-veterinary.svg", tier: "Truck" },
+      { name: "North Fork Heating & Air", logo: "images/partners/north-fork-heating-air.svg", tier: "Hose" }, { name: "Larkin Mills Lumber", logo: "images/partners/larkin-mills-lumber.svg", tier: "Hose" }, { name: "Hadley Family Dental", logo: "images/partners/hadley-family-dental.svg", tier: "Hose" }
     ]
   },
 

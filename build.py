@@ -5,7 +5,7 @@ Handy for emailing a preview. The live site should use the normal files."""
 import base64, json, os, re, sys
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-MIME = {'.woff': 'font/woff', '.mp4': 'video/mp4', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp'}
+MIME = {'.svg': 'image/svg+xml', '.woff': 'font/woff', '.mp4': 'video/mp4', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp'}
 
 
 def read(path):
@@ -25,7 +25,7 @@ def main():
     data = read('data/site.js')
     # inline each local media or image file once, and point the data at it
     assets = {}
-    for path in sorted(set(re.findall(r'"((?:media|images)/[^"]+\.(?:mp4|jpe?g|png|webp))"', data))):
+    for path in sorted(set(re.findall(r'"((?:media|images)/[^"]+\.(?:mp4|jpe?g|png|webp|svg))"', data))):
         if os.path.exists(os.path.join(ROOT, path)):
             assets[path] = data_uri(path)
             data = data.replace('"%s"' % path, '__ASSET["%s"]' % path)
