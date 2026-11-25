@@ -100,7 +100,7 @@ All of these live in `js/plus.js` and the two "more:" blocks in `css/site.css`. 
 | `date` on an event | An "Add to calendar" button | Nothing. It works now. |
 | `tour` | A guided tour of the site for showing it to a department | Your price in `tour.offer.price` and your details in `tour.offer.contact` |
 
-The tour starts from the label across the top of the page, or by adding `?tour` to the address. It moves on by itself every `tour.seconds`, waits while the mouse is on the card, and ends on a panel that adds up the partner wall (`partners.wall` at the `partners.tiers` prices) against your price.
+The tour starts from the label across the top of the page, from the link in the footer, or by adding `?tour` to the address. It moves on by itself every `tour.seconds`, waits while the mouse is on the card, and ends on a panel that adds up the partner wall (`partners.wall` at the `partners.tiers` prices) against your price.
 
 ## Sponsors
 
