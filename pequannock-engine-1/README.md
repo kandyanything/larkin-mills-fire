@@ -1,7 +1,14 @@
-# Pequannock Engine Company #1, website concept
+# Pequannock Township Engine Company #1, website concept
 
-A pitch built on the firehouse template (design 2). It is not the company's site: every page says
-so, search engines are kept out, and no form sends anything.
+A pitch for the company in two designs, with the same content. Neither is the company's site:
+every page says so, search engines are kept out, and no form sends anything.
+
+- **Design 2, the firehouse** (this folder): the four bay doors of the firehouse open the parts
+  of the site, each a short page of its own. White, black, and the blue of the company's patch.
+- **Design 1, one long page** (`design-1/`): dark navy and gold with drifting sparks, the whole
+  firehouse beside the headline, and everything on one scrolling page. Red accent from the patch.
+
+Each design is self-contained, with its own `data/site.js`. A change to the content goes in both.
 
 ## Where the content comes from
 
@@ -16,7 +23,7 @@ and 2026 date, the partner levels and prices, the safety advice.
 ## Pictures
 
 - `images/firehouse-front.jpg`: an artist's rendering made from a photo of the real firehouse.
-  The four door positions are `front.doors[].box` in the data file.
+  In design 2 the four door positions are `front.doors[].box` in the data file.
 - `images/bays/`: what shows behind each lifted door, made from that bay's own windows.
 - `images/brand/patch.png`: the company patch, cut out of a small copy. Ask for the original.
 - The history and Fire Calls photos load from the company's current site. If one cannot load, a

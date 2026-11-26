@@ -1,5 +1,7 @@
 /* ============================================================================
-   SITE DATA — Pequannock Engine Company #1 (website concept)
+   SITE DATA — Pequannock Township Engine Company #1 (website concept)
+
+   DESIGN 2 of two. Design 1, one long dark page, is in design-1/.
 
    A CONCEPT, NOT THE COMPANY'S SITE. It was built to show Pequannock Township
    Fire Department, Pompton Plains Engine Company #1 what a new website could do.
@@ -21,8 +23,8 @@ window.SITE = {
   state: "NJ",
   station: "1",
   founded: 1915,
-  companyTemplate: "{town} Engine Company #1",
-  shortTemplate: "{town} Engine Co. 1",
+  companyTemplate: "{town} Township Engine Company #1",
+  shortTemplate: "{town} Twp. Engine Co. 1",
   tagline: "All volunteer since 1915",
 
   /* The company's own patch, cut out of the small copy supplied. Ask the company for the original artwork. */
@@ -39,6 +41,7 @@ window.SITE = {
   accent: "#2536BF",
 
   templateControls: false,
+  otherDesign: { label: "See design 1", href: "design-1/" },
   motion: { density: 1 },
 
   /* Concept mode: a label that stays on screen, and a "Sample" tag under the heading of every
@@ -46,7 +49,7 @@ window.SITE = {
      company has bought the site and supplied its own content. */
   concept: {
     badge: "Website concept",
-    badgeNote: "Not the official site of Pequannock Engine Company #1.",
+    badgeNote: "Not the official site of Pequannock Township Engine Company #1.",
     sample: {
       calls: "The 302-a-year average and the six calls listed are from the company's site. The breakdown by type is a placeholder.",
       apparatus: "The specifications are from the company's site. The drawings stand in for photographs of the real trucks.",
@@ -152,7 +155,7 @@ window.SITE = {
   hero: {
     photo: "",
     title: "When the alarm sounds, your neighbors go.",
-    text: "{company} has served Pompton Plains and Pequannock Township since 1915. All volunteer, about 302 calls a year, and no bill.",
+    text: "{company} has served Pompton Plains and the township since 1915. All volunteer, about 302 calls a year, and no bill.",
     primary: { label: "Become a volunteer", href: "#join" },
     secondary: { label: "Give to the fund drive", href: "#support" }
   },
@@ -488,6 +491,6 @@ window.SITE = {
     builtBy: "",
     status: "",
     followTitle: "Elsewhere",
-    sample: "Website concept prepared for Pequannock Engine Company #1. This is not the company's official website. The officers, roster, apparatus, history and events come from the company's own site, ptfdco1.org; anything tagged Sample is a placeholder. The firehouse picture is an artist's rendering made from a photo of the building."
+    sample: "Website concept prepared for Pequannock Township Engine Company #1. This is not the company's official website. The officers, roster, apparatus, history and events come from the company's own site, ptfdco1.org; anything tagged Sample is a placeholder. The firehouse picture is an artist's rendering made from a photo of the building."
   }
 };
