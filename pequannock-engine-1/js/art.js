@@ -458,7 +458,8 @@
         '<path d="' + SLEEVE + '" fill="none" stroke="' + deep + '" stroke-opacity=".7" stroke-width="1"/>';
     }
 
-    var town = up(cfg.town), line = up(cfg.coatLine || 'Fire Co.'), nm = up(name);
+    var onBack = cfg.coatPanel === 'shoulders', VH = onBack ? 444 : H;
+    var town = up(cfg.coatTown || cfg.town), line = up(cfg.coatLine || 'Fire Co.'), nm = up(name);
     var fit = function (str, size, max, ratio) { return str.length * size * ratio > max ? ' textLength="' + max + '" lengthAdjust="spacingAndGlyphs"' : ''; };
     var sewn = function (str, y, size, max, ls) {
       var a = ' x="250" y="' + y + '" text-anchor="middle" font-family="' + BLOCK + '" font-size="' + size + '" letter-spacing="' + ls + '"' + fit(str, size, max, 0.8);
@@ -467,7 +468,7 @@
     };
     var mark = emblem(cfg).replace(/^<svg[^>]*>/, '<svg x="194" y="259" width="112" height="112" viewBox="0 0 220 220" aria-hidden="true">');
 
-    var s = '<svg class="art art-coat" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(coatLabel(cfg, name)) + '">';
+    var s = '<svg class="art art-coat" viewBox="0 0 ' + W + ' ' + VH + '" role="img" aria-label="' + esc(coatLabel(cfg, name)) + '">';
     s += '<defs>' +
       '<linearGradient id="' + p + 'bd" gradientUnits="userSpaceOnUse" x1="108" y1="0" x2="392" y2="0"><stop offset="0" stop-color="' + lo + '"/><stop offset=".14" stop-color="' + shell + '"/><stop offset=".4" stop-color="' + hi + '"/><stop offset=".62" stop-color="' + shell + '"/><stop offset=".88" stop-color="' + mix(shell, lo, 0.5) + '"/><stop offset="1" stop-color="' + deep + '"/></linearGradient>' +
       '<linearGradient id="' + p + 'sl" gradientUnits="userSpaceOnUse" x1="50" y1="296" x2="124" y2="306"><stop offset="0" stop-color="' + lo + '"/><stop offset=".3" stop-color="' + mix(shell, hi, 0.6) + '"/><stop offset=".6" stop-color="' + shell + '"/><stop offset="1" stop-color="' + deep + '"/></linearGradient>' +
@@ -497,10 +498,10 @@
     s += '<rect x="226" y="3" width="48" height="20" rx="3" fill="#0B1428" stroke="' + L.brass + '" stroke-width="1.2"/>' + letter(String(cfg.station), 250, 18, { size: 13, fill: L.sign, family: BLOCK, shade: false, ls: 0 });
 
     /* name panel hanging from the tail */
-    s += '<rect x="160" y="412" width="184" height="72" rx="4" fill="#0A0602" opacity=".45" filter="' + u('b5') + '"/>';
-    s += '<rect x="158" y="408" width="184" height="74" rx="4" fill="#17181C"/><g clip-path="' + u('tail') + '"><rect x="158" y="408" width="184" height="74" fill="' + u('weave') + '" opacity=".7"/><path d="M112 424 Q250 444 388 424" fill="none" stroke="#000" stroke-opacity=".8" stroke-width="16" filter="' + u('b5') + '"/></g>';
-    s += '<rect x="164.5" y="439.5" width="171" height="36" rx="2.5" fill="none" stroke="' + lime + '" stroke-width="1.5" stroke-dasharray="4.4 2.4"/>';
-    s += '<text class="coat-name" x="250" y="466.5" text-anchor="middle" font-family="' + BLOCK + '" font-size="23" letter-spacing="1.6" fill="' + u('lime') + '"' + fit(nm, 23, COAT_NAME_FIT, 0.74) + '>' + esc(nm) + '</text>';
+    if (!onBack) s += '<rect x="160" y="412" width="184" height="72" rx="4" fill="#0A0602" opacity=".45" filter="' + u('b5') + '"/>';
+    if (!onBack) s += '<rect x="158" y="408" width="184" height="74" rx="4" fill="#17181C"/><g clip-path="' + u('tail') + '"><rect x="158" y="408" width="184" height="74" fill="' + u('weave') + '" opacity=".7"/><path d="M112 424 Q250 444 388 424" fill="none" stroke="#000" stroke-opacity=".8" stroke-width="16" filter="' + u('b5') + '"/></g>';
+    if (!onBack) s += '<rect x="164.5" y="439.5" width="171" height="36" rx="2.5" fill="none" stroke="' + lime + '" stroke-width="1.5" stroke-dasharray="4.4 2.4"/>';
+    if (!onBack) s += '<text class="coat-name" x="250" y="466.5" text-anchor="middle" font-family="' + BLOCK + '" font-size="23" letter-spacing="1.6" fill="' + u('lime') + '"' + fit(nm, 23, COAT_NAME_FIT, 0.74) + '>' + esc(nm) + '</text>';
 
     /* sleeves, then the back panel over them */
     s += '<g>' + sleeve() + '</g><g transform="' + MIRROR + '">' + sleeve() + '</g>';
@@ -509,13 +510,19 @@
     /* seams: shoulder yoke and the two action pleats */
     s += '<path d="M118 128 Q250 150 382 128" fill="none" stroke="#120B03" stroke-opacity=".5" stroke-width="5" filter="' + u('b2') + '" transform="translate(0 2)"/><path d="M118 128 Q250 150 382 128" fill="none" stroke="' + deep + '" stroke-opacity=".75" stroke-width="1"/>' + stitch('M119 131.5 Q250 153.5 381 131.5') + stitch('M119 124.6 Q250 146.6 381 124.6', hi, 0.5);
     s += '<path d="M143 133 C139 160 141 185 141 213" fill="none" stroke="' + deep + '" stroke-opacity=".6" stroke-width="1"/><path d="M357 133 C361 160 359 185 359 213" fill="none" stroke="' + deep + '" stroke-opacity=".6" stroke-width="1"/>' + stitch('M146 134 C142 160 144 185 144 213') + stitch('M354 134 C358 160 356 185 356 213');
-    /* drag rescue device flap under the collar */
-    s += '<rect x="221" y="96" width="58" height="21" rx="2.5" fill="#120B03" opacity=".5" filter="' + u('b2') + '"/><rect x="221" y="94" width="58" height="21" rx="2.5" fill="' + mix(shell, lo, 0.35) + '" stroke="' + deep + '" stroke-opacity=".7" stroke-width=".8"/><rect x="223.6" y="96.6" width="52.8" height="15.8" rx="1.5" fill="none" stroke="' + deep + '" stroke-width=".7" stroke-dasharray="2.4 1.7" opacity=".7"/><rect x="243" y="111" width="14" height="9" rx="1.5" fill="' + lime + '"/><text x="250" y="108.4" text-anchor="middle" font-family="' + BLOCK + '" font-size="7.5" letter-spacing=".8" fill="' + deep + '" opacity=".85">DRD</text>';
+    /* drag rescue device flap under the collar, or the name panel across the shoulders */
+    if (onBack) s += '<rect x="174" y="99" width="152" height="31" rx="3" fill="#0A0602" opacity=".55" filter="' + u('b2') + '"/>' +
+      '<rect x="174" y="96" width="152" height="31" rx="3" fill="#141518"/><rect x="174" y="96" width="152" height="31" rx="3" fill="' + u('weave') + '" opacity=".6"/>' +
+      '<rect x="176.6" y="98.6" width="146.8" height="25.8" rx="2" fill="none" stroke="#55575E" stroke-width=".8" stroke-dasharray="2.6 1.8"/>' +
+      '<text class="coat-name" data-size="18" data-fit="136" x="250" y="118" text-anchor="middle" font-family="' + BLOCK + '" font-size="18" letter-spacing="1.2" fill="#F1EFE6"' + fit(nm, 18, 136, 0.74) + '>' + esc(nm) + '</text>';
+    else s += '<rect x="221" y="96" width="58" height="21" rx="2.5" fill="#120B03" opacity=".5" filter="' + u('b2') + '"/><rect x="221" y="94" width="58" height="21" rx="2.5" fill="' + mix(shell, lo, 0.35) + '" stroke="' + deep + '" stroke-opacity=".7" stroke-width=".8"/><rect x="223.6" y="96.6" width="52.8" height="15.8" rx="1.5" fill="none" stroke="' + deep + '" stroke-width=".7" stroke-dasharray="2.4 1.7" opacity=".7"/><rect x="243" y="111" width="14" height="9" rx="1.5" fill="' + lime + '"/><text x="250" y="108.4" text-anchor="middle" font-family="' + BLOCK + '" font-size="7.5" letter-spacing=".8" fill="' + deep + '" opacity=".85">DRD</text>';
     /* department lettering, sewn on */
-    s += sewn(town, 181, 29, 196, 1) + sewn(line, 201.5, 13.5, 150, 2.2);
+    var tSize = Math.min(29, 212 / (town.length * 0.8)), lSize = Math.min(15, 200 / (line.length * 0.8));
+    s += sewn(town, onBack ? 176 : 201.5 - lSize - 7, tSize, 212, 1) + sewn(line, 202.5, lSize, 200, 1.6);
     s += BANDS.map(function (b) { return band(b[0], b[1]); }).join('');
     /* the department crest, as a twill patch */
-    s += '<circle cx="250" cy="318" r="63" fill="#0A0602" opacity=".6" filter="' + u('b2') + '"/><circle cx="250" cy="315" r="62" fill="#17181C"/><circle cx="250" cy="315" r="59" fill="none" stroke="#D2A237" stroke-width="5"/><circle cx="250" cy="315" r="59" fill="none" stroke="#7E5C12" stroke-width="5" stroke-dasharray="1.1 2.1" opacity=".6"/>' + mark + '<circle cx="250" cy="315" r="56.5" fill="' + u('thread') + '"/><circle cx="250" cy="315" r="56.5" fill="none" stroke="#000" stroke-opacity=".35" stroke-width="3" filter="' + u('b1') + '"/>';
+    if (cfg.emblemImage) s += '<image href="' + esc(cfg.emblemImage) + '" x="183" y="252" width="134" height="134" opacity=".55" filter="' + u('b2') + '" transform="translate(1.5 3)"/><image href="' + esc(cfg.emblemImage) + '" x="183" y="252" width="134" height="134"/><rect x="183" y="252" width="134" height="134" fill="' + u('thread') + '" clip-path="' + u('cb') + '" opacity=".6"/>';
+    else s += '<circle cx="250" cy="318" r="63" fill="#0A0602" opacity=".6" filter="' + u('b2') + '"/><circle cx="250" cy="315" r="62" fill="#17181C"/><circle cx="250" cy="315" r="59" fill="none" stroke="#D2A237" stroke-width="5"/><circle cx="250" cy="315" r="59" fill="none" stroke="#7E5C12" stroke-width="5" stroke-dasharray="1.1 2.1" opacity=".6"/>' + mark + '<circle cx="250" cy="315" r="56.5" fill="' + u('thread') + '"/><circle cx="250" cy="315" r="56.5" fill="none" stroke="#000" stroke-opacity=".35" stroke-width="3" filter="' + u('b1') + '"/>';
     /* folds and the roll of the cloth, over everything sewn to it */
     s += '<g fill="none" stroke-linecap="round">' +
       '<path d="' + BODY + '" stroke="#120B03" stroke-opacity=".5" stroke-width="20" filter="' + u('b8') + '"/>' +
@@ -537,7 +544,7 @@
     /* A slow glint across the reflective trim. It sits in its own layer above the
        coat, so the moving light never makes the browser redraw the cloth. */
     var glint = '<g transform="skewX(-16)"><rect class="coat-glint" x="-150" y="0" width="96" height="' + H + '" fill="' + u('glint') + '"/></g>';
-    var fx = '<svg class="art-coat-fx" viewBox="0 0 ' + W + ' ' + H + '" aria-hidden="true" focusable="false"><g clip-path="' + u('cb') + '"><g clip-path="' + u('tb') + '">' + glint + '</g></g>' +
+    var fx = '<svg class="art-coat-fx" viewBox="0 0 ' + W + ' ' + VH + '" aria-hidden="true" focusable="false"><g clip-path="' + u('cb') + '"><g clip-path="' + u('tb') + '">' + glint + '</g></g>' +
       '<g clip-path="' + u('cs') + '"><g clip-path="' + u('ts') + '">' + glint + '</g></g>' +
       '<g transform="' + MIRROR + '"><g clip-path="' + u('cs') + '"><g clip-path="' + u('ts') + '"><g transform="' + MIRROR + '">' + glint + '</g></g></g></g></svg>';
     return '<div class="coat-fig">' + s + '</svg>' + fx + '</div>';
@@ -549,7 +556,8 @@
     if (!svg) return false;
     Array.prototype.forEach.call(svg.querySelectorAll('.coat-name'), function (el) {
       el.textContent = t;
-      if (t.length * 23 * 0.74 > COAT_NAME_FIT) { el.setAttribute('textLength', COAT_NAME_FIT); el.setAttribute('lengthAdjust', 'spacingAndGlyphs'); }
+      var sz = +el.getAttribute('data-size') || 23, mx = +el.getAttribute('data-fit') || COAT_NAME_FIT;
+      if (t.length * sz * 0.74 > mx) { el.setAttribute('textLength', mx); el.setAttribute('lengthAdjust', 'spacingAndGlyphs'); }
       else { el.removeAttribute('textLength'); el.removeAttribute('lengthAdjust'); }
     });
     svg.setAttribute('aria-label', coatLabel(cfg, name));

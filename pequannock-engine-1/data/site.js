@@ -31,7 +31,10 @@ window.SITE = {
   emblemImage: "images/brand/patch.png",
   emblemBottom: "Engine Co. No. 1",
   shieldMark: "PTFD",
-  coatLine: "Engine Co. 1",
+  /* lettered on the back of the coat in "There's a coat with your name on it" */
+  coatTown: "Pequannock Twp",
+  coatPanel: "shoulders",
+  coatLine: "Engine Company #1",
   mapPin: "1",
   parkName: " ",
 
