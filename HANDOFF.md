@@ -180,9 +180,10 @@ and `data/site.js`. Code is copied per site, so a fix in one copy does not reach
 1. **Pequannock gets its own repo and address.** The owner creates an empty GitHub repo (suggested
    name `pequannock-engine-1-concept`) and connects it to Cloudflare Workers Builds. Then move the
    folder: design 2 to the repo root, design 1 to `/design-1/`, copy `wrangler.toml` (name matching
-   the Worker), `_headers`, `robots.txt`, `404.html`, `.assetsignore`, and keep "concept" in the
-   Worker name. Update the White-Meadow-style README and the links. Remove the folder from
-   `larkin-mills-fire` only after the new address works.
+   the Worker), `_headers`, `robots.txt`, `404.html` and `.assetsignore`, and keep "concept" in
+   the Worker name, as White Meadow Lake does. Fix the two "See design" links (design 2 at `/`,
+   design 1 at `/design-1/`). Remove the folder from `larkin-mills-fire` only after the new
+   address works.
 2. Owner to fill in the tour price and contact line on each pitch site before showing it.
 3. Pequannock upgrades when the owner has them: photos of the real trucks, the original patch file,
    a ChatGPT turnout-gear picture for Pequannock (back of the coat, blank name panel across the
