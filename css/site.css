@@ -670,6 +670,7 @@ dialog.dlg-report { width: min(96vw, 780px); }
 /* ---------- more: the guided tour ---------- */
 .tour-go { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; margin-top: 6px; padding: 4px 12px; border: 0; border-radius: 5px; background: var(--ink); color: var(--white); font-weight: 700; font-size: .875rem; cursor: pointer; }
 .tour-go .ic { width: 13px; height: 13px; }
+a.tour-go { text-decoration: none; }
 .concept-badge .tour-go { pointer-events: auto; }
 .concept-badge .tour-go span { display: inline; }
 .sample-bar .tour-go { margin: 0 0 0 10px; min-height: 26px; padding: 2px 10px; vertical-align: middle; }

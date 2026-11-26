@@ -100,6 +100,8 @@ window.SITE = {
 
   /* A thin label across the very top. Keep it on any demo that is shared; delete the line for a real department. */
   sampleBanner: "Sample site. {town} is a fictional town, and this is not a real fire department.",
+  /* A link to the other design of this sample, shown beside the label above. Remove it for a real department. */
+  otherDesign: { label: "See design 2", href: "design-2/" },
 
   /* Site-wide notice under the header. Set active:false to hide it. */
   alert: { active: true, text: "Red flag warning today. No outdoor burning in {town} until 8 PM.", link: { label: "Burn rules", href: "#safety" } },

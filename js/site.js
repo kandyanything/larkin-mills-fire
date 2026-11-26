@@ -53,7 +53,7 @@
   /* ---------- sections ---------- */
   function header() {
     var nav = [['Join', '#join']].concat(S.stations && S.stations.items && S.stations.items.length ? [['Stations', '#stations']] : [], [['Apparatus', '#apparatus'], ['Officers', '#officers'], ['Safety', '#safety'], ['Events', '#events'], ['Support us', '#support'], ['Contact', '#contact']]);
-    return (S.sampleBanner ? '<div class="sample-bar"><div class="wrap">' + esc(S.sampleBanner) + P.tourButton(S) + '</div></div>' : '') +
+    return (S.sampleBanner ? '<div class="sample-bar"><div class="wrap">' + esc(S.sampleBanner) + (S.otherDesign ? '<a class="tour-go" href="' + esc(S.otherDesign.href) + '">' + esc(S.otherDesign.label) + '</a>' : '') + P.tourButton(S) + '</div></div>' : '') +
       '<div class="strip"><div class="wrap"><strong>Emergency? Call 911.</strong><div class="strip-right">' +
       '<a href="tel:' + esc(S.contact.nonEmergency.replace(/[^0-9]/g, '')) + '">Non-emergency: ' + esc(S.contact.nonEmergency) + '</a>' +
       '<button type="button" data-open="members">' + I('lock') + 'Members</button></div></div></div>' +

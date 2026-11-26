@@ -4,6 +4,9 @@ A complete one-page site for a volunteer fire department or fire company. Open `
 
 The sample content is fictional: Larkin Mills, its officers, its businesses and its phone numbers are invented, and the photos are computer-generated.
 
+
+**A second design** of this same site, "Bay Doors", lives in [`design-2/`](design-2/README.md) and is served at `/design-2/`. The label across the top of each design links to the other.
+
 ## Make it a new department
 
 Edit one file: `data/site.js`.
