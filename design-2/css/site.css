@@ -172,8 +172,13 @@ h3 { font: 800 1.25rem/1.2 var(--text); letter-spacing: -.01em; }
 /* photographed: the real building, with a door placed over each real opening */
 .hero3--photo { padding-top: 0; background: var(--ink); color: var(--white); }
 /* as wide as the page, but never so tall that the headline falls off the first screen */
-.house--photo { width: min(100%, calc((100vh - 272px) * var(--k, 2.2))); width: min(100%, max(880px, calc((100svh - 272px) * var(--k, 2.2)))); margin: 0 auto; padding: 0; border: 0; background: #1B1D21; aspect-ratio: var(--ar); }
+.house--photo { width: min(100%, calc((100vh - 272px) * var(--k, 2.2))); width: min(100%, max(720px, calc((100svh - 272px) * var(--k, 2.2)))); margin: 0 auto; padding: 0; border: 0; background: none; aspect-ratio: var(--ar); }
 .house-photo { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* when the screen is wider than the photograph, a soft, dark copy of it fills the sides */
+.hero3--photo .house-scroll { position: relative; overflow: hidden; }
+.hero3--photo .house-scroll::before { content: ""; position: absolute; inset: -40px; background: var(--photo) center / cover no-repeat; filter: blur(26px) brightness(.5) saturate(1.1); }
+.house--photo { position: relative; }
+.house--photo .house-photo { -webkit-mask-image: linear-gradient(90deg, transparent, #000 2.5%, #000 97.5%, transparent); mask-image: linear-gradient(90deg, transparent, #000 2.5%, #000 97.5%, transparent); }
 .house--photo .house-doors { position: absolute; inset: 0; display: block; height: auto; }
 .house--photo .house-doors li { position: absolute; display: block; }
 .house--photo .bdoor { height: 100%; border: 0; }
@@ -195,7 +200,7 @@ h3 { font: 800 1.25rem/1.2 var(--text); letter-spacing: -.01em; }
 .hero3--photo .house-cap .btn { display: none; }
 .hero3--photo { --cap: 52px; }
 .house-copy a { pointer-events: auto; }
-.hero3--photo h1 { font-size: clamp(2.6rem, 5vw, 4.9rem); text-shadow: 0 2px 20px rgba(0, 0, 0, .5); }
+.hero3--photo h1 { font-size: clamp(2.6rem, 5vw, 4.9rem); font-size: clamp(2.2rem, min(5vw, 7.6svh), 4.9rem); text-shadow: 0 2px 20px rgba(0, 0, 0, .5); }
 .hero3--photo .hero2-side p { color: rgba(255, 255, 255, .92); }
 
 /* the row of small doors across the top of every bay */
@@ -527,6 +532,13 @@ dialog::backdrop { background: rgba(14, 15, 17, .72); }
 .swatch[aria-pressed="true"] { border-color: var(--ink); box-shadow: 0 0 0 2px var(--tape); }
 
 /* ---------- smaller screens ---------- */
+/* the strip under the building stays on one line: the door's own text already says the rest */
+@media (min-width: 901px) { .hero3--photo .house-line { flex-wrap: nowrap; } .hero3--photo .house-line p:not(.house-cap) { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; } .hero3--photo .house-cap { flex: 0 0 auto; white-space: nowrap; } }
+@media (min-width: 901px) and (max-width: 1420px) { .hero3--photo .house-line:has(.house-cap b) p:not(.house-cap) { display: none; } .hero3--photo .house-cap { margin-left: auto; } }
+/* on a small building the door shows its name and the button; the strip underneath carries the sentence */
+.house--photo { container-type: inline-size; }
+@container (max-width: 1040px) { .bdoor-txt em { display: none; } }
+@media (min-width: 901px) and (max-width: 1180px) { .hero3--photo .house-line p:not(.house-cap) { display: none; } }
 @media (max-width: 1180px) {
   .people { grid-template-columns: repeat(3, 1fr); }
   .roles { grid-template-columns: repeat(3, 1fr); }
@@ -571,7 +583,10 @@ dialog::backdrop { background: rgba(14, 15, 17, .72); }
   .cap-mouse { display: none; }
   /* a photographed building is shown large and panned sideways with a finger */
   .house-scroll { overflow-x: auto; scroll-snap-type: x proximity; }
-  .house--photo { width: 250%; margin: 0; }
+  .house--photo { width: 190%; margin: 0; }
+  .hero3--photo .house-scroll { overflow-x: auto; overflow-y: hidden; }
+  .hero3--photo .house-scroll::before { display: none; }
+  .house--photo .house-photo { -webkit-mask-image: none; mask-image: none; }
   .house-copy { position: static; padding: 18px 0 0; background: none; }
   .hero3--photo .hero-cta { flex-direction: row; margin-top: 14px; }
   .hero3--photo .hero3-top { grid-template-columns: 1fr; }

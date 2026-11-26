@@ -89,7 +89,7 @@
     }).join('') + '</ul>';
     var cap = '<p class="house-cap" aria-live="polite">' + doorCap(state.up) + '</p>';
     var cls = (state.hinted ? '' : ' is-waiting');
-    if (photo) return '<section class="hero3 hero3--photo" id="top" aria-labelledby="hero-h"><div class="house-scroll"><div class="house house--photo' + cls + '" style="--ar:' + (f.width || 16) + ' / ' + (f.height || 9) + ';--k:' + ((f.width || 16) / (f.height || 9)).toFixed(4) + '">' +
+    if (photo) return '<section class="hero3 hero3--photo" id="top" aria-labelledby="hero-h"><div class="house-scroll" style="--photo:url(' + esc(new URL(f.photo, document.baseURI).href) + ')"><div class="house house--photo' + cls + '" style="--ar:' + (f.width || 16) + ' / ' + (f.height || 9) + ';--k:' + ((f.width || 16) / (f.height || 9)).toFixed(4) + '">' +
       '<img class="house-photo" src="' + esc(f.photo) + '" alt="' + esc(f.photoAlt || '') + '">' + doors + '</div></div>' +
       '<div class="house-copy"><div class="wrap hero3-top"><h1 id="hero-h">' + esc(h.title) + '</h1><div class="hero-cta"><a class="btn btn--white" href="' + h.primary.href + '">' + esc(h.primary.label) + '</a><a class="btn btn--ghost" href="' + h.secondary.href + '">' + esc(h.secondary.label) + '</a></div></div></div>' +
       '<div class="wrap house-line"><p>' + esc(h.text) + '</p>' + cap + '</div><div class="tape" aria-hidden="true"></div></section>';
