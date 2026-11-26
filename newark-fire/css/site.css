@@ -998,3 +998,15 @@ dialog.dlg-report { width: min(96vw, 780px); }
 .sta { position: relative; }
 .sta-img { position: absolute; top: 14px; right: 14px; width: 84px; height: 84px; border-radius: 4px; object-fit: cover; box-shadow: 0 0 0 1px rgba(20, 22, 27, .12); }
 .sta--photo .sta-units, .sta--photo h3, .sta--photo .sta-addr { margin-right: 92px; }
+/* Five doors on the rendering make each door small, so the words inside a lifted door are sized to the
+   door itself. The door's one-line description shows in the caption under the picture instead. */
+.house--photo .bdoor { container-type: inline-size; }
+.house--photo .bdoor-txt { left: 5px; right: 5px; bottom: 6px; gap: 4px; justify-items: center; text-align: center; }
+.house--photo .bdoor-txt b { font-size: clamp(11px, 17cqw, 1.2rem); line-height: 1; letter-spacing: .02em; text-shadow: 0 1px 6px rgba(0, 0, 0, .8); }
+.house--photo .bdoor-txt em { display: none; }
+.house--photo .bdoor-txt i { margin-top: 0; padding: 2px 8px; font-size: clamp(10px, 13cqw, .8125rem); }
+/* the yellow name over each door follows the door's size too, so neighbors never touch */
+.house--photo .house-doors > li { container-type: inline-size; }
+.house--photo .lintel { padding: 3px 7px 2px; font-size: clamp(10px, 15cqw, 1.15rem); letter-spacing: .05em; }
+/* at least as wide as the awning, so the rendering's own lettering ("Engine 36" and so on) stays covered */
+.house--photo .lintel { min-width: 106%; text-align: center; }
