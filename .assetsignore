@@ -10,3 +10,5 @@ build.py
 dist
 work
 .gitkeep
+HANDOFF.md
+tools

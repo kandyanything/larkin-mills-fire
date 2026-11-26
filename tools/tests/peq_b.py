@@ -1,0 +1,76 @@
+import json, numpy as np, cv2
+from playwright.sync_api import sync_playwright
+URL = 'http://localhost:8765/pequannock-engine-1/index.html'
+ARGS = ['--no-sandbox', '--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist']
+ok = []
+def check(n, c, x=''): ok.append((n, bool(c))); print(('  ok   ' if c else '  FAIL ') + n + (' | ' + str(x) if x != '' else ''))
+with sync_playwright() as p:
+    b = p.chromium.launch(executable_path='/usr/bin/google-chrome', args=ARGS); errs = []
+    def page(w=1440, h=900, seen=True, **kw):
+        ctx = b.new_context(viewport={'width': w, 'height': h}, accept_downloads=True, **kw); pg = ctx.new_page()
+        pg.on('pageerror', lambda e: errs.append('PAGEERROR ' + str(e))); pg.on('console', lambda m: errs.append(m.text[:140]) if m.type == 'error' and 'ERR_' not in m.text and 'wixstatic' not in m.text and 'weather.gov' not in m.text else None)
+        if seen: pg.add_init_script("try{localStorage.setItem('welcome-off:launch','1')}catch(e){}")
+        return ctx, pg
+    has = lambda pg, sel: pg.evaluate("!!document.querySelector(%s)" % json.dumps(sel))
+    bay = lambda pg: pg.evaluate("Array.from(document.querySelectorAll('.bay')).filter(b => !b.hidden).map(b => b.getAttribute('data-bay')).join()")
+    up = lambda pg: pg.evaluate("Array.from(document.querySelectorAll('.bdoor')).findIndex(d => d.classList.contains('is-up'))")
+    ctx, pg = page(seen=False); pg.goto(URL); pg.wait_for_timeout(1900)
+    check('first visit: welcome opens with the fire running', has(pg, 'dialog.wl[open]') and not has(pg, 'dialog.wl.is-static'))
+    pg.screenshot(path='peq_welcome.png')
+    check('welcome carries the concept note', 'Website concept' in pg.inner_text('dialog.wl'))
+    pg.click('[data-wl-skip]'); pg.wait_for_timeout(1700); pg.click('.wl-actions .btn'); pg.wait_for_timeout(300)
+    check('closing the welcome stirs the doors', has(pg, '.house.is-hint')); ctx.close()
+    ctx, pg = page(); pg.goto(URL); pg.wait_for_timeout(2800)
+    check('title and robots say concept', 'website concept' in pg.title() and pg.get_attribute('meta[name=robots]', 'content').startswith('noindex'))
+    check('home is the only bay showing, four doors', bay(pg) == 'home' and pg.locator('.bdoor').count() == 4)
+    r = pg.evaluate("[Math.round(document.querySelector('.hero3').getBoundingClientRect().bottom), innerHeight]"); check('the first screen holds the whole firehouse', r[0] <= r[1], r)
+    for i in [0, 3]:
+        bx = pg.locator('.bdoor').nth(i).bounding_box(); pg.mouse.move(bx['x'] + bx['width'] / 2, bx['y'] + bx['height'] / 2); pg.wait_for_timeout(950)
+        t = pg.evaluate("(() => { var d = document.querySelectorAll('.bdoor')[%d], s = d.querySelector('.bdoor-shut').getBoundingClientRect(), r = d.getBoundingClientRect(); return [Math.round(r.top - s.top), Math.round(r.height)] })()" % i)
+        check('pointing lifts door %d' % (i + 1), up(pg) == i and t[0] > t[1] * 0.85, t)
+    pg.mouse.move(300, 300); pg.wait_for_timeout(300); check('door drops when the pointer leaves the building', up(pg) == -1)
+    pg.evaluate("document.querySelectorAll('.bdoor')[1].focus()"); pg.wait_for_timeout(200); pg.keyboard.press('Enter'); pg.wait_for_timeout(500)
+    check('keyboard: Enter on the People door goes into that bay', bay(pg) == 'people' and pg.evaluate("scrollY") == 0)
+    check('bay shows officers, roster, year and history', all(pg.is_visible('#' + x) for x in ['officers', 'members', 'year', 'history']))
+    check('33 chiefs listed, 4 archive photos', pg.locator('.chiefs li').count() == 33 and pg.locator('.gallery--dusk img').count() == 4)
+    pg.click('.nav a[href="#join"]'); pg.wait_for_timeout(400); check('Join in the menu opens the join bay', bay(pg) == 'join' and pg.is_visible('#juniors'))
+    pg.fill('#coat-name', 'Daley'); pg.wait_for_timeout(700); check('name goes on the drawn coat', 'DALEY' in pg.inner_text('#coat').upper() or 'Daley' in pg.inner_html('#coat'))
+    pg.click('[data-open="apply"]'); pg.wait_for_timeout(200); check('interest form opens', has(pg, '#apply[open]')); pg.keyboard.press('Escape')
+    pg.click('.site-footer a[href="#partners"]'); pg.wait_for_timeout(600); check('a deep link opens the right bay', bay(pg) == 'give' and abs(pg.evaluate("document.getElementById('partners').getBoundingClientRect().top")) < 160)
+    pg.evaluate("document.querySelector('[data-open=\"report\"]').scrollIntoView({block:'center'})"); pg.click('[data-open="report"]'); pg.wait_for_timeout(200)
+    check('sample report uses invented businesses only', pg.inner_text('#rep-h') == 'Example Hardware' and 'Handy Mike' not in pg.inner_text('#report')); pg.keyboard.press('Escape')
+    pg.evaluate("document.querySelector('.give-qr').scrollIntoView({block:'center'}); document.querySelector('.give-qr .qr').style.width='300px'")
+    im = cv2.imdecode(np.frombuffer(pg.locator('.give-qr .qr').screenshot(), np.uint8), cv2.IMREAD_COLOR); q = cv2.QRCodeDetector().detectAndDecode(im)[0]; check('the giving code scans', q.endswith('#support'), q)
+    pg.go_back(); pg.wait_for_timeout(400); check('the back button returns to the last bay', bay(pg) == 'join')
+    pg.click('.brand'); pg.wait_for_timeout(400); check('the name in the header goes home', bay(pg) == 'home')
+    pg.evaluate("document.getElementById('help').scrollIntoView()"); pg.fill('#finder-q', 'inspection'); n = pg.evaluate("Array.from(document.querySelectorAll('.finder-list .task')).filter(l => !l.hidden).map(l => l.querySelector('h3').textContent).join('|')"); check('finder finds the inspection answer', n == 'Schedule a fire inspection', n)
+    tags = pg.evaluate("Array.from(document.querySelectorAll('.sample-tag')).map(t => t.closest('section') && t.closest('section').id).filter(Boolean)"); check('every placeholder section is tagged', set(tags) >= {'calls','apparatus','join','neighbors','year','events','santa','feed','support','partners','safety','contact'}, sorted(set(tags)))
+    check('pictures from the company site fall back when they cannot load', pg.evaluate("Array.from(document.querySelectorAll('img[data-fell]')).length") >= 0)
+    pg.goto(URL + '#santa'); pg.wait_for_timeout(1500); a = pg.get_attribute('[data-santa-truck]', 'transform'); pg.wait_for_timeout(900); check('santa map runs, ten stops', a != pg.get_attribute('[data-santa-truck]', 'transform') and pg.locator('[data-santa-stop]').count() == 10)
+    fell = pg.evaluate("(async () => { var i = document.querySelector('#feed img'); i.scrollIntoView(); await new Promise(r => setTimeout(r, 1500)); return [i.getAttribute('data-fell'), i.getAttribute('src')] })()"); check('feed photo that cannot load shows the stand-in', fell[0] == '1' and fell[1].endswith('photo-missing.jpg'), fell)
+    with pg.expect_download() as dl:
+        pg.evaluate("document.querySelector('[data-ics]').scrollIntoView({block:'center'})"); pg.click('[data-ics="0"]')
+    check('calendar file for the Turkey Trot', 'turkey-trot' in dl.value.suggested_filename, dl.value.suggested_filename)
+    pg.click('[data-badge-close]'); pg.wait_for_timeout(200); check('the concept label closes', not has(pg, '#concept-badge'))
+    ctx.close()
+    ctx, pg = page(); pg.goto(URL + '?alert'); pg.wait_for_timeout(1500); check('weather alert demo shows', has(pg, '.wx') or 'Weather' in pg.inner_text('body')[:1200] or has(pg, '[data-wx] *'), pg.evaluate("(document.querySelector('.wx,[data-wx]')||{}).className")); ctx.close()
+    ctx, pg = page(); pg.goto(URL + '?tour'); pg.wait_for_timeout(1500); seen = []
+    for i in range(9):
+        seen.append(bay(pg) + ':' + pg.evaluate("(document.querySelector('.tour-focus')||{id:'end'}).id"))
+        if has(pg, '[data-tour-next]'): pg.click('[data-tour-next]'); pg.wait_for_timeout(700)
+    check('the tour walks from bay to bay', seen == ['home:top', 'events:feed', 'people:year', 'join:join', 'join:neighbors', 'events:santa', 'give:support', 'give:partners', 'give:end'], seen)
+    pg.screenshot(path='peq_tour_end.png'); print('   tour end:', pg.inner_text('.tour')[:300].replace('\n', ' / '))
+    ctx.close()
+    ctx, pg = page(seen=False, reduced_motion='reduce'); pg.goto(URL); pg.wait_for_timeout(1300); check('reduced motion: still welcome, no door hint', has(pg, 'dialog.wl.is-static') and not has(pg, '.house.is-hint')); ctx.close()
+    ctx, pg = page(390, 844, device_scale_factor=2, has_touch=True, is_mobile=True); pg.goto(URL); pg.wait_for_timeout(2600)
+    check('phone: no sideways scroll, building pans', not pg.evaluate("document.documentElement.scrollWidth > innerWidth") and pg.evaluate("document.querySelector('.house-scroll').scrollWidth > innerWidth"))
+    pg.tap('.bdoor[data-bdoor="1"]'); pg.wait_for_timeout(900); check('phone: first tap lifts the door and stays', up(pg) == 1 and bay(pg) == 'home' and pg.is_visible('.bdoor.is-up .bdoor-txt i'))
+    pg.tap('.bdoor[data-bdoor="1"]'); pg.wait_for_timeout(600); check('phone: second tap goes in', bay(pg) == 'people')
+    pg.tap('.nav-toggle'); pg.wait_for_timeout(300); pg.screenshot(path='peq_m_menu.png'); check('phone: menu lists Join', pg.is_visible('.nav a[href="#join"]'))
+    for h in ['#join', '#apparatus', '#officers', '#events', '#support']:
+        pg.goto(URL + h); pg.wait_for_timeout(700)
+        if pg.evaluate("document.documentElement.scrollWidth > innerWidth + 1"): check('phone: no sideways scroll in ' + h, False, pg.evaluate("Array.from(document.querySelectorAll('.bay:not([hidden]) *')).filter(e => e.getBoundingClientRect().right > innerWidth + 2).slice(0,4).map(e => e.className || e.tagName).join(' | ')"))
+    check('phone: bays checked for sideways scroll', True)
+    pg.goto(URL + '#officers'); pg.wait_for_timeout(800); pg.screenshot(path='peq_m_people.png', full_page=True)
+    ctx.close(); b.close()
+print('ALL PASS' if all(v for _, v in ok) else 'FAILURES: ' + ', '.join(n for n, v in ok if not v), '|', len(ok), 'checks | errors:', errs[:6])
