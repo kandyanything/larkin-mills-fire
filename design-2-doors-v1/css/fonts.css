@@ -1,0 +1,8 @@
+/* Self-hosted fonts (SIL Open Font License; see fonts/OFL-*.txt).
+   Big Shoulders was drawn for the City of Chicago; Public Sans for the United States government. */
+@font-face { font-family: "Bay Display"; src: url("../fonts/big-shoulders-display-900.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Bay Display Light"; src: url("../fonts/big-shoulders-display-800.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Public Sans"; src: url("../fonts/public-sans-400.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Public Sans"; src: url("../fonts/public-sans-600.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Public Sans"; src: url("../fonts/public-sans-700.woff2") format("woff2"); font-weight: 700; font-display: swap; }
+@font-face { font-family: "Public Sans"; src: url("../fonts/public-sans-800.woff2") format("woff2"); font-weight: 800 900; font-display: swap; }

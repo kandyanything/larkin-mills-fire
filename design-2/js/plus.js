@@ -402,7 +402,9 @@
   function tourGo(i, focus) {
     var steps = tourSteps(); if (!tour.el || i < 0 || i >= steps.length) return;
     tour.i = i; tour.left = ((S.tour.seconds || 6) * 1000);
-    var st = steps[i], sec = st.at && document.getElementById(st.at);
+    var st = steps[i];
+    if (st.at && window.FireBays) window.FireBays.show(st.at);      /* a design with separate pages opens the right one first */
+    var sec = st.at && document.getElementById(st.at);
     document.querySelectorAll('.tour-focus').forEach(function (x) { x.classList.remove('tour-focus'); });
     if (sec && !st.end) { sec.classList.add('tour-focus'); sec.scrollIntoView({ behavior: reduce.matches ? 'auto' : 'smooth', block: 'start' }); }
     if (st.alert && S.weather && !(wx.list && wx.list.length)) { wx.demo = true; wxShow(); }

@@ -106,6 +106,30 @@ window.SITE = {
   /* Site-wide notice under the header. Set active:false to hide it. */
   alert: { active: true, text: "Red flag warning today. No outdoor burning in {town} until 8 PM.", link: { label: "Burn rules", href: "#safety" } },
 
+  /* The front of the firehouse, and what is behind each bay door. Each door opens one part of the
+     site: `bay` is join, rigs, people, events or give, and `href` is where a click lands.
+     `photo` is what shows when the door lifts.
+     To use a straight-on photograph of the real building instead of the drawn brick front, set
+     `photo` here and give every door `box: [left, top, width, height]` in percent of that picture. */
+  front: {
+    sign: "{company}",
+    est: "Volunteer since 1856",
+    photo: "images/stations/headquarters-front.jpg", width: 1672, height: 750,
+    photoAlt: "The {company} headquarters at sunset, seen straight on: four arched glass bay doors with an engine behind each, and the main entrance to the right",
+    hint: "Point at a door to look inside.",
+    hintTouch: "Tap a door to look inside. Swipe to see the whole building.",
+    /* The doors run left to right across the building. `arch` rounds the top of a door, as a
+       percent of its height, to match an arched opening. Without `photo` above, the boxes are
+       ignored and the doors are drawn. */
+    doors: [
+      { bay: "rigs", label: "Rigs", href: "#apparatus", photo: "images/rigs/engine-1.jpg", pos: "60% 50%", line: "The trucks, and the five houses they run from.", box: [18.66, 46.67, 8.37, 24.13], arch: 14 },
+      { bay: "people", label: "People", href: "#officers", photo: "images/officers/chief-carter.jpg", pos: "50% 18%", line: "168 volunteers and the officers they elect.", box: [29.78, 46.67, 8.73, 24.13], arch: 14 },
+      { bay: "events", label: "Events", href: "#events", photo: "images/rigs/ladder-1.jpg", pos: "55% 50%", line: "Drill nights, breakfasts and Santa on Engine 1.", box: [41.39, 46.67, 8.73, 24.13], arch: 14 },
+      { bay: "give", label: "Give", href: "#support", photo: "images/rigs/rescue-1.jpg", pos: "60% 50%", line: "Tax dollars buy the trucks. You buy the rest.", box: [52.99, 46.67, 8.73, 24.13], arch: 14 },
+      { bay: "join", label: "Join", href: "#join", photo: "images/gear/turnout-gear.jpg", pos: "76% 30%", line: "The front door. There's a coat with your name on it.", box: [68.54, 51.2, 9.69, 20.0] }
+    ]
+  },
+
   hero: {
     photo: "images/stations/station-5.jpg",   /* leave empty to show the drawn firehouse instead */
     photoAlt: "Station 5, the {company} headquarters, at sunset",

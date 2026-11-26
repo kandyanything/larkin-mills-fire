@@ -43,7 +43,7 @@ a { color: inherit; }
 h1, h2 { font-family: var(--display); font-weight: 900; line-height: .9; letter-spacing: .004em; text-wrap: balance; }
 h3 { font: 800 1.25rem/1.2 var(--text); letter-spacing: -.01em; }
 :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
-.hero2 :focus-visible, .strip :focus-visible, .band--dusk :focus-visible, .band--accent :focus-visible, .site-footer :focus-visible, .mbar :focus-visible, .tour :focus-visible, .wl :focus-visible { outline-color: var(--tape); }
+.hero3--photo :focus-visible, .bay-nav :focus-visible, .strip :focus-visible, .band--dusk :focus-visible, .band--accent :focus-visible, .site-footer :focus-visible, .mbar :focus-visible, .tour :focus-visible, .wl :focus-visible { outline-color: var(--tape); }
 .vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .skip { position: absolute; left: -9999px; top: 8px; z-index: 300; padding: 10px 16px; border-radius: var(--r); background: var(--white); color: var(--ink); font-weight: 700; }
 .skip:focus { left: 8px; }
@@ -66,10 +66,10 @@ h3 { font: 800 1.25rem/1.2 var(--text); letter-spacing: -.01em; }
 .btn--line:hover { border-color: var(--ink); background: var(--ink); color: var(--white); }
 .link { border: 0; padding: 0; background: none; color: var(--accent); font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; cursor: pointer; }
 .link:hover { text-decoration-thickness: 4px; }
-.band--dusk .link, .band--accent .link, .hero2 .link { color: var(--tape); }
+.band--dusk .link, .band--accent .link { color: var(--tape); }
 /* a unit's call sign, lettered like a number plate */
 .plate { display: inline-block; min-width: 2.3em; padding: 3px 7px 2px; border-radius: 2px; background: var(--ink); color: var(--tape); font: 900 1.0625rem/1.1 var(--display); letter-spacing: .05em; text-align: center; }
-.band--dusk .plate, .hero2 .plate { background: var(--tape); color: var(--ink); }
+.band--dusk .plate { background: var(--tape); color: var(--ink); }
 .card { padding: clamp(20px, 3vw, 34px); border-radius: var(--r); background: var(--white); color: var(--ink); }
 .demo-note { padding: 12px 14px; border-left: 5px solid var(--tape); background: #FFF6CC; color: var(--ink); font-size: .9688rem; line-height: 1.45; }
 .sample-tag { display: inline-block; padding: 4px 10px; border: 1.5px dashed currentColor; border-radius: var(--r); font-size: .875rem; line-height: 1.4; }
@@ -123,53 +123,117 @@ h3 { font: 800 1.25rem/1.2 var(--text); letter-spacing: -.01em; }
 .nav-toggle { display: none; align-items: center; gap: 8px; min-height: 46px; padding: 8px 14px; border: 2px solid var(--ink); border-radius: var(--r); background: var(--white); font-weight: 700; cursor: pointer; }
 
 /* ---------- the front of the firehouse ---------- */
-.hero2 { position: relative; padding-top: clamp(28px, 3.4vw, 48px); background: var(--accent); color: var(--white); }
-.hero2::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 28%, rgba(0, 0, 0, .3)); pointer-events: none; }
-.hero2 > * { position: relative; }
-.hero2-top { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); align-items: end; gap: 24px clamp(24px, 5vw, 72px); }
-.hero2 h1 { font-size: clamp(3.1rem, 6.5vw, 6.3rem); line-height: .86; }
-.hero2-side p { max-width: 34ch; font-size: clamp(1.0625rem, 1.4vw, 1.25rem); line-height: 1.5; }
-.hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
-.doors { display: flex; gap: clamp(6px, 1vw, 14px); height: clamp(300px, calc(100vh - 560px), 480px); height: clamp(300px, calc(100svh - 560px), 480px); margin-top: clamp(24px, 3vw, 40px); }
-.door { position: relative; flex: 1 1 0; min-width: 0; overflow: hidden; background: #1B1D21; transition: flex-grow .65s var(--ease); }
-.door.is-active { flex-grow: 3.6; }
-.door-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.14); transition: transform 2.2s var(--ease) .25s; }
-.hero2.is-open .door-photo { transform: none; }
-.door::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgba(0, 0, 0, .86)); pointer-events: none; }
-.door-hit { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end; gap: 4px; padding: 0 clamp(10px, 1.5vw, 24px) clamp(14px, 1.7vw, 24px); border: 0; background: none; color: var(--white); text-align: left; cursor: pointer; }
-.door-hit:focus-visible { outline-offset: -6px; }
-.door-hit b { font: 900 clamp(3.4rem, 6.6vw, 6.4rem)/.78 var(--display); }
-.door-hit span { font-weight: 700; font-size: clamp(.9375rem, 1.15vw, 1.125rem); line-height: 1.15; }
-.door.is-active .door-hit { cursor: default; }
-.door.is-active::after { background: linear-gradient(180deg, transparent 8%, rgba(0, 0, 0, .55) 52%, rgba(0, 0, 0, .9)); }
-.door-info { position: absolute; right: clamp(14px, 1.7vw, 24px); bottom: clamp(14px, 1.7vw, 24px); z-index: 3; width: min(52%, 400px); opacity: 0; transform: translateY(10px); transition: opacity .25s, transform .4s var(--ease); pointer-events: none; }
-.door.is-active .door-info { opacity: 1; transform: none; transition-delay: .28s; pointer-events: auto; }
-.door-info { text-shadow: 0 1px 10px rgba(0, 0, 0, .65); }
-.door-info .plate { text-shadow: none; }
-.door-line { font-weight: 700; }
-.door-units { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-.door-text { margin-block: 10px 12px; color: rgba(255, 255, 255, .92); font-size: .9688rem; line-height: 1.45; }
-/* the door itself: five white panels, a row of glass, the number painted on, a rubber seal at the floor */
-.door-shut { position: absolute; inset: 0; z-index: 4; display: grid; place-items: end center; padding-bottom: 13%; border-bottom: 10px solid #101114; pointer-events: none;
-  background:
+.hero3 { position: relative; padding-top: clamp(26px, 3.2vw, 44px); }
+.hero3-top { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); align-items: end; gap: 20px clamp(24px, 5vw, 72px); }
+.hero3 h1 { font-size: clamp(3rem, 5.8vw, 5.6rem); line-height: .86; }
+.hero2-side p { max-width: 36ch; color: var(--ink-2); font-size: clamp(1.0625rem, 1.35vw, 1.1875rem); line-height: 1.5; }
+.hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+
+/* drawn: a brick front with a stone sign band and one opening for each bay */
+.house { position: relative; margin-top: clamp(22px, 3vw, 38px); padding: 0 clamp(8px, 2.2vw, 30px); border-top: 10px solid #DDD6C6;
+  background-color: color-mix(in srgb, var(--accent) 70%, #47231A);
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, .34)), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='36'%3E%3Cpath d='M0 17h60v2H0zM0 35h60v1H0zM0 0h60v1H0zM14 1h2v16h-2zM44 19h2v16h-2z' fill='%23000' fill-opacity='.24'/%3E%3C/svg%3E"); }
+.house-sign { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 4px 20px; width: fit-content; max-width: 100%; margin: clamp(10px, 1.4vw, 18px) auto; padding: 9px clamp(14px, 2.4vw, 34px) 7px; border: 3px solid #C9C1AE; background: #ECE7DA; color: var(--ink); box-shadow: 0 3px 0 rgba(0, 0, 0, .3); }
+.house-sign b { font: 900 clamp(1.35rem, 3.3vw, 2.9rem)/.9 var(--display); letter-spacing: .09em; text-transform: uppercase; }
+.house-sign span { color: var(--ink-2); font-weight: 700; font-size: .9375rem; }
+.house-doors { display: grid; grid-template-columns: repeat(var(--n, 5), 1fr); gap: clamp(8px, 2.2vw, 34px); height: clamp(240px, calc(100vh - 636px), 380px); height: clamp(240px, calc(100svh - 636px), 380px); }
+.house-doors li { position: relative; display: flex; flex-direction: column; min-width: 0; }
+.lintel { display: block; padding: 6px 4px 4px; border-bottom: 3px solid #BDB5A2; background: #ECE7DA; color: var(--ink); font: 900 clamp(.9rem, 1.7vw, 1.5rem)/1 var(--display); letter-spacing: .09em; text-align: center; text-transform: uppercase; }
+.bdoor { position: relative; flex: 1; display: block; overflow: hidden; border-inline: 6px solid #26282C; background: #111214; color: var(--white); text-decoration: none; }
+.bdoor:focus-visible { outline: 4px solid var(--tape); outline-offset: 2px; }
+.bdoor-in { position: absolute; inset: 0; }
+.bdoor-in img { width: 100%; height: 100%; object-fit: cover; }
+.bdoor-in::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, .1) 20%, rgba(0, 0, 0, .9)); }
+.bdoor-txt { position: absolute; left: clamp(8px, 1vw, 14px); right: clamp(8px, 1vw, 14px); bottom: clamp(8px, 1vw, 14px); z-index: 1; display: grid; justify-items: start; gap: 4px; }
+.bdoor-txt b { font: 900 clamp(1.5rem, 2.6vw, 2.5rem)/.86 var(--display); }
+.bdoor-txt em { font-style: normal; font-size: .9375rem; line-height: 1.3; }
+.bdoor-txt i { margin-top: 4px; padding: 5px 12px; border-radius: var(--r); background: var(--tape); color: var(--ink); font-style: normal; font-weight: 700; font-size: .9375rem; }
+/* the door: white panels, a row of glass, the bay number painted on, a rubber seal at the floor */
+.bdoor-shut { position: absolute; inset: 0; z-index: 2; display: grid; place-items: end center; padding-bottom: 12%; border-bottom: 8px solid #101114; background-color: #F3F1EA;
+  background-image:
     linear-gradient(180deg, rgba(0, 0, 0, .22), transparent 7%),
     repeating-linear-gradient(180deg, transparent 0 calc(20% - 4px), rgba(21, 23, 26, .22) calc(20% - 4px) calc(20% - 2px), rgba(255, 255, 255, .95) calc(20% - 2px) 20%),
     linear-gradient(90deg, #E3E0D8, #F7F5EF 16%, #F7F5EF 84%, #DEDAD1);
-  transition: transform 1.25s cubic-bezier(.66, 0, .18, 1); transition-delay: calc(var(--i) * 110ms + 140ms); }
-.door-shut i { position: absolute; left: 9%; right: 9%; top: 22.5%; height: 15%;
+  transition: transform .75s cubic-bezier(.6, 0, .2, 1); }
+.bdoor-shut i { position: absolute; left: 9%; right: 9%; top: 22.5%; height: 15%;
   background:
     linear-gradient(115deg, rgba(255, 255, 255, .24) 0 26%, transparent 26% 56%, rgba(255, 255, 255, .1) 56% 70%, transparent 70%),
     linear-gradient(#1A232E, #2C3947) 0 0 / 30% 100% no-repeat,
     linear-gradient(#1A232E, #2C3947) 50% 0 / 30% 100% no-repeat,
     linear-gradient(#1A232E, #2C3947) 100% 0 / 30% 100% no-repeat; }
-.door-shut b { color: var(--accent); font: 900 clamp(4.4rem, 10vw, 9.6rem)/.78 var(--display); }
-.hero2.is-open .door-shut { transform: translateY(-102%); }
-.hero2.no-anim .door-shut, .hero2.no-anim .door-photo { transition: none; }
+.bdoor-shut b { color: var(--accent); font: 900 clamp(3rem, 7vw, 6.4rem)/.78 var(--display); }
+.bdoor.is-up .bdoor-shut { transform: translateY(-90%); }
+/* on arrival each door lifts a little and settles, so it is plain that they move */
+.house.is-hint .bdoor-shut { animation: peek 1.25s cubic-bezier(.6, 0, .3, 1) calc(var(--i) * 130ms + 250ms) 1; }
+@keyframes peek { 0%, 100% { transform: none; } 45% { transform: translateY(-34%); } }
+.house-cap { display: none; }
+.cap-touch { display: none; }
+
+/* photographed: the real building, with a door placed over each real opening */
+.hero3--photo { padding-top: 0; background: var(--ink); color: var(--white); }
+/* as wide as the page, but never so tall that the headline falls off the first screen */
+.house--photo { width: min(100%, calc((100vh - 272px) * var(--k, 2.2))); width: min(100%, max(880px, calc((100svh - 272px) * var(--k, 2.2)))); margin: 0 auto; padding: 0; border: 0; background: #1B1D21; aspect-ratio: var(--ar); }
+.house-photo { position: absolute; inset: 0; width: 100%; height: 100%; }
+.house--photo .house-doors { position: absolute; inset: 0; display: block; height: auto; }
+.house--photo .house-doors li { position: absolute; display: block; }
+.house--photo .bdoor { height: 100%; border: 0; }
+.house--photo .bdoor-shut { padding: 0; border: 0; background-color: transparent; background-repeat: no-repeat; }
+.house--photo .bdoor.is-up .bdoor-shut { transform: translateY(-96%); }
+.house--photo .lintel { position: absolute; left: 50%; bottom: calc(100% + 6px); padding: 4px 10px 3px; border: 0; border-radius: 2px; background: var(--tape); font-size: clamp(.8rem, 1.25vw, 1.2rem); white-space: nowrap; transform: translateX(-50%); box-shadow: 0 2px 8px rgba(0, 0, 0, .45); }
+.house--photo .bdoor-txt { left: 6px; right: 6px; bottom: 6px; gap: 2px; }
+.house--photo .bdoor-txt b { font-size: clamp(1.1rem, 1.9vw, 1.9rem); }
+.house--photo .bdoor-txt em { font-size: clamp(.75rem, .95vw, .875rem); line-height: 1.25; }
+.house--photo .bdoor-txt i { padding: 3px 9px; font-size: .8125rem; }
+/* the headline sits on the apron in front of the building */
+.house-copy { position: absolute; left: 0; right: 0; bottom: calc(16px + var(--cap, 0px)); padding: clamp(40px, 6vw, 90px) 0 clamp(14px, 1.8vw, 26px); background: linear-gradient(180deg, transparent, rgba(8, 9, 11, .7) 55%, rgba(8, 9, 11, .9)); pointer-events: none; }
+.hero3--photo .hero3-top { grid-template-columns: minmax(0, 1fr) auto; }
+.hero3--photo .hero-cta { flex-direction: column; margin: 0; }
+.hero3--photo .house-line { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 32px; min-height: 52px; padding-block: 10px; }
+.hero3--photo .house-line p { color: var(--white); font-size: 1.0625rem; }
+.hero3--photo .house-cap { display: flex; align-items: center; gap: 12px; color: var(--on-dusk-2); }
+.hero3--photo .house-cap b { color: var(--tape); font: 900 1.5rem/1 var(--display); }
+.hero3--photo .house-cap .btn { display: none; }
+.hero3--photo { --cap: 52px; }
+.house-copy a { pointer-events: auto; }
+.hero3--photo h1 { font-size: clamp(2.6rem, 5vw, 4.9rem); text-shadow: 0 2px 20px rgba(0, 0, 0, .5); }
+.hero3--photo .hero2-side p { color: rgba(255, 255, 255, .92); }
+
+/* the row of small doors across the top of every bay */
+.bay-nav { background: var(--ink); color: var(--white); }
+.bay-nav .wrap { display: flex; align-items: stretch; gap: 0 clamp(10px, 2vw, 28px); overflow-x: auto; }
+.bay-home { display: flex; align-items: center; gap: 10px; padding: 10px clamp(10px, 2vw, 28px) 10px 0; border-right: 1px solid rgba(255, 255, 255, .22); color: var(--white); font-weight: 700; text-decoration: none; white-space: nowrap; }
+.bay-home .art-emblem { width: 30px; height: 30px; flex: none; }
+.bay-nav ul { display: flex; }
+.bay-nav li a { display: flex; align-items: center; gap: 10px; height: 100%; padding: 12px clamp(10px, 1.4vw, 18px) 8px; border-bottom: 4px solid transparent; color: var(--on-dusk-2); font-weight: 700; text-decoration: none; white-space: nowrap; }
+.bay-nav li a:hover { color: var(--white); }
+.bay-nav i { display: grid; place-items: end center; width: 26px; height: 30px; padding-bottom: 2px; border-bottom: 3px solid #000; background: repeating-linear-gradient(180deg, #F3F1EA 0 6px, #CFCBC0 6px 7px); }
+.bay-nav i b { color: var(--accent); font: 900 1rem/.8 var(--display); }
+.bay-nav a[aria-current] { border-bottom-color: var(--tape); color: var(--white); }
+.bay-nav a[aria-current] i { background: var(--accent); box-shadow: inset 0 5px 0 #F3F1EA; }
+.bay-nav a[aria-current] i b { color: var(--tape); }
+.nav a[aria-current] { border-bottom-color: var(--accent); }
+
 /* the doors stand on a strip of reflective trim, with a glint that crosses it now and then */
 .tape { position: relative; height: 16px; overflow: hidden; background: linear-gradient(180deg, var(--tape) 0 31%, #DADDE2 31% 69%, var(--tape) 69%); }
 .tape::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 42%, rgba(255, 255, 255, .92) 50%, transparent 58%); transform: translateX(-100%); animation: glint 7s ease-in-out 2.4s infinite; }
 @keyframes glint { 0% { transform: translateX(-100%); } 36%, 100% { transform: translateX(100%); } }
 .is-still .tape::after { animation: none; }
+
+/* ---------- rigs as spec sheets, officers as a roster ---------- */
+.sheets { display: grid; gap: clamp(18px, 2.6vw, 36px); }
+.sheet { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); background: var(--white); }
+.sheet:nth-child(even) .sheet-photo { order: 2; }
+.sheet-photo img, .sheet-photo .art { width: 100%; height: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.sheet-info { position: relative; padding: clamp(22px, 3.4vw, 48px); overflow: hidden; }
+.sheet-info > * { position: relative; }
+.sheet-info .sheet-code { position: absolute; right: clamp(10px, 2vw, 26px); top: clamp(4px, 1vw, 14px); color: #E6E8EA; font: 900 clamp(5.4rem, 10vw, 9.4rem)/.8 var(--display); }
+.sheet h3 { font: 900 clamp(2.6rem, 4.6vw, 4.2rem)/.86 var(--display); letter-spacing: .005em; }
+.roster { border-top: 3px solid var(--ink); }
+.roster li { display: grid; grid-template-columns: 68px minmax(9em, 1fr) minmax(0, 1.4fr) minmax(0, 1.6fr); align-items: center; gap: 4px clamp(14px, 2.4vw, 32px); padding-block: 10px; border-bottom: 1px solid var(--line); }
+.roster img, .roster-blank { width: 68px; height: 68px; border-radius: var(--r); background: var(--apron); object-fit: cover; object-position: 50% 16%; }
+.roster .rank { color: var(--accent); font-weight: 700; }
+.roster strong { font-size: 1.25rem; line-height: 1.2; }
+.roster .note { color: var(--ink-2); }
 
 /* ---------- community partner ---------- */
 .pb { padding-top: clamp(22px, 3vw, 40px); }
@@ -478,7 +542,7 @@ dialog::backdrop { background: rgba(14, 15, 17, .72); }
   .nav .btn + .btn { margin: 10px 0 0; }
 }
 @media (max-width: 900px) {
-  .head, .hero2-top, .calls-grid, .join-top--photo, .join-mid, .viewer, .safety-grid, .events-grid, .support-grid, .contact-grid, .chief, .chief--both { grid-template-columns: 1fr; }
+  .head, .hero3-top, .calls-grid, .join-top--photo, .join-mid, .viewer, .safety-grid, .events-grid, .support-grid, .contact-grid, .chief, .chief--both { grid-template-columns: 1fr; }
   .chief--both .chief-uniform { max-width: 260px; }
   .chief-portrait { max-width: 360px; }
   .finder-list, .wall { grid-template-columns: 1fr 1fr; }
@@ -495,17 +559,40 @@ dialog::backdrop { background: rgba(14, 15, 17, .72); }
   .brand b { font-size: 1.5rem; }
   .brand .art-emblem { width: 42px; height: 42px; }
   .site-header .wrap { min-height: 66px; }
-  .doors { height: 380px; gap: 5px; }
-  .door { flex: 0 0 44px; }
-  .door.is-active { flex: 1 1 0; }
-  .door:not(.is-active) .door-hit { align-items: center; padding-inline: 0; }
-  .door:not(.is-active) .door-hit span { display: none; }
-  .door:not(.is-active) .door-hit b { font-size: 2.3rem; }
-  .door-info { left: 14px; right: 14px; bottom: 104px; width: auto; }
-  .door-text { display: none; }
-  .door-units { margin-bottom: 10px; }
-  .door-shut b { font-size: 2.6rem; }
-  .door-shut i { left: 14%; right: 14%; background: linear-gradient(#1A232E, #2C3947); }
+  .house-doors { gap: 6px; height: 190px; }
+  .house { padding-inline: 6px; }
+  .house-sign span { display: none; }
+  .bdoor { border-inline-width: 3px; }
+  .bdoor-txt { display: none; }
+  .lintel { letter-spacing: .03em; }
+  .house-cap { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; min-height: 64px; margin-top: 12px; padding-bottom: 14px; }
+  .house-cap b { font: 900 1.6rem/1 var(--display); }
+  .house-cap span { flex: 1 1 180px; }
+  .cap-mouse { display: none; }
+  /* a photographed building is shown large and panned sideways with a finger */
+  .house-scroll { overflow-x: auto; scroll-snap-type: x proximity; }
+  .house--photo { width: 250%; margin: 0; }
+  .house-copy { position: static; padding: 18px 0 0; background: none; }
+  .hero3--photo .hero-cta { flex-direction: row; margin-top: 14px; }
+  .hero3--photo .hero3-top { grid-template-columns: 1fr; }
+  .hero3--photo .house-cap .btn { display: inline-flex; }
+  .hero3--photo .house-cap { flex-wrap: wrap; }
+  .hero3--photo h1 { text-shadow: none; }
+  /* the caption for a lifted door sits right under the building, ahead of the headline */
+  .hero3--photo { display: flex; flex-direction: column; }
+  .hero3--photo .house-scroll { order: 0; }
+  .hero3--photo .house-line { order: 1; display: block; min-height: 0; padding-block: 0; }
+  .hero3--photo .house-line p:not(.house-cap) { display: none; }
+  .hero3--photo .house-cap { min-height: 58px; margin-top: 0; padding-block: 10px; border-bottom: 1px solid rgba(255, 255, 255, .16); }
+  .hero3--photo .house-copy { order: 2; }
+  .hero3--photo .tape { order: 3; }
+  .roster li { grid-template-columns: 56px 1fr; }
+  .roster img, .roster-blank { width: 56px; height: 56px; grid-row: span 3; }
+  .sheet { grid-template-columns: 1fr; }
+  .sheet:nth-child(even) .sheet-photo { order: 0; }
+  .bay-home span { display: none; }
+  .bay-home { padding-right: 12px; }
+  .bay-nav li a { padding-inline: 10px; }
   .pb-ad { grid-template-columns: 1fr; gap: 10px; }
   .pb-mark { padding: 0 0 10px; border-right: 0; border-bottom: 2px solid color-mix(in srgb, var(--ac) 60%, transparent); }
   .pb-cta { justify-self: start; }
@@ -525,13 +612,15 @@ dialog::backdrop { background: rgba(14, 15, 17, .72); }
   .tc-open { bottom: 80px; }
   .tc-open span { display: none; }
   .tc { bottom: 134px; }
+  .cap-touch { display: inline; }
   .mbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 80; display: grid; grid-template-columns: repeat(3, 1fr); padding-bottom: env(safe-area-inset-bottom); border-top: 3px solid var(--tape); background: var(--night); }
   .mbar a { display: grid; justify-items: center; gap: 2px; padding: 10px 4px 9px; color: var(--white); font-weight: 700; font-size: .875rem; text-decoration: none; }
   .mbar .ic { width: 20px; height: 20px; color: var(--tape); }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .door, .door-shut, .door-photo, .door-info, .gear-stage, .pb-ad { transition: none; }
+  .bdoor-shut, .gear-stage, .pb-ad { transition: none; }
+  .house.is-hint .bdoor-shut { animation: none; }
   .tape::after { animation: none; }
   [data-still] { display: none; }
 }

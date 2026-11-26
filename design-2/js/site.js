@@ -1,14 +1,16 @@
 /* Design 2, "Bay Doors". Renders the whole site from data/site.js, then wires up the interactions.
    Nothing here is department-specific: edit the data file, not this one.
 
-   The page opens on the front of the firehouse: one bay door for each station (or each rig, for a
-   department with a single station). The doors roll up when the visitor arrives. */
+   The site is a firehouse you walk into. The first screen is the front of the building, and each
+   bay door is a part of the site: point at a door and it rolls up to show what is inside, click and
+   you go in. Each bay is its own short page, so there is no long scroll. `front` in the data file
+   names the doors; which sections sit in which bay is decided in render() below. */
 (function () {
   'use strict';
   var A = window.FireArt, RAW = window.SITE, esc = A.esc, I = A.icon;
   var app = document.getElementById('app');
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var state = { rig: 0, station: 0, ad: 0, adPaused: reduced, first: true, coat: '', amount: null, still: false, zoom: false, door: null, open: reduced };
+  var state = { rig: 0, station: 0, ad: 0, adPaused: reduced, first: true, coat: '', amount: null, still: false, zoom: false, bay: 'home', up: -1, hinted: reduced };
   var S, FX = window.FireFX, P = window.FirePlus;
   try { state.still = window.localStorage.getItem('fx-still') === '1'; } catch (e) { /* storage can be blocked: start with motion on */ }
 
@@ -55,7 +57,7 @@
 
   /* ---------- sections ---------- */
   function header() {
-    var nav = (S.stations && S.stations.items && S.stations.items.length ? [['Stations', '#stations']] : []).concat([['Apparatus', '#apparatus'], ['Officers', '#officers'], ['Safety', '#safety'], ['Events', '#events'], ['Contact', '#contact']]);
+    var nav = S.front.doors.filter(function (d) { return d.bay !== 'give'; }).map(function (d) { return [d.label, d.href, d.bay]; }).concat([['Contact', '#contact', '']]);
     var rest = RAW.companyTemplate.replace('{town}', '').replace(/\s+/g, ' ').trim();
     return (S.sampleBanner ? '<div class="sample-bar"><div class="wrap"><span>' + esc(S.sampleBanner) + '</span>' + (S.otherDesign ? '<a class="tour-go" href="' + esc(S.otherDesign.href) + '">' + esc(S.otherDesign.label) + '</a>' : '') + P.tourButton(S) + '</div></div>' : '') +
       '<div class="strip"><div class="wrap"><strong><i aria-hidden="true"></i>Emergency? Call 911.</strong><div class="strip-right">' +
@@ -65,50 +67,55 @@
       '<header class="site-header"><div class="wrap">' +
       '<a class="brand" href="#top" aria-label="' + esc(S.company) + ', top of page">' + A.emblem(S) + '<span><b>' + esc(S.town) + '</b><span>' + esc(rest) + '</span></span></a>' +
       '<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav">' + I('menu') + 'Menu</button>' +
-      '<nav class="nav" id="nav" aria-label="Main">' + nav.map(function (n) { return '<a href="' + n[1] + '">' + n[0] + '</a>'; }).join('') +
-      '<a class="btn btn--line btn--small" href="#join">Volunteer</a><a class="btn btn--small" href="#support">Donate</a></nav></div></header>';
+      '<nav class="nav" id="nav" aria-label="Main">' + nav.map(function (n) { return '<a href="' + esc(n[1]) + '"' + (n[2] ? ' data-bay="' + esc(n[2]) + '"' + (n[2] === state.bay ? ' aria-current="page"' : '') : '') + '>' + esc(n[0]) + '</a>'; }).join('') +
+      '<a class="btn btn--small" href="#support">Donate</a></nav></div></header>';
   }
 
-  /* One door for each station; with a single station, one for each rig that has a photo. */
-  function doorItems() {
-    var st = S.stations && S.stations.items;
-    if (st && st.length > 1) return st.map(function (x, i) {
-      return { big: x.number, name: x.name, title: 'Station ' + x.number + ', ' + x.name, photo: x.photo, text: x.text, line: x.address + ', ' + S.town, units: x.units || [], href: '#stations', go: 'data-station-go="' + i + '"', more: 'More about Station ' + x.number };
-    });
-    var out = [];
-    S.apparatus.rigs.forEach(function (r, i) {
-      if (r.photo) out.push({ big: r.code + ((r.name.match(/\d+$/) || [''])[0]), name: r.name, title: r.name, photo: r.photo, text: r.text, line: r.kind, units: [], href: '#apparatus', go: 'data-rig-go="' + i + '"', more: 'More about ' + r.name });
-    });
-    return out;
-  }
+  /* The front of the firehouse. Drawn in brick unless `front.photo` gives a straight-on picture of
+     the real building; then each door needs `box: [left, top, width, height]` in percent of the
+     picture, and the real doors lift. */
   function hero() {
-    var h = S.hero, doors = doorItems();
-    if (state.door === null) { state.door = 0; doors.forEach(function (d, i) { if (d.photo === h.photo) state.door = i; }); }
-    state.door = Math.min(state.door, Math.max(0, doors.length - 1));
-    return '<section class="hero2' + (state.open ? ' is-open no-anim' : '') + '" id="top" aria-labelledby="hero-h"><div class="wrap hero2-top">' +
-      '<h1 id="hero-h">' + esc(h.title) + '</h1><div class="hero2-side"><p>' + esc(h.text) + '</p>' +
-      '<div class="hero-cta"><a class="btn btn--white" href="' + h.primary.href + '">' + esc(h.primary.label) + '</a><a class="btn btn--ghost" href="' + h.secondary.href + '">' + esc(h.secondary.label) + '</a></div></div></div>' +
-      (doors.length ? '<div class="wrap"><ul class="doors">' + doors.map(function (d, i) {
-        var on = i === state.door;
-        return '<li class="door' + (on ? ' is-active' : '') + '" style="--i:' + i + '"><img class="door-photo" src="' + esc(d.photo) + '" alt="">' +
-          '<button class="door-hit" type="button" data-door="' + i + '" aria-label="' + esc(d.title) + '" aria-expanded="' + on + '" aria-controls="door-info-' + i + '"><b>' + esc(d.big) + '</b><span>' + esc(d.name) + '</span></button>' +
-          '<div class="door-info" id="door-info-' + i + '"' + (on ? '' : ' inert') + '><p class="door-line">' + esc(d.line) + '</p>' + (d.units.length ? '<p class="door-units">' + plates(d.units) + '</p>' : '') +
-          '<p class="door-text">' + esc(d.text) + '</p><a class="link" href="' + d.href + '" ' + d.go + '>' + esc(d.more) + '</a></div>' +
-          '<div class="door-shut" aria-hidden="true"><i></i><b>' + esc(d.big) + '</b></div></li>';
-      }).join('') + '</ul></div>' : '') + '<div class="tape" aria-hidden="true"></div></section>';
+    var h = S.hero, f = S.front, photo = !!f.photo;
+    var copy = '<h1 id="hero-h">' + esc(h.title) + '</h1><div class="hero2-side"><p>' + esc(h.text) + '</p>' +
+      '<div class="hero-cta"><a class="btn' + (photo ? ' btn--white' : '') + '" href="' + h.primary.href + '">' + esc(h.primary.label) + '</a><a class="btn ' + (photo ? 'btn--ghost' : 'btn--line') + '" href="' + h.secondary.href + '">' + esc(h.secondary.label) + '</a></div></div>';
+    var doors = '<ul class="house-doors">' + f.doors.map(function (d, i) {
+      var box = photo && d.box, up = i === state.up;
+      var at = box ? ' style="left:' + box[0] + '%;top:' + box[1] + '%;width:' + box[2] + '%;height:' + box[3] + '%"' : '';
+      var face = box ? ';background-image:url(' + esc(f.photo) + ');background-size:' + (10000 / box[2]).toFixed(2) + '% ' + (10000 / box[3]).toFixed(2) + '%;background-position:' + (box[0] / (100 - box[2]) * 100).toFixed(2) + '% ' + (box[1] / (100 - box[3]) * 100).toFixed(2) + '%' : '';
+      return '<li' + at + '><span class="lintel" aria-hidden="true">' + esc(d.label) + '</span>' +
+        '<a class="bdoor' + (up ? ' is-up' : '') + '" href="' + esc(d.href) + '" data-bdoor="' + i + '" style="--i:' + i + (box && d.arch ? ';border-radius:50% 50% 0 0 / ' + (+d.arch) + '% ' + (+d.arch) + '% 0 0' : '') + '" aria-label="' + esc(d.label + '. ' + d.line) + '">' +
+        '<span class="bdoor-in"><img src="' + esc(d.photo) + '" alt=""' + (d.pos ? ' style="object-position:' + esc(d.pos) + '"' : '') + '><span class="bdoor-txt"><b>' + esc(d.label) + '</b><em>' + esc(d.line) + '</em><i>Go in</i></span></span>' +
+        '<span class="bdoor-shut" style="' + face.slice(1) + '">' + (box ? '' : '<i></i><b>' + (i + 1) + '</b>') + '</span></a></li>';
+    }).join('') + '</ul>';
+    var cap = '<p class="house-cap" aria-live="polite">' + doorCap(state.up) + '</p>';
+    var cls = (state.hinted ? '' : ' is-waiting');
+    if (photo) return '<section class="hero3 hero3--photo" id="top" aria-labelledby="hero-h"><div class="house-scroll"><div class="house house--photo' + cls + '" style="--ar:' + (f.width || 16) + ' / ' + (f.height || 9) + ';--k:' + ((f.width || 16) / (f.height || 9)).toFixed(4) + '">' +
+      '<img class="house-photo" src="' + esc(f.photo) + '" alt="' + esc(f.photoAlt || '') + '">' + doors + '</div></div>' +
+      '<div class="house-copy"><div class="wrap hero3-top"><h1 id="hero-h">' + esc(h.title) + '</h1><div class="hero-cta"><a class="btn btn--white" href="' + h.primary.href + '">' + esc(h.primary.label) + '</a><a class="btn btn--ghost" href="' + h.secondary.href + '">' + esc(h.secondary.label) + '</a></div></div></div>' +
+      '<div class="wrap house-line"><p>' + esc(h.text) + '</p>' + cap + '</div><div class="tape" aria-hidden="true"></div></section>';
+    return '<section class="hero3" id="top" aria-labelledby="hero-h"><div class="wrap hero3-top">' + copy + '</div>' +
+      '<div class="wrap"><div class="house' + cls + '" style="--n:' + f.doors.length + '"><div class="house-sign"><b>' + esc(f.sign || S.company) + '</b>' + (f.est ? '<span>' + esc(f.est) + '</span>' : '') + '</div>' + doors + '</div>' + cap + '</div><div class="tape" aria-hidden="true"></div></section>';
   }
-  function pickDoor(i) {
-    if (i === state.door) return;
-    state.door = i;
-    app.querySelectorAll('.door').forEach(function (li, k) {
-      var on = k === i, info = li.querySelector('.door-info');
-      li.classList.toggle('is-active', on); li.querySelector('.door-hit').setAttribute('aria-expanded', on);
-      if (on) info.removeAttribute('inert'); else info.setAttribute('inert', '');
-    });
+  function doorCap(i) {
+    var f = S.front, d = f.doors[i];
+    return d ? '<b>' + esc(d.label) + '</b><span>' + esc(d.line) + '</span><a class="btn btn--small" href="' + esc(d.href) + '">Go in</a>' : '<span class="cap-mouse">' + esc(f.hint || 'Point at a door to look inside.') + '</span><span class="cap-touch">' + esc(f.hintTouch || 'Tap a door to look inside.') + '</span>';
   }
-  function openDoors() {
-    state.open = true;
-    var h = app.querySelector('.hero2'); if (h) h.classList.add('is-open');
+  function liftDoor(i) {
+    if (i === state.up) return;
+    state.up = i;
+    app.querySelectorAll('.bdoor').forEach(function (d, k) { d.classList.toggle('is-up', k === i); });
+    var cap = app.querySelector('.house-cap'); if (cap) cap.innerHTML = doorCap(i);
+  }
+  /* once the visitor can see the building, every door lifts a little and settles: they move */
+  function hintDoors() {
+    if (state.hinted) return;
+    state.hinted = true;
+    var h = app.querySelector('.house'); if (h) { h.classList.remove('is-waiting'); h.classList.add('is-hint'); }
+  }
+  /* the row of small doors across the top of every bay */
+  function bayNav(id) {
+    return '<nav class="bay-nav" aria-label="Bays"><div class="wrap"><a class="bay-home" href="#top">' + A.emblem(S) + '<span>Front of the house</span></a><ul>' +
+      S.front.doors.map(function (d, i) { return '<li><a href="' + esc(d.href) + '"' + (d.bay === id ? ' aria-current="page"' : '') + '><i aria-hidden="true"><b>' + (i + 1) + '</b></i><span>' + esc(d.label) + '</span></a></li>'; }).join('') + '</ul></div></nav>';
   }
 
   function partnerBanner() {
@@ -245,12 +252,19 @@
   }
   function apparatus() {
     var a = S.apparatus;
-    return '<section class="band band--concrete" id="apparatus" aria-labelledby="app-h"><div class="wrap"><div class="head"><h2 id="app-h">' + esc(a.title) + '</h2><p class="lede">' + esc(a.text) + '</p></div>' +
-      '<div class="rig-tabs" role="tablist" aria-label="Apparatus">' + a.rigs.map(function (r, i) {
-        return '<button class="rig-tab" type="button" role="tab" id="rig-tab-' + i + '" aria-controls="rig-panel" aria-selected="' + (i === state.rig) + '" tabindex="' + (i === state.rig ? 0 : -1) + '" data-rig="' + i + '"><span class="plate">' + esc(r.code + ((r.name.match(/\d+$/) || [S.station])[0])) + '</span>' + esc(r.name.replace(/\s*\d+$/, '')) + '</button>';
-      }).join('') + '</div><div id="rig-panel" role="tabpanel" aria-labelledby="rig-tab-' + state.rig + '">' + rigPanel() + '</div>' + (a.fleet ? '<p class="fleet">' + esc(a.fleet) + '</p>' : '') + '</div></section>';
+    return '<section class="band band--concrete" id="apparatus" aria-labelledby="app-h"><div class="wrap"><div class="head"><h2 id="app-h">' + esc(a.title) + '</h2><p class="lede">' + esc(a.text) + '</p></div><ol class="sheets">' +
+      a.rigs.map(function (r) {
+        var code = r.code + ((r.name.match(/\d+$/) || [S.station])[0]);
+        return '<li class="sheet"><div class="sheet-photo">' + (r.photo ? '<img src="' + esc(r.photo) + '" alt="' + esc(r.name) + '" loading="lazy">' : A.rig(r.type, S, { label: r.name })) + '</div>' +
+          '<div class="sheet-info"><b class="sheet-code" aria-hidden="true">' + esc(code) + '</b><h3>' + esc(r.name) + '</h3><p class="rig-kind">' + esc(r.kind) + '</p><p class="rig-text">' + esc(r.text) + '</p>' +
+          '<dl class="specs">' + r.specs.map(function (x) { return '<div><dt>' + esc(x[0]) + '</dt><dd>' + esc(x[1]) + '</dd></div>'; }).join('') + '</dl></div></li>';
+      }).join('') + '</ol>' + (a.fleet ? '<p class="fleet">' + esc(a.fleet) + '</p>' : '') + '</div></section>';
   }
 
+  /* one line of the roster */
+  function rosterRow(p) {
+    return '<li>' + (p.photo ? '<img src="' + esc(p.photo) + '" alt="" loading="lazy">' : '<span class="roster-blank" aria-hidden="true"></span>') + '<span class="rank">' + esc(p.rank) + '</span><strong>' + esc(p.name) + '</strong><span class="note">' + esc(p.note || '') + '</span></li>';
+  }
   function person(p) {
     var pic = p.photo ? '<img src="' + esc(p.photo) + '" alt="' + esc(p.rank + ' ' + p.name) + '" loading="lazy">' : A.portrait(p, S);
     return '<li><figure class="person' + (p.photo ? ' person--photo' : '') + '">' + pic + '<figcaption><span class="rank">' + esc(p.rank) + '</span><strong>' + esc(p.name) + '</strong>' + (p.note ? '<span class="note">' + esc(p.note) + '</span>' : '') + '</figcaption></figure></li>';
@@ -270,9 +284,9 @@
     var o = S.officers;
     return '<section class="band" id="officers" aria-labelledby="off-h"><div class="wrap"><div class="head"><h2 id="off-h">' + esc(o.title) + '</h2><p class="lede">' + esc(o.text) + '</p></div>' +
       chief(o.chief) +
-      '<ul class="people">' + o.line.map(person).join('') + '</ul>' +
+      '<ul class="roster">' + o.line.map(rosterRow).join('') + '</ul>' +
       (o.captains && o.captains.length ? '<h3 class="people-sub">' + esc(o.captainsTitle || 'Station captains') + '</h3><ul class="captains">' + o.captains.map(function (c) { return '<li><span>' + esc(c.station) + '</span><strong>' + esc(c.name) + '</strong></li>'; }).join('') + '</ul>' : '') +
-      (o.admin && o.admin.length ? '<h3 class="people-sub">Company officers</h3><ul class="people people--admin">' + o.admin.map(person).join('') + '</ul>' : '') + '</div></section>';
+      (o.admin && o.admin.length ? '<h3 class="people-sub">Company officers</h3><ul class="roster">' + o.admin.map(rosterRow).join('') + '</ul>' : '') + '</div></section>';
   }
 
   function safety() {
@@ -367,7 +381,7 @@
       again: w.once ? null : { label: esc(w.again || "Don't show this again"), checked: off },
       onClose: function (dont) {
         try { if (dont || w.once) window.localStorage.setItem(key, '1'); else window.localStorage.removeItem(key); } catch (e) { /* it will show again next visit */ }
-        openDoors();
+        hintDoors();
       }
     });
     return true;
@@ -417,13 +431,38 @@
   function render() {
     S = resolve(RAW);
     theme();
-    app.innerHTML = header() + '<main id="main">' + hero() + partnerBanner() + tasks() + calls() + P.feed(S) + join() + P.neighbors(S) + stations() + apparatus() + officers() + P.year(S) + safety() + P.lake(S, '') + events() + P.santa(S, '') + support() + partners() + gallery() + history() + contact() + '</main>' + footer() + mobileBar() + membersDialog() + P.dialogs(S);
+    function bay(id, html) { return '<div class="bay" data-bay="' + id + '"' + (id === state.bay ? '' : ' hidden') + '>' + (id === 'home' ? '' : bayNav(id)) + html + '</div>'; }
+    app.innerHTML = header() + '<main id="main">' +
+      bay('home', hero() + partnerBanner() + tasks() + calls() + safety() + P.lake(S, '') + contact()) +
+      bay('join', join() + P.neighbors(S)) +
+      bay('rigs', apparatus() + stations()) +
+      bay('people', officers() + P.year(S) + history()) +
+      bay('events', events() + P.santa(S, '') + P.feed(S)) +
+      bay('give', support() + partners() + gallery()) + '</main>' + footer() + mobileBar() + membersDialog() + P.dialogs(S);
     jsonLd();
+    /* on a phone the photographed building is wider than the screen: start with the doors in view */
+    var pan = app.querySelector('.house-scroll'); if (pan && pan.scrollWidth > pan.clientWidth + 4) pan.scrollLeft = pan.scrollWidth * 0.4 - pan.clientWidth / 2;
     P.mount(app, S);
     fitGearName();
     state.first = false;
     document.documentElement.classList.toggle('is-still', motionOn() && state.still);
   }
+  /* Show the bay that holds this section (or the bay itself), then bring the section into view. */
+  function go(id) {
+    var el = id && (document.getElementById(id) || app.querySelector('.bay[data-bay="' + id + '"]'));
+    var b = el && el.closest ? el.closest('.bay') : null; if (!b) return false;
+    var name = b.getAttribute('data-bay'), changed = name !== state.bay, first = b.querySelector('section');
+    state.bay = name;
+    app.querySelectorAll('.bay').forEach(function (x) { x.hidden = x !== b; });
+    app.querySelectorAll('.nav a[data-bay]').forEach(function (a) { if (a.getAttribute('data-bay') === name) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current'); });
+    if (el === b || el === first || id === 'top') window.scrollTo({ top: 0, behavior: 'instant' });
+    else el.scrollIntoView({ behavior: changed || reduced ? 'instant' : 'smooth', block: 'start' });
+    if (changed) liftDoor(-1);
+    return true;
+  }
+  window.FireBays = { show: go };
+  window.addEventListener('hashchange', function () { go(window.location.hash.slice(1) || 'top'); });
+
   function rerender() {
     var y = window.scrollY, active = document.activeElement && document.activeElement.id;
     render();
@@ -446,7 +485,7 @@
   }
 
   document.addEventListener('click', function (e) {
-    var t = e.target.closest('[data-rig],[data-station],[data-ad],[data-ad-pause],[data-topic],[data-open],[data-close],[data-amount],[data-donate],[data-still],[data-gear-zoom],[data-welcome],[data-preset],[data-door],[data-station-go],[data-rig-go],.nav-toggle,.tc-open,.pb-ad,.nav a');
+    var t = e.target.closest('[data-rig],[data-station],[data-ad],[data-ad-pause],[data-topic],[data-open],[data-close],[data-amount],[data-donate],[data-still],[data-gear-zoom],[data-welcome],[data-preset],[data-station-go],[data-rig-go],.bdoor,.nav-toggle,.tc-open,.pb-ad,.nav a');
     if (!t) return;
     if (t.matches('[data-rig],[data-rig-go]')) {
       state.rig = +(t.getAttribute('data-rig') || t.getAttribute('data-rig-go'));
@@ -456,7 +495,11 @@
       state.station = +(t.getAttribute('data-station') || t.getAttribute('data-station-go'));
       app.querySelectorAll('#stations .rig-tab').forEach(function (b, i) { var on = i === state.station; b.setAttribute('aria-selected', on); b.tabIndex = on ? 0 : -1; });
       var sp = document.getElementById('st-panel'); sp.innerHTML = stationPanel(); sp.setAttribute('aria-labelledby', 'st-tab-' + state.station);
-    } else if (t.matches('[data-door]')) { pickDoor(+t.getAttribute('data-door')); }
+    } else if (t.matches('.bdoor')) {
+      /* a finger cannot hover: the first tap lifts the door, the second goes in */
+      var bi = +t.getAttribute('data-bdoor');
+      if (lastPointer !== 'mouse' && e.detail !== 0 && bi !== state.up) { e.preventDefault(); liftDoor(bi); }
+    }
     else if (t.matches('[data-ad]')) { showAd(+t.getAttribute('data-ad')); }
     else if (t.matches('[data-ad-pause]')) {
       state.adPaused = !state.adPaused;
@@ -495,13 +538,18 @@
     var next = tabs[(i + tabs.length) % tabs.length]; next.click(); next.focus(); e.preventDefault();
   });
 
-  /* a door widens under the mouse, under a finger or on keyboard focus */
+  /* a door lifts under the mouse or on keyboard focus, and drops when the pointer leaves the building */
+  var lastPointer = 'mouse', touchAt = 0;
+  document.addEventListener('pointerdown', function (e) { lastPointer = e.pointerType || 'mouse'; if (lastPointer !== 'mouse') touchAt = Date.now(); }, true);
   document.addEventListener('pointerover', function (e) {
-    if (e.pointerType !== 'mouse') return;
-    var d = e.target.closest && e.target.closest('.door'); if (d) pickDoor(+d.querySelector('.door-hit').getAttribute('data-door'));
+    if (e.pointerType !== 'mouse' || !e.target.closest) return;
+    var d = e.target.closest('.bdoor');
+    if (d) liftDoor(+d.getAttribute('data-bdoor'));
+    else if (state.up !== -1 && !e.target.closest('.house')) liftDoor(-1);
   });
   document.addEventListener('focusin', function (e) {
-    var b = e.target.closest && e.target.closest('.door-hit'); if (b) pickDoor(+b.getAttribute('data-door'));
+    /* a tap focuses the door just before it clicks it; leave that to the click, which lifts first and goes in second */
+    var d = e.target.closest && e.target.closest('.bdoor'); if (d && Date.now() - touchAt > 700) liftDoor(+d.getAttribute('data-bdoor'));
   });
 
   document.addEventListener('input', function (e) {
@@ -528,11 +576,12 @@
   window.addEventListener('scroll', function () { var h = app.querySelector('.site-header'); if (h) h.classList.toggle('is-stuck', window.scrollY > 48); }, { passive: true });
 
   render();
-  /* The doors go up once the visitor can see them: straight away, or when the welcome is closed.
+  /* The doors stir once the visitor can see them: straight away, or when the welcome is closed.
      ?tour starts the guided tour instead of the welcome. */
+  if (window.location.hash.length > 1) go(window.location.hash.slice(1));
   setTimeout(function () {
-    if (/[?&]tour\b/.test(window.location.search)) { P.tour(); openDoors(); }
-    else if (!welcome(/[?&]welcome\b/.test(window.location.search))) openDoors();
+    if (/[?&]tour\b/.test(window.location.search)) { P.tour(); hintDoors(); }
+    else if (!welcome(/[?&]welcome\b/.test(window.location.search))) hintDoors();
   }, 700);
   if (RAW.templateControls !== false) controls();
   setInterval(function () {

@@ -5,21 +5,47 @@ features as design 1 (the folder above this one) and looks nothing like it.
 
 | | Design 1 | Design 2 |
 | --- | --- | --- |
+| How it works | One long page you scroll | A firehouse you walk into: each door opens its own short page |
+| First screen | A full photo with the headline over it | The front of the building. Point at a door and it lifts to show what is inside; click and you go in |
 | Feel | Dark and dramatic: navy, maroon, gold, embers | Bright and clean: white, the department's red, black, reflective yellow |
-| First screen | A full photo with the headline over it | The front of the firehouse: one bay door per station, rolling up as you arrive |
 | Lettering | Wide and heavy | Tall and condensed, like the numbers on a rig |
 | Finding things | A grid of common requests | A search box that filters the common requests as you type |
-| Calls | Light section | A dark run log, like a status board |
+| Rigs and officers | Tabs and photo tiles | Spec sheets and a roster |
 
-## The doors
+## The front of the firehouse
 
-- With more than one station, there is a door for each station (`stations.items`). Pointing at a
-  door, tapping it or tabbing to it widens it and shows the address, the rigs housed there and a
-  link down to that station.
-- With one station, there is a door for each rig that has a photo (`apparatus.rigs`).
-- The doors roll up when the page opens, or when the welcome popup is closed. Visitors whose device
-  asks for reduced motion get them already open.
-- The door that starts wide is the one whose photo matches `hero.photo`.
+`front` in `data/site.js` sets it up.
+
+- **With a straight-on photograph** (`front.photo`, with its `width` and `height`): each door in
+  `front.doors` gets `box: [left, top, width, height]` in percent of the picture, placed over a
+  real opening, and `arch` to round its top. The real door lifts. Larkin Mills uses its four bays
+  and the front entrance.
+- **Without one:** leave `front.photo` empty and the building is drawn in brick in the
+  department's color, with a numbered white door for each entry in `front.doors`.
+- Each door names its `bay` (join, rigs, people, events or give), where a click lands (`href`),
+  the `photo` behind the door and one `line` of text.
+- A mouse lifts a door by pointing at it. A finger lifts it with the first tap and goes in with
+  the second. The keyboard lifts it on focus and goes in with Enter.
+- On a phone the photographed building is shown large and pans sideways.
+
+## The bays
+
+`render()` in `js/site.js` decides what is in each one:
+
+| Bay | Sections |
+| --- | --- |
+| Front of the house | the building, the partner banner, the search box, the run log, safety, contact |
+| Join | joining, the neighbors |
+| Rigs | the spec sheets, the stations |
+| People | command staff, the year in numbers, history |
+| Events | events and news, Santa night, the feed |
+| Give | the fund drive, partners, the gallery |
+
+Every old link still works: an address ending in `#partners` opens the Give bay and scrolls to the
+partners, and the browser's back button moves between bays.
+
+The first version of this design, with five station doors that rolled up on arrival, is kept in
+`design-2-doors-v1/` and on the branch `design-2-bay-doors-v1`.
 
 ## Colors and type
 
