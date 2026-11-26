@@ -1,6 +1,6 @@
 # Handoff notes: fire department websites
 
-Last updated November 26, 2026. Read this first in a new session. It covers every site, where the
+Last updated November 26, 2026 (afternoon: Newark added). Read this first in a new session. It covers every site, where the
 code is, how it is published, what is real and what is a placeholder, and what comes next.
 
 ---
@@ -11,7 +11,7 @@ code is, how it is published, what is real and what is a placeholder, and what c
 
 | Repo | What it holds |
 | --- | --- |
-| `kandyanything/larkin-mills-fire` | Larkin Mills sample (design 1 and design 2), the saved first version of design 2, and both Pequannock concepts. **This file lives here.** |
+| `kandyanything/larkin-mills-fire` | Larkin Mills sample (design 1 and design 2), the saved first version of design 2, both Pequannock concepts and both Newark concepts. **This file lives here.** |
 | `kandyanything/white-meadow-lake-fire-concept` | White Meadow Lake Fire Company 5 concept (design 1) |
 
 Branch `design-2-bay-doors-v1` in `larkin-mills-fire` keeps the first version of design 2.
@@ -68,6 +68,8 @@ listed in `.assetsignore`, so they are not published.
 | **Pequannock Township Engine Company #1**, design 2 | `pequannock-engine-1/` | https://larkin-mills-fire.kandyanything.workers.dev/pequannock-engine-1/ | 2 |
 | **Pequannock Township Engine Company #1**, design 1 | `pequannock-engine-1/design-1/` | https://larkin-mills-fire.kandyanything.workers.dev/pequannock-engine-1/design-1/ | 1 |
 | **White Meadow Lake Fire Company 5** (Rockaway Township) | `white-meadow-lake-fire-concept` repo root | https://white-meadow-lake-fire-concept.kandyanything.workers.dev/ | 1 |
+| **Newark Fire Division** (career city department), design 2 | `newark-fire/` | https://larkin-mills-fire.kandyanything.workers.dev/newark-fire/ | 2 |
+| **Newark Fire Division**, design 1 | `newark-fire/design-1/` | https://larkin-mills-fire.kandyanything.workers.dev/newark-fire/design-1/ | 1 |
 
 Each design links to the other one from the bar at the top ("See design 1" / "See design 2").
 
@@ -90,11 +92,16 @@ and `data/site.js`. Code is copied per site, so a fix in one copy does not reach
 | Finding things | Grid of common requests | Search box that filters the requests |
 
 **Newest code for each design** (start new builds from these):
-- Design 1: `pequannock-engine-1/design-1/` (White Meadow Lake code plus split hero, roster, juniors,
-  archive photos, list of chiefs, coat name panel, photo stand-in). The Larkin Mills root copy has
+- Design 1: `newark-fire/design-1/` (Pequannock design 1 plus: `sections` and `nav` set the page
+  from the data, `headerCta`/`mobileCta`/`mobileCall` replace Donate, donations/events/partners
+  optional, many firehouses as searchable cards). For a volunteer company, the Pequannock copy
+  `pequannock-engine-1/design-1/` needs fewer switches turned back on. The Larkin Mills root copy has
   no concept mode.
-- Design 2: `pequannock-engine-1/` (Larkin Mills design 2 plus concept mode, side-by-side hero for a
-  tall photo, roster, juniors, chiefs, coat name panel). `design-2/` is the plain sample.
+- Design 2: `newark-fire/` (Pequannock design 2 plus: `bays` sets which sections sit behind which
+  door, the same switches as above, five doors on the rendering). `pequannock-engine-1/` is the
+  volunteer-company version. `design-2/` is the plain sample.
+- Without `bays`, `sections`, `nav`, `headerCta` and the rest, the Newark code behaves like the
+  Pequannock code, so either can start a volunteer build.
 
 **Files in each folder:**
 - `data/site.js`: all content, `window.SITE`. Tokens `{town} {company} {short} {station}`.
@@ -126,6 +133,9 @@ and `data/site.js`. Code is copied per site, so a fix in one copy does not reach
   with the name drawn onto it (Larkin Mills and White Meadow Lake work this way).
 - `officers.portraits: "initials"`: initials tiles for real people without photos.
 - `roll`, `juniors`, `history.photos`, `history.chiefs`: the Pequannock additions.
+- Newark additions (newark-fire code only): `bays` (design 2), `sections` and `nav` (design 1),
+  `headerCta`, `mobileCta`, `mobileCall`, `orgWord`, `prevention` and `community` (fact panels),
+  `stations.offices`, `stations.foot`, and `photo`/`photoAlt` on a station card.
 
 ---
 
@@ -175,6 +185,30 @@ and `data/site.js`. Code is copied per site, so a fix in one copy does not reach
 
 ---
 
+### Newark Fire Division (concept, both designs)
+- A **career city department** (about 650 firefighters, 16 firehouses), part of Newark Public
+  Safety. Volunteer parts are off: no donations, volunteer hours, day jobs, juniors or events. Join
+  is hiring through the NJ Civil Service Commission. Sponsors are a marked proposal (a city
+  department needs its attorneys' approval).
+- Real (from newarkpublicsafety.org/nfd/, Nov 2026): headquarters 480 Clinton Ave, (973) 733-6000
+  and HQ (973) 733-6007, the 16 firehouses with companies and neighborhoods, the offices, the
+  companies and special units, Chief Del Ortiz, Director Emanuel Miranda Sr., BC Mark Furka, Capt.
+  Philip Alfano IV, Capt. Kenya E. Dunham (bios and portraits), 16,720 calls a year, the history
+  (timeline, chiefs, line-of-duty deaths it names), safety advice, prevention units, CERT and
+  community programs, recruiter email candidate@ci.newark.nj.us.
+- Pictures: the top of both designs is the owner's rendering `images/firehouse-front-newark.jpg`
+  (five doors; it says "Station 36" and "Newark Fire Department", not real Newark lettering). The
+  emblem `images/brand/emblem.png` is cut from a 220-pixel copy. `images/photos/` holds nine owner
+  photos (confirm rights before live use). Leadership portraits and eleven gallery photos load from
+  newarkpublicsafety.org with the grey stand-in as fallback. A supplied "Station 36" photo with
+  trucks 31/34 was left out as not Newark NJ.
+- Placeholder (tagged Sample): call breakdown, the academy step, partner program and its invented
+  businesses, the sketch map. The calls table shows famous historic fires until dispatch feeds it.
+- The chief has an empty "in his own words" box on purpose. Notes and questions for the division:
+  `newark-fire/README.md`.
+- Checks: `tools/tests/nwk_b.py` (design 2, 41 checks) and `tools/tests/nwk1_b.py` (design 1 and
+  the links between designs, 28 checks).
+
 ## 6. What comes next
 
 1. **Pequannock gets its own repo and address.** The owner creates an empty GitHub repo (suggested
@@ -193,6 +227,10 @@ and `data/site.js`. Code is copied per site, so a fix in one copy does not reach
    text.)
 5. Any new prospect: copy the newest folder for the chosen design (section 4), replace
    `data/site.js` and `images/`, keep concept mode on.
+6. Newark: the owner confirms it is done, then decide whether it gets its own repo (as planned for
+   Pequannock). Better pictures would help: a rendering lettered with real Newark companies (for
+   example Engine 10 and Ladder 5 on Clinton Avenue), the emblem's original file, larger copies of
+   the supplied photos, and the chief's message in his own words.
 
 ---
 
@@ -223,3 +261,6 @@ and `data/site.js`. Code is copied per site, so a fix in one copy does not reach
 - Pequannock built on design 2 (Nov 25), renamed "Pequannock Township Engine Company #1" and built
   again on design 1 (Nov 26); the coat now reads "Pequannock Twp / Engine Company #1" with the
   visitor's name across the shoulders and the real patch on the back.
+- Newark Fire Division built on both designs (Nov 26), the first career city department: the
+  template gained data switches to turn off the volunteer and donation parts, a searchable list of
+  16 firehouses, and a five-door front on the owner's rendering.

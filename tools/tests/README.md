@@ -19,6 +19,8 @@ Clone to those paths, or change the paths at the top of each script.
 | --- | --- |
 | `peq_b.py` | Pequannock, design 2 (firehouse doors): 35 checks, desktop and phone |
 | `p1_b.py` | Pequannock, design 1 (long page): 26 checks, and the links between the two designs |
+| `nwk_b.py` | Newark, design 2 (five doors on the rendering): 41 checks, desktop and phone |
+| `nwk1_b.py` | Newark, design 1 (long page): 28 checks, and the links between the two designs |
 | `d2_b.py` | Larkin Mills design 2 (firehouse doors) |
 | `plus_b.py PORT TAG URL` | The shared extras (feed, year, Santa map, QR, tour, giving). `python3 plus_b.py 8765 d2 http://localhost:8765/design-2/index.html` |
 | `plus_t.py` | Older checks of the extras on design 1 |
@@ -28,5 +30,6 @@ Clone to those paths, or change the paths at the top of each script.
 Chrome is at `/usr/bin/google-chrome`. WebGL for the welcome needs the flags
 `--use-angle=swiftshader --enable-unsafe-swiftshader --ignore-gpu-blocklist`.
 
-Pictures that load from the Pequannock company's own site (static.wixstatic.com) and the weather
-service (api.weather.gov) cannot be reached from the workspace; the scripts block or stub them.
+Pictures that load from the Pequannock company's own site (static.wixstatic.com) or from
+newarkpublicsafety.org, and the weather service (api.weather.gov), cannot be reached from the
+workspace; the scripts block or stub them.
