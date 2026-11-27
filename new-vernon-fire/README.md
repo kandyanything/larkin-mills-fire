@@ -37,10 +37,12 @@ officers, the 1967 chiefs), Operation Santa 2026 with its eight routes and centr
 Build-A-Truck, the January 2026 letter retiring the Country Auction and its answers, the Steak &
 Lobster Dinner, the Auxiliary's fundraisers, the contact emails, phone and post office boxes.
 The Country Mile Gardens tree sale (November 28 and 29, 2026) is from the department's social
-media, supplied by the owner.
+media, supplied by the owner. Build-A-Truck's numbers are in images on its page, read from the
+owner's screenshot: Phase 1, a Pierce pumper, $1,500,000 needed by 2028, $800,000 raised; Phase 2,
+a tender, $1,000,000 needed by 2031; and why calls are expected to grow.
 
 Placeholders, each tagged "Sample" on the page (`concept.sample` in `data/site.js`): the call
-breakdown by type, the Build-A-Truck goal and amount raised, the joining steps, the safety advice,
+breakdown by type, the joining steps, the safety advice,
 the other officers, the partner program (its businesses are invented, apart from Country Mile
 Gardens), the Santa map's moving truck, the sketch map.
 
@@ -61,8 +63,8 @@ Gardens), the Santa map's moving truck, the sketch map.
 ## To check with the department
 
 - The officers' names (the site names only the chief) and the chief's message, in his own words.
-- Truck details: makes, years, pumps and tanks; which two trucks Build-A-Truck replaces.
-- The Build-A-Truck goal and the amount raised so far.
+- Truck details: makes, years, pumps and tanks.
+- Keep the Build-A-Truck amount raised up to date ($800,000 as of November 27, 2026).
 - The firehouse street address (the site gives only PO Box 143, Village Road).
 - Drill and meeting nights, and the date of the next Giving Day.
 - Whether the Steak & Lobster Dinner continues, now that the auction is retired.

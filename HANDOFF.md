@@ -223,7 +223,9 @@ and `data/site.js`. Code is copied per site, so a fix in one copy does not reach
   the 16 founders and first officers, the 1967 chiefs, Operation Santa Dec 5 and 6, 2026 (routes and
   central stops), Build-A-Truck, the auction's retirement (Jan 2026), the Auxiliary's fundraisers,
   emails firecompany@, firstaidsquad@, auxiliary@, admin@nvvfd.org, (973) 538-1277. Country Mile
-  Gardens tree sale Nov 28 and 29 (from their social media, via the owner).
+  Gardens tree sale Nov 28 and 29 (from their social media, via the owner). Build-A-Truck (from the
+  owner's screenshot; the numbers are images on their page): Phase 1 Pierce pumper $1.5M by 2028,
+  $800,000 raised; Phase 2 tender $1M by 2031.
 - Pictures: the owner's firehouse rendering (`images/firehouse-front-nv.jpg`: three bays open Fire
   Co., First Aid, Auxiliary with names inside the doors; three dormer windows open History, Santa,
   Give). The patch is cut from the Santa flyer. `images/photos/` holds the owner's photos, including

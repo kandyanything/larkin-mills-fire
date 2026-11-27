@@ -15,9 +15,10 @@
    the retirement of the Country Auction and its questions and answers, the
    Steak & Lobster Dinner, the Auxiliary's fundraisers, the emails, phone and
    addresses.
+   Build-A-Truck's phases, goals and amount raised are from the images on its
+   page, read from the owner's screenshot.
    Placeholder, and tagged "Sample" on the page (see `concept.sample` below):
-   the call breakdown by type, the fund goal and amount raised, the joining
-   steps, the safety advice, the partner program and its businesses, the Santa
+   the call breakdown by type, the joining steps, the safety advice, the partner program and its businesses, the Santa
    map's moving truck, the sketch map.
    Photos: images/photos/ holds the department's own photos, supplied by the
    owner from its banner, its social media and its First Aid Squad page
@@ -67,11 +68,10 @@ window.SITE = {
     badgeNote: "Not the official site of the New Vernon Volunteer Fire Department.",
     sample: {
       calls: "\"Nearly 700 calls a year\" is from the department's own letter of January 2026. The breakdown by type is a placeholder.",
-      apparatus: "The trucks are listed by type on the department's site. Engine 1's photo is from its banner; the other trucks are drawings, and their details are to come.",
+      apparatus: "The trucks are listed by type on the department's site, and Build-A-Truck gives the tender's age. Engine 1's photo is from its banner; the other trucks are drawings, and their details are to come.",
       join: "The training, the three ways to serve and the answers come from the department's pages. The four steps are a typical outline, to be confirmed.",
       officers: "The department's site names only the chief. The other officers' names go here.",
       safety: "General fire safety advice, to be replaced with the department's own.",
-      support: "The goal and the amount raised are placeholders: the department has not published them.",
       santa: "The dates, routes and central stops are the department's own. The moving truck is a demonstration on a sketch map.",
       partners: "A proposal. The businesses are invented; the level names follow the department's own sponsorship levels.",
       photos: "The department's own photos, from its site and social media. The department can caption them properly.",
@@ -128,7 +128,7 @@ window.SITE = {
       { at: "squad", title: "The First Aid Squad gets its own page", text: "Free EMT training, and a place for neighbors who would rather drive." },
       { at: "santa", title: "Operation Santa, live", text: "On the night, the map follows the truck, so families know when to come to the end of the driveway." },
       { at: "history", title: "105 years, told properly", text: "The sixteen men who met at Haley's store in 1920, and everything since." },
-      { at: "support", title: "It raises money", text: "Build-A-Truck and the Annual Fund Drive, with a donate button that works on any phone." },
+      { at: "support", title: "It raises money", text: "Build-A-Truck's $800,000 of $1.5 million, up to date on the bar, with a donate button that works on any phone." },
       { at: "partners", title: "And partners help pay for it", text: "Local businesses get a place on the site all year, and a monthly report.", action: "report", actionLabel: "See a sample report" },
       { end: true, title: "What it costs the department" }
     ],
@@ -216,7 +216,8 @@ window.SITE = {
       items: [
         ["1921", "8 alarms in the department's first year"],
         ["When the auction began", "Fewer than 50 calls a year"],
-        ["Today", "Nearly 700 calls a year"]
+        ["Today", "Nearly 700 calls a year"],
+        ["Ahead", "More expected: bigger homes and new developments, brush fires, storms, flooding rescues, and downed trees and wires"]
       ]
     }
   },
@@ -296,11 +297,11 @@ window.SITE = {
   apparatus: {
     title: "The trucks",
     text: "Two Class A pumper engines, a heavy rescue, a tanker, a mini pumper and the chief's vehicle.",
-    fleet: "Two of them are getting old: Build-A-Truck is raising money to replace a 32-year-old fire truck and a 31-year-old tender.",
+    fleet: "Two of them are getting old. Build-A-Truck replaces the 32-year-old fire truck with a Pierce pumper ($1.5 million, needed by 2028), then the 31-year-old tender ($1 million, needed by 2031).",
     rigs: [
       { type: "engine", code: "E", plate: "E-1", photo: "images/photos/engine-1.jpg", name: "Engine 1", tab: "Engines", kind: "One of two Class A pumper engines", text: "Lettered Fire & Rescue, outside the firehouse.", specs: [["Engines in service", "Two Class A pumpers"]] },
       { type: "rescue", code: "R", plate: "R", name: "Heavy rescue", tab: "Rescue", kind: "Heavy rescue truck", text: "Vehicle rescue and the heavy tools.", specs: [["Details", "To come from the department"]] },
-      { type: "tanker", code: "T", plate: "T", name: "Tanker", tab: "Tanker", kind: "Water tanker (tender)", text: "Brings the water. The 31-year-old tender is one of the trucks Build-A-Truck will replace.", specs: [["Details", "To come from the department"]] },
+      { type: "tanker", code: "T", plate: "T", name: "Tanker", tab: "Tanker", kind: "Water tanker (tender)", text: "Hauls water where there is no hydrant. Many homes in Harding Township and the semi-rural towns around it rely on private wells, with no hydrant nearby.", specs: [["Age", "31 years"], ["Replacement", "Build-A-Truck Phase 2: $1,000,000, needed by 2031"]] },
       { type: "brush", code: "MP", plate: "MP", name: "Mini pumper", tab: "Mini pumper", kind: "Mini pumper", text: "A smaller pumper.", specs: [["Details", "To come from the department"]] }
     ]
   },
@@ -352,7 +353,7 @@ window.SITE = {
       { month: "Dec", day: "6", date: "2026-12-06T17:00", hours: 3, title: "Operation Santa, night two", meta: "Sunday, 5 to 8 PM. Routes 5 to 8. In severe rain or snow, Santa meets the children at the firehouse the next weekend." }
     ],
     news: [
-      { date: "Under way", title: "Build-A-Truck", text: "Raising money to replace a 32-year-old fire truck and a 31-year-old tender. The department receives no state, local or federal funding." },
+      { date: "Under way", title: "Build-A-Truck", text: "$800,000 raised toward Phase 1, a $1.5 million Pierce pumper needed by 2028. Phase 2, a $1 million tender, is needed by 2031. The department receives no state, local or federal funding." },
       { date: "January 2026", title: "The Country Auction is retired", text: "After more than 70 years. When it began the department answered fewer than 50 calls a year; now it answers nearly 700, and the auction took more than 6,000 volunteer hours." },
       { date: "2026", title: "The Honor Roll of Donors is posted", text: "Thank you to every family, business and foundation that gave this year." }
     ]
@@ -380,13 +381,13 @@ window.SITE = {
 
   support: {
     title: "We receive $0 in tax dollars.",
-    text: "The {company} is fully self-funded: no state, local or federal money. Build-A-Truck is raising money to replace a 32-year-old fire truck and a 31-year-old tender.",
-    fund: { name: "Build-A-Truck", raised: 185000, goal: 750000, note: "Placeholder figures. The department sets the goal and the site keeps the bar up to date." },
+    text: "The {company} is 100% independent and relies only on private funding, as decided in 1921 to ease the tax burden on residents. Build-A-Truck is replacing a 32-year-old fire truck and a 31-year-old tender.",
+    fund: { name: "Build-A-Truck, Phase 1: a new fire truck", raised: 800000, goal: 1500000, note: "A Pierce pumper, needed by 2028. Phase 2, a $1,000,000 tender, is needed by 2031." },
     amounts: [50, 100, 250, 500],
     monthly: true,
     demoNote: "Demo only. On a live site this button opens the department's own giving page.",
     qr: { label: "Scan to give", text: "Print this code on the Fund Drive letter. It opens this page on any phone." },
-    other: ["The annual NVVFD Giving Day", "Answer the Annual Fund Drive letter", "\"Fill the Tank\": a blended gift to the Reinvestment Fund and the day-to-day costs", "Build-A-Truck questions: Tom Heyl, 973-479-1898"]
+    other: ["Phase 2: a new tender, $1,000,000, needed by 2031", "The annual NVVFD Giving Day", "Answer the Annual Fund Drive letter", "\"Fill the Tank\": a blended gift to the Reinvestment Fund and the day-to-day costs", "Build-A-Truck questions: Tom Heyl, 973-479-1898"]
   },
 
   /* Sponsors. A PROPOSAL with invented businesses, using the department's own level names. */

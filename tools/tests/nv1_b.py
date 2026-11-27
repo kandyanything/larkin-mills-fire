@@ -34,7 +34,7 @@ with sync_playwright() as p:
     pg.click('.rig-tab[data-rig="0"]'); pg.wait_for_timeout(300); check('Engine 1 shows its photo', pg.evaluate("document.querySelector('#rig-panel img').getAttribute('src')").endswith('engine-1.jpg'))
     check('history, founders and chiefs', pg.locator('#history .timeline li').count() == 11 and pg.locator('#members .roll li').count() == 24 and pg.locator('.chiefs li').count() == 10)
     tags = pg.evaluate("Array.from(document.querySelectorAll('.sample-tag')).map(t => t.closest('section') && t.closest('section').id).filter(Boolean)")
-    check('every placeholder section is tagged', set(tags) >= {'calls', 'apparatus', 'join', 'officers', 'safety', 'support', 'santa', 'partners', 'contact'}, sorted(set(tags)))
+    check('every placeholder section is tagged', set(tags) >= {'calls', 'apparatus', 'join', 'officers', 'safety', 'santa', 'partners', 'contact'}, sorted(set(tags)))
     ctx.close()
 
     ctx, pg = page(); pg.goto(URL + '?tour'); pg.wait_for_timeout(1500); seen = []
