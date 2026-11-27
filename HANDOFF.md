@@ -1,6 +1,6 @@
 # Handoff notes: fire department websites
 
-Last updated November 26, 2026 (afternoon: Newark added). Read this first in a new session. It covers every site, where the
+Last updated November 27, 2026 (New Vernon added). Read this first in a new session. It covers every site, where the
 code is, how it is published, what is real and what is a placeholder, and what comes next.
 
 ---
@@ -11,7 +11,7 @@ code is, how it is published, what is real and what is a placeholder, and what c
 
 | Repo | What it holds |
 | --- | --- |
-| `kandyanything/larkin-mills-fire` | Larkin Mills sample (design 1 and design 2), the saved first version of design 2, both Pequannock concepts and both Newark concepts. **This file lives here.** |
+| `kandyanything/larkin-mills-fire` | Larkin Mills sample (design 1 and design 2), the saved first version of design 2, both Pequannock concepts, both Newark concepts and both New Vernon concepts. **This file lives here.** |
 | `kandyanything/white-meadow-lake-fire-concept` | White Meadow Lake Fire Company 5 concept (design 1) |
 
 Branch `design-2-bay-doors-v1` in `larkin-mills-fire` keeps the first version of design 2.
@@ -70,6 +70,8 @@ listed in `.assetsignore`, so they are not published.
 | **White Meadow Lake Fire Company 5** (Rockaway Township) | `white-meadow-lake-fire-concept` repo root | https://white-meadow-lake-fire-concept.kandyanything.workers.dev/ | 1 |
 | **Newark Fire Division** (career city department), design 2 | `newark-fire/` | https://larkin-mills-fire.kandyanything.workers.dev/newark-fire/ | 2 |
 | **Newark Fire Division**, design 1 | `newark-fire/design-1/` | https://larkin-mills-fire.kandyanything.workers.dev/newark-fire/design-1/ | 1 |
+| **New Vernon Volunteer Fire Department** (Harding Township), design 2 | `new-vernon-fire/` | https://larkin-mills-fire.kandyanything.workers.dev/new-vernon-fire/ | 2 |
+| **New Vernon Volunteer Fire Department**, design 1 | `new-vernon-fire/design-1/` | https://larkin-mills-fire.kandyanything.workers.dev/new-vernon-fire/design-1/ | 1 |
 
 Each design links to the other one from the bar at the top ("See design 1" / "See design 2").
 
@@ -92,6 +94,10 @@ and `data/site.js`. Code is copied per site, so a fix in one copy does not reach
 | Finding things | Grid of common requests | Search box that filters the requests |
 
 **Newest code for each design** (start new builds from these):
+- Newest of all: `new-vernon-fire/` and `new-vernon-fire/design-1/` (the Newark code plus: data
+  blocks with `facts` placed by name become panels, panels with `photos`, `tribute`, `calls.side`,
+  officer list hidden when only the chief is named, `lintel: "inside"`, six openings including
+  windows). A volunteer company with a First Aid Squad or Auxiliary should start here.
 - Design 1: `newark-fire/design-1/` (Pequannock design 1 plus: `sections` and `nav` set the page
   from the data, `headerCta`/`mobileCta`/`mobileCall` replace Donate, donations/events/partners
   optional, many firehouses as searchable cards). For a volunteer company, the Pequannock copy
@@ -209,6 +215,24 @@ and `data/site.js`. Code is copied per site, so a fix in one copy does not reach
 - Checks: `tools/tests/nwk_b.py` (design 2, 41 checks) and `tools/tests/nwk1_b.py` (design 1 and
   the links between designs, 28 checks).
 
+### New Vernon Volunteer Fire Department (concept, both designs)
+- Volunteer, Harding Township (20 square miles), founded 1921, nearly 700 calls a year, no tax
+  money. Three parts as on nvvfd.com: Fire Company, First Aid Squad (own section and door),
+  Auxiliary (own section and door). Chief Ward Connon is the only officer named on their site.
+- Real (every page of nvvfd.com, Nov 27, 2026, sitemap included): history chapters one and two,
+  the 16 founders and first officers, the 1967 chiefs, Operation Santa Dec 5 and 6, 2026 (routes and
+  central stops), Build-A-Truck, the auction's retirement (Jan 2026), the Auxiliary's fundraisers,
+  emails firecompany@, firstaidsquad@, auxiliary@, admin@nvvfd.org, (973) 538-1277. Country Mile
+  Gardens tree sale Nov 28 and 29 (from their social media, via the owner).
+- Pictures: the owner's firehouse rendering (`images/firehouse-front-nv.jpg`: three bays open Fire
+  Co., First Aid, Auxiliary with names inside the doors; three dormer windows open History, Santa,
+  Give). The patch is cut from the Santa flyer. `images/photos/` holds the owner's photos, including
+  Engine 1 beneath the Tribute in Light ("We remember", second section on both designs, as the
+  owner asked for it to be prominent). Other photos load from images.squarespace-cdn.com.
+- Instagram and Facebook cannot be read from a Claude workspace: ask the owner for screenshots.
+- Notes and questions for the department: `new-vernon-fire/README.md`. Checks: `tools/tests/nv_b.py`
+  (design 2, 27 checks) and `tools/tests/nv1_b.py` (design 1, 13 checks).
+
 ## 6. What comes next
 
 1. **Pequannock gets its own repo and address.** The owner creates an empty GitHub repo (suggested
@@ -264,3 +288,6 @@ and `data/site.js`. Code is copied per site, so a fix in one copy does not reach
 - Newark Fire Division built on both designs (Nov 26), the first career city department: the
   template gained data switches to turn off the volunteer and donation parts, a searchable list of
   16 firehouses, and a five-door front on the owner's rendering.
+- New Vernon Volunteer Fire Department built on both designs (Nov 27): First Aid Squad and
+  Auxiliary sections of their own, the 9/11 tribute photo, and a front whose windows open sections
+  as well as its bay doors.
