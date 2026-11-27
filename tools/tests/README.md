@@ -22,7 +22,7 @@ Clone to those paths, or change the paths at the top of each script.
 | `nv_b.py` | New Vernon, design 2 (six openings on the rendering): 34 checks, and the links to design 1 |
 | `nv1_b.py` | New Vernon, design 1 (long page): 18 checks |
 | `nwk_b.py` | Newark, design 2 (five doors on the rendering): 41 checks, desktop and phone |
-| `nwk1_b.py` | Newark, design 1 (long page): 28 checks, and the links between the two designs |
+| `nwk1_b.py` | Newark, design 1 (long page): 35 checks, the links between the two designs, and the dark theme (with `contrast_js.txt`, a text-contrast check) |
 | `d2_b.py` | Larkin Mills design 2 (firehouse doors) |
 | `plus_b.py PORT TAG URL` | The shared extras (feed, year, Santa map, QR, tour, giving). `python3 plus_b.py 8765 d2 http://localhost:8765/design-2/index.html` |
 | `plus_t.py` | Older checks of the extras on design 1 |

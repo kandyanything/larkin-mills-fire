@@ -7,6 +7,9 @@
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var state = { rig: 0, station: 0, ad: 0, adPaused: reduced, first: true, coat: '', amount: null, still: false, zoom: false, slide: 0 };
   var S, FX = window.FireFX, P = window.FirePlus;
+  /* Light or dark: the data's `theme`, unless the address says ?theme=dark or ?theme=light. */
+  var THEME = (function () { var m = /[?&]theme=(dark|light)/.exec(window.location.search); return m ? m[1] : (RAW.theme === 'dark' ? 'dark' : 'light'); })();
+  document.documentElement.setAttribute('data-theme', THEME);
   try { state.still = window.localStorage.getItem('fx-still') === '1'; } catch (e) { /* storage can be blocked: start with motion on */ }
 
   /* ---------- background motion: embers and glints behind the dark sections ---------- */
@@ -57,7 +60,8 @@
   function emblem() { return S.emblemImage ? '<img class="art art-emblem" src="' + esc(S.emblemImage) + '" alt="">' : A.emblem(S); }
   function header() {
     var nav = S.nav || [['Join', '#join']].concat(S.stations && S.stations.items && S.stations.items.length ? [['Stations', '#stations']] : [], [['Apparatus', '#apparatus'], ['Officers', '#officers'], ['Safety', '#safety']], S.events ? [['Events', '#events']] : [], S.support ? [['Support us', '#support']] : [], [['Contact', '#contact']]);
-    return (S.sampleBanner ? '<div class="sample-bar"><div class="wrap">' + esc(S.sampleBanner) + (S.otherDesign ? '<a class="tour-go" href="' + esc(S.otherDesign.href) + '">' + esc(S.otherDesign.label) + '</a>' : '') + (S.concept ? '' : P.tourButton(S)) + '</div></div>' : '') +
+    return (S.sampleBanner ? '<div class="sample-bar"><div class="wrap">' + esc(S.sampleBanner) + (S.otherDesign ? '<a class="tour-go" href="' + esc(S.otherDesign.href) + '">' + esc(S.otherDesign.label) + '</a>' : '') +
+      (S.themeSwitch ? '<a class="tour-go theme-go" href="?theme=' + (THEME === 'dark' ? 'light' : 'dark') + '">' + (THEME === 'dark' ? 'See the light theme' : 'See the dark theme') + '</a>' : '') + (S.concept ? '' : P.tourButton(S)) + '</div></div>' : '') +
       '<div class="strip"><div class="wrap"><strong>Emergency? Call 911.</strong><div class="strip-right">' +
       '<a href="tel:' + esc(S.contact.nonEmergency.replace(/[^0-9]/g, '')) + '">Non-emergency: ' + esc(S.contact.nonEmergency) + '</a>' +
       '<button type="button" data-open="members">' + I('lock') + 'Members</button></div></div></div>' +

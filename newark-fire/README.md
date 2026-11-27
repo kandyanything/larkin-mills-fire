@@ -10,6 +10,12 @@ division's site: every page says so, search engines are kept out, and no form se
 
 Each design is self-contained, with its own `data/site.js`. A change to the content goes in both.
 
+**Design 1 also has a dark theme**: the same page with every section on dark navy, as many
+athletic sites are. `theme: "light"` or `"dark"` in `design-1/data/site.js` sets the default;
+`?theme=dark` or `?theme=light` in the address overrides it, and the concept bar links to the
+other theme (`themeSwitch`). The colors are in `design-1/css/dark.css`, built from
+`design-1/css/site.css` by `tools/make_dark.py`; run it again after changing `site.css`.
+
 ## A city department, not a volunteer company
 
 Newark's is a career (paid) department run by the city, so the volunteer parts of the template are

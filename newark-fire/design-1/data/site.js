@@ -53,6 +53,10 @@ window.SITE = {
 
   templateControls: false,
   otherDesign: { label: "See design 2", href: "../" },
+  /* Light or dark. "dark" puts every section on dark navy; ?theme=dark or ?theme=light in the
+     address overrides this, and `themeSwitch` shows a link to the other theme in the concept bar. */
+  theme: "light",
+  themeSwitch: true,
   motion: { density: 1 },
 
   /* A city department takes no donations, so the header button and the phone bar point elsewhere. */

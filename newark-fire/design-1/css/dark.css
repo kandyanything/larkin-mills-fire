@@ -1,0 +1,65 @@
+/* Dark theme for design 1. Applies only when <html data-theme="dark"> (set from the data's
+   `theme`, or ?theme=dark in the address). Built from css/site.css by make_dark.py, then the
+   hand-tuned rules at the end. */
+html[data-theme="dark"] { --ink: #EEF1F6; --ink-2: #AEB8CB; --line: #2A3A5E; --concrete: #0E1930; --surface: #15223D; --surface-2: #1B2B4C; color-scheme: dark; }
+html[data-theme="dark"] body { background: #0A1224; }
+/* white surfaces turn dark */
+html[data-theme="dark"] .skip { background: var(--surface); }
+html[data-theme="dark"] .site-header { background: var(--surface); }
+html[data-theme="dark"] .pb { background: var(--surface); }
+html[data-theme="dark"] .pb-pause { background: var(--surface); }
+html[data-theme="dark"] .rig-tab { background: var(--surface); }
+html[data-theme="dark"] .chief { background: var(--surface); }
+html[data-theme="dark"] .event time { background: var(--surface); }
+html[data-theme="dark"] .card { background: var(--surface); }
+html[data-theme="dark"] .amount { background: var(--surface); }
+html[data-theme="dark"] .form input, html[data-theme="dark"] .form select, html[data-theme="dark"] .form textarea { background: var(--surface); }
+html[data-theme="dark"] .tc { background: var(--surface); }
+html[data-theme="dark"] .nav { background: var(--surface); }
+html[data-theme="dark"] .post { background: var(--surface); }
+html[data-theme="dark"] .nb { background: var(--surface); }
+html[data-theme="dark"] .freq button { background: var(--surface); }
+html[data-theme="dark"] .sign-try input { background: var(--surface); }
+html[data-theme="dark"] .dlg-x { background: var(--surface); }
+html[data-theme="dark"] .sta-find { background: var(--surface); }
+html[data-theme="dark"] .sta { background: var(--surface); }
+/* text in the red accent turns gold, which reads on navy (as on the dark bands already) */
+html[data-theme="dark"] .link { color: var(--gold); }
+html[data-theme="dark"] .task .ic { color: var(--gold); }
+html[data-theme="dark"] .calls-total b { color: var(--gold); }
+html[data-theme="dark"] .viewer-info .rig-kind { color: var(--gold); }
+html[data-theme="dark"] .rig-kind { color: var(--gold); }
+html[data-theme="dark"] .captains span { color: var(--gold); }
+html[data-theme="dark"] .person .rank { color: var(--gold); }
+html[data-theme="dark"] .chief .rank { color: var(--gold); }
+html[data-theme="dark"] .tips .ic { color: var(--gold); }
+html[data-theme="dark"] .event time span { color: var(--gold); }
+html[data-theme="dark"] .tier .price { color: var(--gold); }
+html[data-theme="dark"] .tier .ic { color: var(--gold); }
+html[data-theme="dark"] .dlg .ic { color: var(--gold); }
+html[data-theme="dark"] .stats b { color: var(--gold); }
+html[data-theme="dark"] .rep-k { color: var(--gold); }
+html[data-theme="dark"] .rep-lead b { color: var(--gold); }
+html[data-theme="dark"] .event-cal { color: var(--gold); }
+html[data-theme="dark"] .roll h3 span { color: var(--gold); }
+html[data-theme="dark"] .sta-area .ic { color: var(--gold); }
+/* light surfaces that stay light keep dark text */
+html[data-theme="dark"] .btn--gold { color: #14161B; }
+html[data-theme="dark"] .sample-bar { color: #14161B; }
+html[data-theme="dark"] .strip strong::before { color: #14161B; }
+html[data-theme="dark"] .alert { color: #14161B; }
+html[data-theme="dark"] .rig-tab[aria-selected="true"] .plate { color: #14161B; }
+html[data-theme="dark"] .demo-note { color: #14161B; }
+html[data-theme="dark"] .concept-badge { color: #14161B; }
+html[data-theme="dark"] .sample-tag b { color: #14161B; }
+html[data-theme="dark"] .alert--wx { color: #14161B; }
+html[data-theme="dark"] .lake-lists li::before { color: #14161B; }
+html[data-theme="dark"] .santa-when { color: #14161B; }
+html[data-theme="dark"] .santa-stops .is-next i { color: #14161B; }
+html[data-theme="dark"] .rep-bar { color: #14161B; }
+html[data-theme="dark"] .tour-bar i { color: #14161B; }
+html[data-theme="dark"] .wl-copy > .wl-note { color: #14161B; }
+/* ---------- hand-tuned ---------- */
+html[data-theme="dark"] .tour-go { background: #FFFFFF; color: #14161B; }
+html[data-theme="dark"] .band--concrete::before { background: linear-gradient(112deg, transparent 43%, rgba(255, 255, 255, .05) 50%, transparent 57%); }
+html[data-theme="dark"] .site-header { border-bottom-color: #22325A; }

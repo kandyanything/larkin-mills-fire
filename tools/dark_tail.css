@@ -1,0 +1,4 @@
+/* ---------- hand-tuned ---------- */
+html[data-theme="dark"] .tour-go { background: #FFFFFF; color: #14161B; }
+html[data-theme="dark"] .band--concrete::before { background: linear-gradient(112deg, transparent 43%, rgba(255, 255, 255, .05) 50%, transparent 57%); }
+html[data-theme="dark"] .site-header { border-bottom-color: #22325A; }
