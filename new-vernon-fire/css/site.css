@@ -1038,3 +1038,30 @@ dialog.dlg-report { width: min(96vw, 780px); }
 .house--photo .lintel { min-width: 0; }
 .house--photo .lintel-in .lintel { top: 7%; bottom: auto; z-index: 3; pointer-events: none; }
 .house--photo .lintel-in .bdoor-txt b { display: none; }
+
+/* ---------- a fundraising campaign in phases (S.buildatruck) ---------- */
+.camp-phases { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+.camp-phase { display: flex; flex-direction: column; overflow: hidden; border-top: 5px solid var(--accent); border-radius: 8px; background: #fff; color: #15171A; box-shadow: 0 1px 0 rgba(20, 22, 27, .08), 0 12px 30px -20px rgba(15, 27, 51, .45); }
+.camp-img { display: block; width: 100%; aspect-ratio: 12 / 5; object-fit: cover; }
+.camp-body { padding: clamp(20px, 2.4vw, 30px); }
+.camp-kicker { color: var(--accent); font-size: .875rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.camp-phase h3 { margin: 4px 0 0; font-size: clamp(1.6rem, 2.6vw, 2.2rem); line-height: 1.05; }
+.camp-goal { margin-top: 10px; font-size: 1.125rem; }
+.camp-goal b { font-size: 1.35rem; }
+.camp-phase .fund-nums { color: #4A4F57; }
+.camp-text { margin-top: 14px; color: #3A3F47; line-height: 1.5; }
+.camp-why { margin-top: clamp(32px, 4vw, 48px); }
+.camp-why > h3 { font-size: clamp(1.4rem, 2.2vw, 1.9rem); }
+.camp-why-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px 40px; margin-top: 14px; }
+.camp-why h4 { margin: 0 0 8px; color: var(--accent); font-size: 1.05rem; }
+.camp-why li { display: flex; gap: 10px; align-items: flex-start; padding: 6px 0; }
+.camp-why li .ic { width: 18px; height: 18px; flex: none; margin-top: 3px; color: var(--accent); }
+.camp-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 28px; margin-top: clamp(28px, 3.5vw, 40px); }
+.camp-foot p { color: inherit; opacity: .85; }
+
+/* ---------- social links: the top strip and the footer ---------- */
+.strip-social { display: inline-flex; align-items: center; gap: 14px; }
+.strip-right .strip-social a.soc { display: inline-flex; align-items: center; gap: 6px; }
+.soc .ic { width: 18px; height: 18px; flex: none; }
+.foot-col a.soc { display: inline-flex; align-items: center; gap: 8px; }
+@media (max-width: 760px) { .strip-social .soc span { display: none; } .strip-social { gap: 16px; } .soc .ic { width: 20px; height: 20px; } }

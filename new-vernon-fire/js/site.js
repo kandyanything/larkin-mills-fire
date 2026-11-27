@@ -57,6 +57,19 @@
   function money(n) { return '$' + Number(n).toLocaleString('en-US'); }
   function topicLink(label, topic, cls) { return '<a class="' + (cls || 'link') + '" href="#contact" data-topic="' + esc(topic) + '">' + esc(label) + '</a>'; }
 
+  /* Social links with generic icons (people for Facebook, a camera for Instagram), not the brands'
+     own logos: swap in the official icons if the department wants them. A social entry shows here
+     when it has an `icon`. */
+  var SOCIAL_IC = {
+    facebook: '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="17" cy="9" r="2.4"/><path d="M15.6 14.2c2.3.1 4 1.6 4.6 4.3"/></svg>',
+    instagram: '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5h3.2l1.7-2.6h7.2l1.7 2.6h3.2v10.6H3.5z"/><circle cx="12" cy="13.6" r="3.4"/></svg>'
+  };
+  function socialLinks() {
+    return ((S.contact && S.contact.social) || []).filter(function (s) { return s.icon; }).map(function (s) {
+      return '<a class="soc" href="' + esc(s.url) + '" target="_blank" rel="noopener" aria-label="' + esc(s.label) + '">' + (SOCIAL_IC[s.icon] || '') + '<span>' + esc(s.label) + '</span></a>';
+    }).join('');
+  }
+
   /* ---------- sections ---------- */
   /* The header button and the third button of the phone bar: Donate unless the data says otherwise. */
   function cta() { return S.headerCta || { label: 'Donate', href: '#support' }; }
@@ -68,7 +81,7 @@
     return (S.sampleBanner ? '<div class="sample-bar"><div class="wrap"><span>' + esc(S.sampleBanner) + '</span>' + (S.otherDesign ? '<a class="tour-go" href="' + esc(S.otherDesign.href) + '">' + esc(S.otherDesign.label) + '</a>' : '') + (S.concept ? '' : P.tourButton(S)) + '</div></div>' : '') +
       '<div class="strip"><div class="wrap"><strong><i aria-hidden="true"></i>Emergency? Call 911.</strong><div class="strip-right">' +
       '<a href="tel:' + esc(S.contact.nonEmergency.replace(/[^0-9]/g, '')) + '">Non-emergency: ' + esc(S.contact.nonEmergency) + '</a>' +
-      '<button type="button" data-open="members">' + I('lock') + 'Members</button></div></div></div>' +
+      '<span class="strip-social">' + socialLinks() + '</span><button type="button" data-open="members">' + I('lock') + 'Members</button></div></div></div>' +
       (S.alert && S.alert.active ? '<div class="alert" role="status"><div class="wrap">' + I('burn') + '<p>' + esc(S.alert.text) + (S.alert.link ? ' <a href="' + esc(S.alert.link.href) + '">' + esc(S.alert.link.label) + '</a>' : '') + '</p></div></div>' : '') + P.alertSlot(S) +
       '<header class="site-header"><div class="wrap">' +
       '<a class="brand" href="#top" aria-label="' + esc(S.company) + ', top of page">' + emblem() + '<span><b>' + esc(S.town) + '</b><span>' + esc(rest) + '</span></span></a>' +
@@ -334,10 +347,10 @@
 
   function support() {
     var s = S.support; if (!s) return '';
-    var f = s.fund, pct = Math.round(f.raised / f.goal * 100);
+    var f = s.fund, pct = f.goal ? Math.round(f.raised / f.goal * 100) : 0;
     return '<section class="band band--accent" id="support" aria-labelledby="sup-h">' + sparks('accent') + '<div class="wrap support-grid"><div><h2 id="sup-h">' + esc(s.title) + '</h2><p class="lede">' + esc(s.text) + '</p>' +
-      '<div class="card fund"><h3>' + esc(f.name) + '</h3><div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '" aria-label="Fund drive progress"><i style="width:' + pct + '%"></i></div>' +
-      '<div class="fund-nums"><span><b>' + money(f.raised) + '</b> raised</span><span>of ' + money(f.goal) + '</span></div><p class="fund-note">' + esc(f.note) + '</p>' +
+      '<div class="card fund"><h3>' + esc(f.name) + '</h3>' + (f.goal ? '<div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '" aria-label="Fund drive progress"><i style="width:' + pct + '%"></i></div>' +
+      '<div class="fund-nums"><span><b>' + money(f.raised) + '</b> raised</span><span>of ' + money(f.goal) + '</span></div>' : '') + '<p class="fund-note">' + esc(f.note) + '</p>' +
       P.freq(S) + '<div class="amounts" role="group" aria-label="Gift amount">' + s.amounts.map(function (a) { return '<button class="amount" type="button" data-amount="' + a + '" aria-pressed="' + (state.amount === a) + '">' + money(a) + '</button>'; }).join('') + '</div>' +
       '<button class="btn btn--dusk" type="button" data-donate>' + I('heart') + '<span>' + (state.amount ? 'Donate ' + money(state.amount) : 'Donate') + '</span></button>' +
       '<p class="demo-note" id="donate-note" hidden>' + esc(s.demoNote || "Demo only. On a live site this button opens the company's payment page.") + '</p>' + P.giveQr(S) + '</div></div>' +
@@ -366,6 +379,21 @@
       '<div class="feature"><div><ul class="feature-facts">' + (x.facts || []).map(function (f) { return '<li><b>' + esc(f[0]) + '</b><span>' + esc(f[1]) + '</span></li>'; }).join('') + '</ul>' +
       (x.cta ? topicLink(x.cta.label, x.cta.topic, 'btn') : '') + '</div>' +
       (x.photos && x.photos.length ? '<ul class="gallery gallery--two">' + x.photos.map(function (g) { return '<li><figure><img src="' + esc(g.src) + '" alt="' + esc(g.alt || '') + '" loading="lazy"><figcaption>' + esc(g.caption || '') + '</figcaption></figure></li>'; }).join('') + '</ul>' : '') + '</div></div></section>';
+  }
+  /* A fundraising campaign in phases (S.buildatruck): each phase with its goal, date and progress,
+     then why it is needed. */
+  function campaign() {
+    var c = S.buildatruck; if (!c) return '';
+    return '<section class="band band--concrete campaign" id="' + esc(c.id || 'campaign') + '" aria-labelledby="camp-h"><div class="wrap"><div class="head"><h2 id="camp-h">' + esc(c.title) + '</h2><p class="lede">' + esc(c.text) + '</p></div>' +
+      '<div class="camp-phases">' + c.phases.map(function (p) {
+        var pct = p.raised ? Math.round(p.raised / p.goal * 100) : 0;
+        return '<article class="camp-phase">' + (p.photo ? '<img class="camp-img" src="' + esc(p.photo) + '" alt="' + esc(p.alt || '') + '" loading="lazy">' : '') + '<div class="camp-body"><p class="camp-kicker">' + esc(p.kicker) + '</p><h3>' + esc(p.title) + '</h3>' +
+          '<p class="camp-goal"><b>' + money(p.goal) + '</b> needed by ' + esc(p.by) + '</p>' +
+          (p.raised ? '<div class="meter" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '" aria-label="' + esc(p.title) + ' progress"><i style="width:' + pct + '%"></i></div><div class="fund-nums"><span><b>' + money(p.raised) + '</b> raised</span><span>' + money(p.goal - p.raised) + ' to go</span></div>' : '') +
+          '<p class="camp-text">' + esc(p.text) + '</p></div></article>';
+      }).join('') + '</div>' +
+      (c.why ? '<div class="camp-why"><h3>' + esc(c.whyTitle) + '</h3><div class="camp-why-cols">' + c.why.map(function (g) { return '<div><h4>' + esc(g.title) + '</h4><ul>' + g.items.map(function (x) { return '<li>' + I('check') + '<span>' + esc(x) + '</span></li>'; }).join('') + '</ul></div>'; }).join('') + '</div></div>' : '') +
+      '<div class="camp-foot">' + (c.cta ? '<a class="btn" href="' + esc(c.cta.href) + '">' + esc(c.cta.label) + '</a>' : '') + '<div>' + (c.notes || []).map(function (n) { return '<p>' + esc(n) + '</p>'; }).join('') + '</div></div></div></section>';
   }
   /* A big photo with a short dedication beside or over it (S.tribute). */
   function tribute() {
@@ -459,7 +487,7 @@
       '<div class="foot-brand">' + emblem() + '<div><b>' + esc(S.company) + '</b><p>' + esc(c.address) + ', ' + esc(c.cityLine) + '<br>' + esc(c.nonEmergency) + '</p></div></div>' +
       '<div class="foot-col"><h3>The ' + esc(org()) + '</h3><ul><li><a href="#join">Join</a></li>' + (S.stations && S.stations.items && S.stations.items.length ? '<li><a href="#stations">Stations</a></li>' : '') + '<li><a href="#apparatus">Apparatus</a></li><li><a href="#officers">Officers</a></li><li><a href="#history">History</a></li></ul></div>' +
       '<div class="foot-col"><h3>For residents</h3><ul><li><a href="#safety">Fire safety</a></li>' + (S.events ? '<li><a href="#events">Events</a></li>' : '') + (S.support ? '<li><a href="#support">Donate</a></li>' : '') + (S.prevention ? '<li><a href="#prevention">Fire prevention</a></li>' : '') + (S.community ? '<li><a href="#community">Ways to help</a></li>' : '') + (S.partners ? '<li><a href="#partners">Partners</a></li>' : '') + '</ul></div>' +
-      '<div class="foot-col"><h3>' + esc(S.footer.followTitle || 'Follow and sign in') + '</h3><ul>' + (c.social || []).map(function (s) { return '<li><a href="' + esc(s.url) + '">' + esc(s.label) + '</a></li>'; }).join('') + '<li><button type="button" data-open="members">Members\' area</button></li></ul></div></div>' +
+      '<div class="foot-col"><h3>' + esc(S.footer.followTitle || 'Follow and sign in') + '</h3><ul>' + (c.social || []).map(function (s) { return '<li><a href="' + esc(s.url) + '"' + (s.icon ? ' class="soc" target="_blank" rel="noopener"' : '') + '>' + (SOCIAL_IC[s.icon] || '') + esc(s.label) + '</a></li>'; }).join('') + '<li><button type="button" data-open="members">Members\' area</button></li></ul></div></div>' +
       '<div class="foot-legal"><p class="foot-911">In an emergency, call 911. This website is not monitored.</p><p>&copy; ' + new Date().getFullYear() + ' ' + esc(S.company) + '.' + (S.footer.status === undefined ? ' A 501(c)(3) nonprofit.' : (S.footer.status ? ' ' + esc(S.footer.status) : '')) + (S.footer.builtBy ? ' ' + esc(S.footer.builtBy) : '') + '</p><p>' + esc(S.footer.sample) + '</p>' + (motionOn() || S.welcome || S.tour ? '<p class="foot-tools">' + (motionOn() ? stillButton('foot-still') : '') + (S.welcome && S.welcome.on !== false ? '<button class="foot-still" type="button" data-welcome>' + I('play') + '<span>Play the welcome again</span></button>' : '') + (S.tour ? '<button class="foot-still" type="button" data-tour>' + I('play') + '<span>' + esc(S.tour.button || 'Take the tour') + '</span></button>' : '') + '</p>' : '') + '</div></div>' +
       '<svg class="foot-word" viewBox="0 0 ' + ww + ' 100" aria-hidden="true" focusable="false"><text x="0" y="100" textLength="' + ww + '" lengthAdjust="spacingAndGlyphs">' + esc(word) + '</text></svg><div class="chevrons" aria-hidden="true"></div></footer>';
   }
@@ -500,7 +528,7 @@
     theme();
     function bay(id, html) { return '<div class="bay" data-bay="' + id + '"' + (id === state.bay ? '' : ' hidden') + '>' + (id === 'home' ? '' : bayNav(id)) + html + '</div>'; }
     var SECT = {
-      hero: hero, tribute: tribute, partnerBanner: partnerBanner, tasks: tasks, calls: calls, safety: safety, contact: contact, join: join, apparatus: apparatus, stations: stations,
+      hero: hero, tribute: tribute, buildatruck: campaign, partnerBanner: partnerBanner, tasks: tasks, calls: calls, safety: safety, contact: contact, join: join, apparatus: apparatus, stations: stations,
       officers: officers, roll: roll, history: history, events: events, support: support, partners: partners, gallery: gallery,
       lake: function () { return P.lake(S, ''); }, neighbors: function () { return P.neighbors(S); }, year: function () { return P.year(S); },
       santa: function () { return P.santa(S, ''); }, feed: function () { return P.feed(S); },

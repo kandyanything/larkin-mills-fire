@@ -103,8 +103,8 @@ window.SITE = {
     ],
     mapStreets: ["Village Rd", "Millbrook Rd", "Glen Alpin Rd", "Blue Mill Rd"],
     social: [
-      { label: "Facebook", url: "https://www.facebook.com/NVVFD" },
-      { label: "Instagram", url: "https://www.instagram.com/new_vernon_fire_department/" },
+      { label: "Facebook", url: "https://www.facebook.com/NVVFD", icon: "facebook" },
+      { label: "Instagram", url: "https://www.instagram.com/new_vernon_fire_department", icon: "instagram" },
       { label: "The department's current site", url: "https://www.nvvfd.com/" }
     ]
   },
@@ -128,7 +128,7 @@ window.SITE = {
       { at: "squad", title: "The First Aid Squad gets its own page", text: "Free EMT training, and a place for neighbors who would rather drive." },
       { at: "santa", title: "Operation Santa, live", text: "On the night, the map follows the truck, so families know when to come to the end of the driveway." },
       { at: "history", title: "105 years, told properly", text: "The sixteen men who met at Haley's store in 1920, and everything since." },
-      { at: "support", title: "It raises money", text: "Build-A-Truck's $800,000 of $1.5 million, up to date on the bar, with a donate button that works on any phone." },
+      { at: "buildatruck", title: "Build-A-Truck, front and center", text: "Both phases with their goals and deadlines, the $800,000 raised so far, and why the calls keep growing." },
       { at: "partners", title: "And partners help pay for it", text: "Local businesses get a place on the site all year, and a monthly report.", action: "report", actionLabel: "See a sample report" },
       { end: true, title: "What it costs the department" }
     ],
@@ -152,8 +152,8 @@ window.SITE = {
 
   /* The menu across the top, and the order of the page. Section names are the builders in
      js/site.js; a name that matches a data block with `facts` (squad, auxiliary) becomes a panel. */
-  nav: [["Volunteer", "#join"], ["First Aid Squad", "#squad"], ["Trucks", "#apparatus"], ["Santa", "#santa"], ["History", "#history"], ["Donate", "#support"], ["Contact", "#contact"]],
-  sections: ["hero", "tribute", "partnerBanner", "tasks", "events", "santa", "squad", "calls", "year", "join", "auxiliary", "apparatus", "officers", "safety", "support", "partners", "gallery", "history", "roll", "contact"],
+  nav: [["Volunteer", "#join"], ["First Aid Squad", "#squad"], ["Trucks", "#apparatus"], ["Santa", "#santa"], ["History", "#history"], ["Build-A-Truck", "#buildatruck"], ["Contact", "#contact"]],
+  sections: ["hero", "tribute", "partnerBanner", "tasks", "events", "santa", "buildatruck", "squad", "calls", "year", "join", "auxiliary", "apparatus", "officers", "safety", "support", "partners", "gallery", "history", "roll", "contact"],
 
   /* The owner's rendering of the real firehouse, shown whole beside the headline. */
   hero: {
@@ -172,7 +172,7 @@ window.SITE = {
       { icon: "phone", title: "Emergency?", text: "Fire, a medical emergency or a car accident: call 911 first.", action: "Call 911", href: "tel:911", words: "fire ambulance accident emergency hurt smoke" },
       { icon: "calendar", title: "A visit from Santa", text: "Saturday, December 5 and Sunday, December 6, 5 to 8 PM, on a fire truck.", action: "Routes and stops", href: "#santa", words: "santa christmas operation toys tots december truck" },
       { icon: "ladder", title: "Volunteer", text: "Fire Company, First Aid Squad or Auxiliary. No experience needed.", action: "Three ways to serve", href: "#join", words: "join volunteer firefighter member sign up help" },
-      { icon: "heart", title: "Donate", text: "The department receives no tax dollars. Build-A-Truck is under way.", action: "Ways to give", href: "#support", words: "donate give money fund drive truck gift tax" },
+      { icon: "heart", title: "Build-A-Truck", text: "$800,000 raised toward a $1.5 million fire truck, needed by 2028. The department receives no tax dollars.", action: "See the campaign", href: "#buildatruck", words: "donate give money fund drive truck gift tax build tender pumper" },
       { icon: "key", title: "Become an EMT", text: "The First Aid Squad trains you for free: more than 200 hours to start.", action: "About the squad", href: "#squad", words: "emt ambulance first aid squad medical cpr training driver" },
       { icon: "clock", title: "Buy a tree, build a truck", text: "Saturday and Sunday, November 28 and 29: Country Mile Gardens gives $10 for every tree.", action: "Details", href: "#events", words: "christmas tree country mile gardens weekend auxiliary" },
       { icon: "report", title: "Furniture or household goods?", text: "The department no longer accepts or picks up auction items. Local charities and thrift shops can help.", action: "Why the auction ended", href: "#events", words: "auction donate furniture pickup drop off items flea market" },
@@ -379,15 +379,34 @@ window.SITE = {
     note: "Only houses that returned a card or sent the online form are visited. Times are approximate. Shown: Route 1's central stops on Saturday."
   },
 
+  /* Build-A-Truck, from the department's page (its numbers are images there, read from the owner's
+     screenshot of November 27, 2026). Update `raised` as gifts come in. */
+  buildatruck: {
+    id: "buildatruck",
+    title: "Build-A-Truck",
+    text: "The department is replacing a 32-year-old fire truck and a 31-year-old tender. It is 100% independent and receives $0 from state, local and federal funding, as decided in 1921 to ease the tax burden on residents. The new trucks are paid for by private gifts.",
+    phases: [
+      { kicker: "Phase 1", title: "A new fire truck", goal: 1500000, raised: 800000, by: "2028", photo: "images/photos/engine-1.jpg", alt: "Engine 1, a Pierce pumper, outside the firehouse", text: "Pierce pumpers provide powerful and reliable water delivery, essential for effective firefighting." },
+      { kicker: "Phase 2", title: "A new tender", goal: 1000000, by: "2031", photo: "images/photos/portable-tank-night.jpg", alt: "A portable water tank set up on a road at night beside Engine 1", text: "A tender is a water hauler for fires where there is no hydrant. A significant share of homes in Harding Township, and in the semi-rural towns around it, rely on private wells and have no hydrant nearby." }
+    ],
+    whyTitle: "Calls are expected to keep growing",
+    why: [
+      { title: "Development and infrastructure", items: ["Ever-larger single-family homes", "Mandated affordable housing", "Assisted living and market-rate developments"] },
+      { title: "Climate change", items: ["More brush and wildfires", "Weather-related events", "Flooding rescues", "Downed wires and power outages", "Downed trees"] }
+    ],
+    cta: { label: "Give to Build-A-Truck", href: "#support" },
+    notes: ["Or \"Fill the Tank\": a blended gift to the Reinvestment Fund and the department's day-to-day costs.", "Questions: Tom Heyl, 973-479-1898."]
+  },
+
   support: {
     title: "We receive $0 in tax dollars.",
-    text: "The {company} is 100% independent and relies only on private funding, as decided in 1921 to ease the tax burden on residents. Build-A-Truck is replacing a 32-year-old fire truck and a 31-year-old tender.",
-    fund: { name: "Build-A-Truck, Phase 1: a new fire truck", raised: 800000, goal: 1500000, note: "A Pierce pumper, needed by 2028. Phase 2, a $1,000,000 tender, is needed by 2031." },
+    text: "Every truck, every tank of air and every hour of training is paid for by gifts. Give to Build-A-Truck, or to the Annual Fund Drive.",
+    fund: { name: "Give to Build-A-Truck", note: "Phase 1 has $800,000 of its $1,500,000. Pick an amount; it goes to the Truck Fund." },
     amounts: [50, 100, 250, 500],
     monthly: true,
     demoNote: "Demo only. On a live site this button opens the department's own giving page.",
     qr: { label: "Scan to give", text: "Print this code on the Fund Drive letter. It opens this page on any phone." },
-    other: ["Phase 2: a new tender, $1,000,000, needed by 2031", "The annual NVVFD Giving Day", "Answer the Annual Fund Drive letter", "\"Fill the Tank\": a blended gift to the Reinvestment Fund and the day-to-day costs", "Build-A-Truck questions: Tom Heyl, 973-479-1898"]
+    other: ["The annual NVVFD Giving Day", "Answer the Annual Fund Drive letter", "\"Fill the Tank\": a blended gift to the Reinvestment Fund and the day-to-day costs", "Build-A-Truck questions: Tom Heyl, 973-479-1898"]
   },
 
   /* Sponsors. A PROPOSAL with invented businesses, using the department's own level names. */

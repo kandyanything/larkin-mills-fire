@@ -6,13 +6,28 @@ out, and no form sends anything.
 
 - **Design 2, the firehouse** (this folder): the owner's rendering of the real firehouse. Its three
   bay doors open the Fire Company, the First Aid Squad and the Auxiliary; its three dormer windows
-  open History, Santa and Give. Join is the button beside the headline.
+  open History, Santa and Build-A-Truck. Join is the button beside the headline.
 - **Design 1, one long page** (`design-1/`): dark navy and gold with drifting sparks, the
   firehouse rendering beside the headline, and everything on one scrolling page.
 
 Both open with the firehouse and then "We remember": Engine 1 beneath the Tribute in Light.
 
 Each design is self-contained, with its own `data/site.js`. A change to the content goes in both.
+
+## Build-A-Truck and the social links
+
+Build-A-Truck is a section of its own (`buildatruck` in the data), as it is a page of its own on
+the current site: both phases with their goals, deadlines and progress, why calls are expected to
+grow, "Fill the Tank" and the contact. On design 2 the third dormer window opens it, with the
+donate card below; on design 1 it is in the menu and follows Operation Santa. Update `raised` as
+gifts come in.
+
+Facebook and Instagram link from the top strip of every page (icons only on phones) and from the
+footer. The icons are generic (people, a camera), not the brands' logos: swap in the official
+icons if the department wants them (`SOCIAL_IC` in `js/site.js`).
+
+Live weather alerts from the National Weather Service for Harding Township show under the top
+strip by themselves (`weather` in the data); `?alert` shows a sample.
 
 ## Three parts, as on the department's own site
 
@@ -23,7 +38,8 @@ a bay door each), as they have pages of their own today.
 Code added for this build (in this folder's `js/site.js` and `design-1/js/site.js` only):
 any data block with `facts` can be placed by name in `bays` or `sections` and becomes a panel, and
 a panel can carry `photos` (design 1 gained the photo row); `tribute` (a big photo with a short
-dedication); `calls.side` (a short "then and now" list when there is no call log); the officer list
+dedication); `buildatruck` (a campaign in phases); social links with icons (`icon` on a
+`contact.social` entry); a donate card without a bar when its `fund` has no goal; `calls.side` (a short "then and now" list when there is no call log); the officer list
 hides when only the chief is named; `lintel: "inside"` on a door puts its name inside the top of
 the door. The Newark switches (`bays`, `sections`, `nav`, `headerCta`, `orgWord` and the rest) are
 all here too.

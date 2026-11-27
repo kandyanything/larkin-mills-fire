@@ -228,12 +228,14 @@ and `data/site.js`. Code is copied per site, so a fix in one copy does not reach
   $800,000 raised; Phase 2 tender $1M by 2031.
 - Pictures: the owner's firehouse rendering (`images/firehouse-front-nv.jpg`: three bays open Fire
   Co., First Aid, Auxiliary with names inside the doors; three dormer windows open History, Santa,
-  Give). The patch is cut from the Santa flyer. `images/photos/` holds the owner's photos, including
+  Build-A-Truck, which has its own section as on their site). The patch is cut from the Santa flyer.
+  Facebook and Instagram link from the top strip and the footer (generic icons, not the brands'
+  logos). Live weather alerts for Harding Township are on, as on the other sites. `images/photos/` holds the owner's photos, including
   Engine 1 beneath the Tribute in Light ("We remember", second section on both designs, as the
   owner asked for it to be prominent). Other photos load from images.squarespace-cdn.com.
 - Instagram and Facebook cannot be read from a Claude workspace: ask the owner for screenshots.
 - Notes and questions for the department: `new-vernon-fire/README.md`. Checks: `tools/tests/nv_b.py`
-  (design 2, 27 checks) and `tools/tests/nv1_b.py` (design 1, 13 checks).
+  (design 2, 34 checks) and `tools/tests/nv1_b.py` (design 1, 18 checks).
 
 ## 6. What comes next
 

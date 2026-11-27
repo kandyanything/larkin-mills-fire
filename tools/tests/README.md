@@ -19,8 +19,8 @@ Clone to those paths, or change the paths at the top of each script.
 | --- | --- |
 | `peq_b.py` | Pequannock, design 2 (firehouse doors): 35 checks, desktop and phone |
 | `p1_b.py` | Pequannock, design 1 (long page): 26 checks, and the links between the two designs |
-| `nv_b.py` | New Vernon, design 2 (six openings on the rendering): 27 checks, and the links to design 1 |
-| `nv1_b.py` | New Vernon, design 1 (long page): 13 checks |
+| `nv_b.py` | New Vernon, design 2 (six openings on the rendering): 34 checks, and the links to design 1 |
+| `nv1_b.py` | New Vernon, design 1 (long page): 18 checks |
 | `nwk_b.py` | Newark, design 2 (five doors on the rendering): 41 checks, desktop and phone |
 | `nwk1_b.py` | Newark, design 1 (long page): 28 checks, and the links between the two designs |
 | `d2_b.py` | Larkin Mills design 2 (firehouse doors) |
